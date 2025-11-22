@@ -1,0 +1,79 @@
+
+version: '3.9'
+
+x-airflow-env: &airflow-env
+  AIRFLOW__CORE__EXECUTOR: LocalExecutor
+  AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'false'
+  AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+
+  airflow-webserver:
+    image: apache/airflow:2.10.2
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      <<: *airflow-env
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - ./data:/opt/airflow/dags/data
+    command: webserver
+
+  airflow-scheduler:
+    image: apache/airflow:2.10.2
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      <<: *airflow-env
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - ./data:/opt/airflow/dags/data
+    command: scheduler
+
+  airflow-triggerer:
+    image: apache/airflow:2.10.2
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      <<: *airflow-env
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+    command: triggerer
+
+ 
+  flower:
+    image: apache/airflow:2.10.2
+    ports:
+      - "5555:5555"
+    environment:
+      <<: *airflow-env
+    command: flower
+
+volumes:
+  postgres-db-volume:
