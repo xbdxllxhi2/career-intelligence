@@ -34,7 +34,8 @@ services:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
-      - ./data:/opt/airflow/dags/data
+      - ./output:/opt/airflow/output
+      - ./input:/opt/airflow/input
     command: webserver
 
   airflow-scheduler:
@@ -49,7 +50,8 @@ services:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
-      - ./data:/opt/airflow/dags/data
+      - ./output:/opt/airflow/output
+      - ./input:/opt/airflow/input
     command: scheduler
 
   airflow-triggerer:

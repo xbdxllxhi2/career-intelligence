@@ -6,7 +6,7 @@ import time
 import os
 
 API_URL = "https://linkedin-job-search-api.p.rapidapi.com/active-jb-7d"
-LOCAL_FILE ="/opt/airflow/dags/data/jobs.json"
+LOCAL_FILE ="/opt/airflow/output/jobs/jobs.json"
 
 
 HEADERS = {

@@ -6,6 +6,7 @@ from scripts.scraper import scrape_and_save_jobs
 from scripts.data_cleaner import clean_data
 from scripts.saver import save_as_excel
 
+
 TITLE_FITER = '''"Stage Data" 
 OR "Stage Data Engineer"
 OR "Stage Data Engineering"

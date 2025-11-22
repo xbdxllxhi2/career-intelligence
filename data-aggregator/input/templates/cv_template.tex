@@ -1,0 +1,73 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\setlist[itemize]{leftmargin=*}
+
+\pagenumbering{gobble}
+
+\begin{document}
+
+% ===========================
+%   HEADER
+% ===========================
+
+{\Huge \textbf{ {{ name }} }}
+
+
+\vspace{4pt}
+{{ email }} • {{ phone }} • {{ linkedin }} • {{ github }}
+
+\vspace{10pt}
+
+% ===========================
+%   SUMMARY
+% ===========================
+
+\section*{Summary}
+{{ summary }}
+
+% ===========================
+%   EXPERIENCE
+% ===========================
+
+\section*{Experience}
+
+{% for exp in experience %}
+\textbf{{ exp.role }} — {{ exp.company }} \hfill {{ exp.period }} \\
+{{ exp.location }} \\[2pt]
+\begin{itemize}
+    {% for line in exp.details %}
+    \item {{ line }}
+    {% endfor %}
+\end{itemize}
+\vspace{8pt}
+{% endfor %}
+
+% ===========================
+%   EDUCATION
+% ===========================
+
+\section*{Education}
+
+{% for edu in education %}
+\textbf{{ edu.degree }} — {{ edu.school }} \hfill {{ edu.period }} \\
+{{ edu.location }} \\
+\vspace{6pt}
+{% endfor %}
+
+% ===========================
+%   SKILLS
+% ===========================
+
+\section*{Skills}
+
+\begin{itemize}
+    {% for skill in skills %}
+    \item \textbf{{ skill.category }}: {{ skill.stack| join(", ") }}
+    {% endfor %}
+\end{itemize}
+
+\end{document}
