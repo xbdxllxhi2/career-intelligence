@@ -29,16 +29,6 @@ CREATE TABLE jobs (
 CREATE UNIQUE INDEX idx_jobs_checksum ON jobs(job_checksum);
 
 
-CREATE TABLE jobs_history (
-    history_id SERIAL PRIMARY KEY,
-    job_id INT NOT NULL REFERENCES jobs(job_id) ON DELETE CASCADE,
-
-    old_details JSONB NOT NULL,
-    old_checksum CHAR(32) NOT NULL,
-    changed_at TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
-
 CREATE TABLE applications (
     application_id SERIAL PRIMARY KEY,
     job_id INT NOT NULL REFERENCES jobs(job_id) ON DELETE CASCADE,
