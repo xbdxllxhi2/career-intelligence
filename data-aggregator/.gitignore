@@ -1,0 +1,79 @@
+# -----------------------------
+# Python
+# -----------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# -----------------------------
+# Airflow
+# -----------------------------
+logs/
+airflow.db
+airflow.sqlite
+*.pid
+*.log
+
+# Local Airflow configs
+airflow.cfg
+webserver_config.py
+
+# DAGS compiled artifacts
+dags/__pycache__/
+dags/*.pyc
+
+# -----------------------------
+# Project Outputs
+# -----------------------------
+*.xlsx
+*.xls
+*.csv
+*.json
+data/
+output/
+results/
+
+# If your jobs.json is local and generated
+**/jobs.json
+
+# -----------------------------
+# IDE / Editor
+# -----------------------------
+.vscode/
+.idea/
+*.iml
+
+# -----------------------------
+# OS / PowerShell / Windows
+# -----------------------------
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# -----------------------------
+# PyCharm caches
+# -----------------------------
+*.DS_Store
+
+# -----------------------------
+# Docker (if used)
+# -----------------------------
+docker-compose.override.yml
+.env.local
+
+# -----------------------------
+# Temp
+# -----------------------------
+tmp/
+temp/
+*.tmp
