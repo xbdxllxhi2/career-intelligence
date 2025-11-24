@@ -36,6 +36,7 @@ services:
       - ./plugins:/opt/airflow/plugins
       - ./output:/opt/airflow/output
       - ./input:/opt/airflow/input
+      - ./requirements.txt:/requirements.txt
     command: webserver
 
   airflow-scheduler:
@@ -52,6 +53,7 @@ services:
       - ./plugins:/opt/airflow/plugins
       - ./output:/opt/airflow/output
       - ./input:/opt/airflow/input
+      - ./requirements.txt:/requirements.txt
     command: scheduler
 
   airflow-triggerer:
@@ -77,5 +79,21 @@ services:
       <<: *airflow-env
     command: flower
 
+
+  # main_sql_storage:
+  #   image: postgres:15
+  #   container_name: postgres_jobs
+  #   environment:
+  #     POSTGRES_USER: myuser
+  #     POSTGRES_PASSWORD: mypassword
+  #     POSTGRES_DB: jobsdb
+  #   ports:
+  #     - "5433:5432"
+  #   volumes:
+  #     - main_sql_storage-volume:/var/lib/postgresql/data
+
+
+
 volumes:
+  # main_sql_storage-volume:
   postgres-db-volume:

@@ -2,9 +2,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime
 
-
-
-from cv_generator.generate_cv import generate_cv
+from scripts.resume_generator import generate_resume
 
 
 with DAG("application_pipeline",
@@ -13,7 +11,7 @@ with DAG("application_pipeline",
 ):
     create_cv = PythonOperator(
         task_id="generate_cv",
-        python_callable=generate_cv
+        python_callable=generate_resume
     )
 
     create_cv

@@ -1,5 +1,5 @@
 
-.PHONY: init start stop logs restart reset user
+.PHONY: init start stop logs restart reset user install-requirements
 
 init:
 	docker compose run --rm airflow-webserver airflow db init
@@ -12,6 +12,10 @@ user:
 		--lastname Abdellahi \
 		--role Admin \
 		--email admin@example.com
+
+install-requirements:
+	docker compose exec --user airflow airflow-webserver bash -c "pip install -r /requirements.txt"
+	docker compose exec --user airflow airflow-scheduler bash -c "pip install -r /requirements.txt"
 
 start:
 	docker compose up -d

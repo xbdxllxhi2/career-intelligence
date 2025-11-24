@@ -5,7 +5,7 @@ from datetime import datetime
 from scripts.scraper import scrape_and_save_jobs
 from scripts.data_cleaner import clean_data
 from scripts.saver import save_as_excel
-
+from scripts.score_applier import record_scores
 
 TITLE_FITER = '''"Stage Data" 
 OR "Stage Data Engineer"
@@ -41,7 +41,7 @@ with DAG(
 
     transform = PythonOperator(
         task_id="transform",
-        python_callable=clean_data
+        python_callable=record_scores
     )
 
     export = PythonOperator(
