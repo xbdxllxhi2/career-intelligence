@@ -20,6 +20,10 @@ Instructions:
 4. Pour "projects", chaque item doit avoir : "title" et "description". Décris l'objectif, la technologie utilisée et l'impact.
 5. Garde le français correct et professionnel.
 6. Évite tout texte hors JSON, pas de commentaires ni d’explications.
+7. Échappe les caractères spéciaux LaTeX dans le texte (ex: & → \&, % → \%, _ → \_, etc.) pour qu'il puisse être compilé en PDF sans erreur.
+9. Pour chaque accomplissement chiffré, précise l'unité si possible (%, minutes, heures, Go, etc.).
+10. Génère uniquement le JSON demandé. 
+12. Se baser uniquement sur les données fournies.
 
 Exemple de structure JSON attendue :
 """+"""

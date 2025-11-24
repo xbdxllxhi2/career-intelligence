@@ -26,8 +26,10 @@ def _render_template(context):
         f.write(rendered)
 
 def _compile_pdf():
+    tex_file_name = "cv.tex"
+    
     subprocess.run(
-        ["pdflatex", "-interaction=nonstopmode", OUTPUT_TEX],
+        ["pdflatex", "-interaction=nonstopmode", tex_file_name],
         cwd=OUTPUT_DIR,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL

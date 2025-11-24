@@ -2,7 +2,7 @@ from sentence_transformers import SentenceTransformer, util
 
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
-def match_profile_sections(profile, job_keywords, threshold=0.5):
+def match_profile_sections(profile, job_keywords, threshold=0.7):
     matched_skills = []
     matched_experience = []
 
@@ -19,7 +19,7 @@ def match_profile_sections(profile, job_keywords, threshold=0.5):
             if any(util.pytorch_cos_sim(tag_emb, job_emb) > threshold for job_emb in job_embeddings):
                 matched_experience.append(exp)
                 break
-
+    
     return {
         "keywords": job_keywords,
         "skills": matched_skills,

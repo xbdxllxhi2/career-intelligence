@@ -1,4 +1,6 @@
-# main.py
+import typer
+from InquirerPy import inquirer
+
 
 import json
 from services.keyword_extractor import extract_keywords
@@ -25,7 +27,11 @@ def main():
         cv_generated_text = generate_cv_section(context)
         print(f"Cv content {cv_generated_text}")
 
-        generated_cv_parts = json.loads(cv_generated_text)
+        cv_generated_text = cv_generated_text.replace("%", r"\%")
+        cv_generated_text_safe = cv_generated_text.replace("\\", "\\\\")
+
+        generated_cv_parts = json.loads(cv_generated_text_safe)
+
         static_cv_parts = load_data()
         complete_cv = {**static_cv_parts, **generated_cv_parts}
 
@@ -36,5 +42,19 @@ def main():
         print(f"Generated: cv_{job_id}.txt")
 
 
+
+app = typer.Typer()
+
+@app.command()
+def choose():
+    choice = inquirer.select(
+        message="What do you want to do ?",
+        choices=["See available jobs", "Evaluate cv", "Cherry"]
+    ).execute()
+    typer.echo(f"You picked {choice}")
+
+  
+
 if __name__ == "__main__":
+    # app()
     main()
