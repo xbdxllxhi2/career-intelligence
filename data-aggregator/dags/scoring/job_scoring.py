@@ -96,7 +96,7 @@ def compute_total_score(cv_data, job_offer):
         [b for exp in cv_data["experience"] for b in exp["bullets"]]
     )
 
-    # sem_score = 
+    sem_score = 1
     # fasttext_similarity(
     #     cv_text,
     #     job_offer["description"]
