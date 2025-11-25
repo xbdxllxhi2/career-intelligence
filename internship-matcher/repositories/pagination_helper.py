@@ -1,7 +1,7 @@
 from InquirerPy import inquirer
 import json
 
-def paginate_list(items, page_size: int = 10):
+def paginate_list(items, page_size: int = 3):
     if not items:
         print("No jobs found.")
         return

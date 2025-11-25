@@ -1,6 +1,7 @@
 from email.policy import default
 import logging
 from random import choice
+from regex import A
 from sympy import im, true
 import typer
 from InquirerPy import inquirer
@@ -14,6 +15,7 @@ from services.jobs_supplier import get_jobs
 from services.profile_supplier import get_profile
 from services.cv_factory import load_data
 from services.orchestrator import create_cv
+from services.jobs_analyzer import analyze_jobs, perform_kmeans, build_company_skill_matrix
 
 from repositories.jobs_repository import *
 from repositories.pagination_helper import paginate_list
@@ -77,7 +79,37 @@ def get_jobs():
             print("unkown option")
 
 
+@app.command()
+def analyze():
+    action_choices = {
+        1:"See my top wanted skills",
+        2: "Analyze jobs data",
+    }
 
+    choice = inquirer.select(
+    message="Which jobs would you like to see boss ?",
+    choices=[{"name": f"{k} - {v}", "value": k} for k, v in action_choices.items()],
+    ).execute()
+
+    match choice:
+        case 1:
+            _get_my_top_wanted_skills()
+        case 2:
+            analyze_jobs()
+        case _:
+            print("unkown option")
+
+
+def _get_my_top_wanted_skills():
+    jobs = get_all_raw_jobs()
+    profile = get_profile()
+    all_skills = []
+    for category, skills_list in profile.get("skills").items():
+        all_skills.extend(skills_list)
+ 
+    profile_skills = sorted(set(all_skills))
+    build_company_skill_matrix(jobs, profile_skills)
+    
 
 if __name__ == "__main__":
     logger.info("Application started successfully")

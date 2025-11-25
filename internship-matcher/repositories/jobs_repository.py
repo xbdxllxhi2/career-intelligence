@@ -22,6 +22,11 @@ def _format_job(job: dict) -> dict:
         "score": job.get("match_score", {})
     }
 
+def get_all_raw_jobs() -> list[dict]:
+    logger.debug("Getting all jobs raw json")
+    jobs = _load_jobs(JOBS_FILE)
+    return [job for job in jobs.values()]
+
 def get_all_jobs() -> list[dict]:
     logger.debug("Getting all jobs")
     jobs = _load_jobs(JOBS_FILE)
