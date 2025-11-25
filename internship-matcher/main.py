@@ -1,5 +1,7 @@
+from email.policy import default
 import logging
-from sympy import true
+from random import choice
+from sympy import im, true
 import typer
 from InquirerPy import inquirer
 
@@ -13,6 +15,8 @@ from services.profile_supplier import get_profile
 from services.cv_factory import load_data
 from services.orchestrator import create_cv
 
+from repositories.jobs_repository import *
+from repositories.pagination_helper import paginate_list
 
 
 logging.basicConfig(
@@ -38,15 +42,43 @@ def main():
 app = typer.Typer()
 
 @app.command()
-def choose():
+def generate_cv():
+    user_input = inquirer.text(
+    message="Enter the job reference you want to use:"
+).execute()
+    job_data = get_job_by_reference(user_input)
+
+    if not job_data:
+        typer.echo(f"No job found with reference: {user_input}")
+        raise typer.Exit(code=1)
+    create_cv(job_data)
+
+@app.command()
+def get_jobs():
+    job_choices = {
+        1:"See all jobs",
+        2: "See 5 top jobs by score",
+        3: "See lower 5 jobs by score"
+    }
+
     choice = inquirer.select(
-        message="What do you want to do ?",
-        choices=["See available jobs", "Evaluate cv", "Cherry"]
+    message="Which jobs would you like to see boss ?",
+    choices=[{"name": f"{k} - {v}", "value": k} for k, v in job_choices.items()],
     ).execute()
-    typer.echo(f"You picked {choice}")
+
+    match choice:
+        case 1:
+            paginate_list(get_all_jobs())
+        case 2:
+            pass
+        case 3:
+            pass
+        case _:
+            print("unkown option")
+
 
 
 
 if __name__ == "__main__":
     logger.info("Application started successfully")
-    main()
+    app()
