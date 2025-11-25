@@ -1,5 +1,9 @@
 import os
 from groq import Groq
+import logging
+import json
+
+logger = logging.getLogger(__name__)
 
 client = Groq(api_key="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")
 
@@ -57,15 +61,14 @@ Candidate data :
 Compétences et expériences : {context}
 """
 
-
-
     response = client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}],
         model="openai/gpt-oss-120b",
         temperature=0.2,
         max_tokens=50000  
     )
-    print(f"llm response: {response}")
+
+    logger.debug("llm response: %s", json.dumps(response.to_dict(), indent=4))
 
     return response.choices[0].message.content
 

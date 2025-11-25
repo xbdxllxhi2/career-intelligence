@@ -1,7 +1,11 @@
 import json
+import string
 import subprocess
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
+import logging
+
+logger = logging.getLogger(__name__)
 
 INPUT_DIR ="./input"
 TEMPLATE_DIR = F"{INPUT_DIR}/templates"
@@ -15,19 +19,17 @@ def load_data():
     with open(f"{CONTEXT_DIR}/cv_data.json", "r", encoding="utf8") as f:
         return json.load(f)
 
-def _render_template(context):
+def _render_template(tex_file_name,context):
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
     template = env.get_template("cv_template.tex")
     rendered = template.render(context)
 
     Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
 
-    with open(OUTPUT_TEX, "w", encoding="utf8") as f:
+    with open(F"{OUTPUT_DIR}/{tex_file_name}.tex", "w", encoding="utf8") as f:
         f.write(rendered)
 
-def _compile_pdf():
-    tex_file_name = "cv.tex"
-    
+def _compile_pdf(tex_file_name:string):
     subprocess.run(
         ["pdflatex", "-interaction=nonstopmode", tex_file_name],
         cwd=OUTPUT_DIR,
@@ -35,11 +37,12 @@ def _compile_pdf():
         stderr=subprocess.DEVNULL
     )
 
-def generate_cv(context):
-    # context = _load_data()
-    _render_template(context)
-    _compile_pdf()
-    print("CV generated → output/cv.pdf")
+def generate_cv(job, context):
+    logger.debug("complete cv context %s: ", json.dumps(context, indent=4))
+    output_file_name = job['id']
 
+    _render_template(output_file_name, context)
+    _compile_pdf(output_file_name)
+    logger.info("CV generated to output/cv.pdf")
 
 
