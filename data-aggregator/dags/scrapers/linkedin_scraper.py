@@ -10,7 +10,7 @@ LOCAL_FILE ="/opt/airflow/output/jobs/jobs.json"
 
 
 HEADERS = {
-    "x-rapidapi-key": "ca5661ba8cmshf11ead7efed175dp163c0ejsn6b93942c77c6",
+    "x-rapidapi-key": "{rapidapikey-here}", #for linkedin-job-search-api its free!
     "x-rapidapi-host": "linkedin-job-search-api.p.rapidapi.com"
 }
 

@@ -5,7 +5,7 @@ import json
 
 logger = logging.getLogger(__name__)
 
-client = Groq(api_key="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")
+client = Groq(api_key="{your api key here}") # Groq can be used its free!
 
 def generate_cv_section(context):
     prompt = f"""
