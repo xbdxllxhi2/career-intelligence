@@ -64,7 +64,7 @@ def get_jobs():
     }
 
     choice = inquirer.select(
-    message="Which jobs would you like to see boss ?",
+    message="Which jobs would you like to see ??",
     choices=[{"name": f"{k} - {v}", "value": k} for k, v in job_choices.items()],
     ).execute()
 
@@ -87,7 +87,7 @@ def analyze():
     }
 
     choice = inquirer.select(
-    message="Which jobs would you like to see boss ?",
+    message="What would you like to do ?",
     choices=[{"name": f"{k} - {v}", "value": k} for k, v in action_choices.items()],
     ).execute()
 
