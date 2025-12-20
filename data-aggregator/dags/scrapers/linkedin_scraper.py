@@ -4,15 +4,17 @@ import hashlib
 import json
 import time
 import os
+from airflow.providers.http.hooks.http import HttpHook
+from airflow.models import Variable
 
-API_URL = "https://linkedin-job-search-api.p.rapidapi.com/active-jb-7d"
+# API_URL = "https://linkedin-job-search-api.p.rapidapi.com/active-jb-7d"
 LOCAL_FILE ="/opt/airflow/output/jobs/jobs.json"
 
 
-HEADERS = {
-    "x-rapidapi-key": "{rapidapikey-here}", #for linkedin-job-search-api its free!
-    "x-rapidapi-host": "linkedin-job-search-api.p.rapidapi.com"
-}
+# HEADERS = {
+#     "x-rapidapi-key": "ca5661ba8cmshf11ead7efed175dp163c0ejsn6b93942c77c6",
+#     "x-rapidapi-host": "linkedin-job-search-api.p.rapidapi.com"
+# }
 
 
 def load_existing_jobs(file_path=LOCAL_FILE):
@@ -38,11 +40,14 @@ def filter_new_jobs(jobs:list, file_path=LOCAL_FILE):
     return {job["checksum"]: job for job in jobs if job["checksum"] not in existing_checksums}
 
 
-def safe_request(url, headers, params, retries=5):
+def safe_request(conn_id, endpoint, params, retries=5):
     # Make a request with retry logic and handle rate limits
+    hook = HttpHook(method="GET", http_conn_id=conn_id)
+
     for attempt in range(retries):
-        response = requests.get(url, headers=headers, params=params)
+        response = hook.run(endpoint=endpoint, data=params,extra_options={'check_response': False})
         if response.status_code == 200:
+            print(f"response is {response}")
             return response
         if response.status_code == 429:
             wait = (attempt + 1) * 2
@@ -75,7 +80,7 @@ def fetch_jobs(title_filter='"Stage Data Engineer"', location_filter='"France" O
             "description_type": "text"
         }
 
-        response = safe_request(API_URL, HEADERS, params)
+        response = safe_request(conn_id="rapidapi_linkedin_jobs_api", endpoint="/active-jb-7d", params=params)
         if response is None:
             break
 

@@ -1,11 +1,25 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime
+from repositories.write_data_to_db_repo import export_to_postgres
+from scrapers.linkedin_scraper import fetch_and_save
 
-from scripts.scraper import scrape_and_save_jobs
-from scripts.data_cleaner import clean_data
-from scripts.saver import save_as_excel
-from scripts.score_applier import record_scores
+
+
+def export_to_sql(jobs_file_path="/opt/airflow/output/jobs/jobs.json"):
+    export_to_postgres(jobs_file_path=jobs_file_path)
+
+
+def scrape_and_save_jobs(title_filter='"Stage Data Engineer"'):
+    return fetch_and_save(title_filter=title_filter)
+
+
+def record_scores():
+    # apply_scores()
+    return "/opt/airflow/output/jobs/jobs.json"
+
+
+
 
 TITLE_FITER = '''"Stage Data" 
 OR "Stage Data Engineer"
@@ -27,17 +41,17 @@ OR "Stage Python Data"
 OR "Stage Data Analytics"
 OR "Stage Data Visualization"
 '''
-
+# scrape >> transform >> export
 with DAG(
-    "job_pipeline",
+    "job_pipelineV3",
     start_date=datetime(2025,11,22),
     schedule="@daily"
 ):
-    scrape = PythonOperator(
-        task_id="scrape",
-        python_callable=scrape_and_save_jobs,
-        op_kwargs={"title_filter": TITLE_FITER}
-    )
+    # scrape = PythonOperator(
+    #     task_id="scrape",
+    #     python_callable=scrape_and_save_jobs,
+    #     op_kwargs={"title_filter": TITLE_FITER}
+    # )
 
     transform = PythonOperator(
         task_id="transform",
@@ -46,7 +60,8 @@ with DAG(
 
     export = PythonOperator(
         task_id="export",
-        python_callable=save_as_excel
+        python_callable=export_to_sql,
+        op_kwargs={"jobs_file_path": "/opt/airflow/output/jobs/jobs.json"}
     )
 
-    scrape >> transform >> export
+    transform >> export

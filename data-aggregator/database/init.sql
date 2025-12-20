@@ -1,53 +1,73 @@
-CREATE TABLE organizations (
+CREATE TABLE if NOT EXISTS organizations (
     organization_id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
-    logo_url TEXT,
+    name TEXT NOT NULL,
     website TEXT,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE jobs (
-    job_id SERIAL PRIMARY KEY,
-    job_title TEXT NOT NULL,
-    job_url TEXT UNIQUE,
-    source TEXT NOT NULL,
-    location TEXT,
-    description TEXT,
-    remote BOOLEAN DEFAULT FALSE,
-    raw JSONB NOT NULL,
-    organization_id INT REFERENCES organizations(organization_id) ON DELETE SET NULL,
-    job_checksum CHAR(64) NOT NULL,
-    expires_at TIMESTAMP,
+    logo_url TEXT,
+    industry TEXT,
+    size_bucket TEXT,
+    employees INT,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+
+    CONSTRAINT uq_org_name UNIQUE (name)
 );
 
-CREATE UNIQUE INDEX idx_jobs_checksum ON jobs(job_checksum);
+CREATE TABLE if NOT EXISTS sources (
+    source_id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    domain TEXT,
+    source_type TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
-CREATE TABLE job_score (
-    id SERIAL PRIMARY KEY,
-    job_id INT NOT NULL REFERENCES jobs(job_id) ON DELETE CASCADE,
-    metric TEXT NOT NULL,
-    factor TEXT,
-    value FLOAT NOT NULL,
-    description TEXT
+    CONSTRAINT uq_source UNIQUE (name, domain)
 );
 
-CREATE TABLE applications (
-    application_id SERIAL PRIMARY KEY,
-    job_id INT NOT NULL REFERENCES jobs(job_id) ON DELETE CASCADE,
-    applied_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    resume_version TEXT,
-    cover_letter TEXT,
-    notes TEXT,
-    status TEXT NOT NULL DEFAULT 'pending'
+
+CREATE TABLE if NOT EXISTS locations (
+    location_id SERIAL PRIMARY KEY,
+    country TEXT,
+    region TEXT,
+    city TEXT,
+    lat DOUBLE PRECISION,
+    lng DOUBLE PRECISION,
+    timezone TEXT
 );
 
-CREATE TABLE email_responses (
-    email_id SERIAL PRIMARY KEY,
-    application_id INT NOT NULL REFERENCES applications(application_id) ON DELETE CASCADE,
-    subject TEXT,
-    body TEXT,
-    raw_email JSONB,
-    received_at TIMESTAMP NOT NULL DEFAULT NOW()
+
+CREATE TABLE if NOT EXISTS jobs (
+    job_id SERIAL PRIMARY KEY,
+
+    title TEXT NOT NULL,
+    description TEXT,
+
+    job_url TEXT,
+    external_id TEXT,
+
+    seniority TEXT,
+    employment_type TEXT[],
+    remote BOOLEAN,
+
+    posted_at TIMESTAMP,
+    expires_at TIMESTAMP,
+
+    source_id INT NOT NULL REFERENCES sources(source_id),
+    organization_id INT REFERENCES organizations(organization_id),
+    location_id INT REFERENCES locations(location_id),
+    has_easy_apply BOOLEAN,
+    job_checksum CHAR(64) NOT NULL,
+    raw JSONB NOT NULL,
+
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT uq_job_checksum UNIQUE (job_checksum)
 );
+
+
+CREATE INDEX idx_jobs_source ON jobs(source_id);
+CREATE INDEX idx_jobs_org ON jobs(organization_id);
+CREATE INDEX idx_jobs_location ON jobs(location_id);
+CREATE INDEX idx_jobs_expires ON jobs(expires_at);
+
+
+
+

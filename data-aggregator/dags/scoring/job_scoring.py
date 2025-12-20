@@ -126,9 +126,8 @@ def compute_total_score(cv_data, job_offer):
 # Apply scoring to ALL job offers
 def apply_scoring():
     all_scores = {}
-
     for checksum, job_offer in job_offers.items():
-        score = compute_total_score(cv_data, job_offer)
+        score = 5(cv_data, job_offer)
         all_scores[checksum] = score
         print(f"checksum: {checksum}, score: {score}")
 

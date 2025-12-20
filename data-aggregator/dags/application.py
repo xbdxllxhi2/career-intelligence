@@ -2,18 +2,18 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime
 
-from scripts.resume_generator import generate_resume
+# from scripts.resume_generator import generate_resume
 
 
-with DAG("application_pipeline",
+with DAG("application_pipelineV2",
          start_date=datetime(2025,11,22),
          schedule="@weekly"
 ):
-    create_cv = PythonOperator(
-        task_id="generate_cv",
-        python_callable=generate_resume
-    )
+    # create_cv = PythonOperator(
+    #     task_id="generate_cv",
+    #     python_callable=generate_resume
+    # )
 
-    create_cv
-
+    # create_cv
+    pass
 

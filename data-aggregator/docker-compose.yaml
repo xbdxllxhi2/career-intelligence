@@ -80,20 +80,20 @@ services:
     command: flower
 
 
-  # main_sql_storage:
-  #   image: postgres:15
-  #   container_name: postgres_jobs
-  #   environment:
-  #     POSTGRES_USER: myuser
-  #     POSTGRES_PASSWORD: mypassword
-  #     POSTGRES_DB: jobsdb
-  #   ports:
-  #     - "5433:5432"
-  #   volumes:
-  #     - main_sql_storage-volume:/var/lib/postgresql/data
-
+  main_sql_storage:
+    image: postgres:15
+    container_name: sql_storage_postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: jobsdb
+    ports:
+      - "5433:5432"
+    volumes:
+      - main_sql_storage-volume:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
 
 volumes:
-  # main_sql_storage-volume:
+  main_sql_storage-volume:
   postgres-db-volume:
