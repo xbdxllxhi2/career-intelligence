@@ -1,0 +1,103 @@
+.hero {
+  position: relative;
+  padding: 7rem 2rem;
+  text-align: center;
+  color: white;
+  overflow: hidden;
+  background: radial-gradient(
+      circle at top left,
+      rgba(56, 189, 248, 0.35),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgba(99, 102, 241, 0.35),
+      transparent 40%
+    ),
+    linear-gradient(180deg, #0f172a, #020617);
+}
+
+/* subtle glow blobs */
+.hero::before,
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.35;
+  z-index: 0;
+}
+
+.hero::before {
+  background: #38bdf8;
+  top: -100px;
+  left: -100px;
+}
+
+.hero::after {
+  background: #6366f1;
+  bottom: -120px;
+  right: -120px;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero h1 {
+  font-size: 3.2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.hero p {
+  max-width: 640px;
+  margin: 1.5rem auto 2.5rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.hero p-button:first-child ::ng-deep .p-button {
+  background: linear-gradient(90deg, #6366f1, #38bdf8);
+  border: none;
+}
+
+.hero p-button:last-child ::ng-deep .p-button {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.section-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(99, 102, 241, 0.5),
+    transparent
+  );
+  margin: 4rem 0;
+}
+
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.steps,
+.benefits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 4rem 2rem;
+}
+
+.cta {
+  text-align: center;
+  padding: 5rem 2rem;
+}
+

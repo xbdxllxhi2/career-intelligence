@@ -1,0 +1,85 @@
+<div class="flex-1 overflow-auto p-3 pb-36">
+
+    @if (isConversationEmpty()) {
+    <div class="text-center text-4xl mt-12">
+        Find your perfect job match!
+    </div>
+
+    <div class="mt-12 max-w-3xl mx-auto">
+        <p class="mb-4">
+            Welcome to the Job Finder module! Here, you can input your skills,
+            experience, and preferences to find job opportunities that align
+            with your profile.
+        </p>
+        <p>
+            Simply type or paste your information into the textarea below, and
+            our AI-powered system will analyze your profile to suggest the best
+            job matches for you.
+        </p>
+    </div>
+    } @else {
+    <div class="max-w-3xl mx-auto mt-6">
+        @for (qa of getConversation(); track $index) {
+        <div class="mb-12">
+
+            <div class="flex justify-end mb-4">
+                <div class="px-4 py-2 rounded-2xl border border-gray-300/40 bg-neutral-200/10">
+                    {{ qa.question }}
+                </div>
+            </div>
+
+            <div class="mb-2 p-2 rounded-xl bg-emerald-700/10 border-b border-gray-600">
+                <h4 class="text-md font-semibold">Summary</h4>
+                <p>{{ qa.summary }}</p>
+            </div>
+
+            <div class="mb-2">
+                <p-accordion>
+                    <p-accordion-panel value="1">
+                        <p-accordion-header>Reasoning</p-accordion-header>
+                        <p-accordion-content>
+                            <p>{{ qa.reasoning }}</p>
+                        </p-accordion-content>
+                    </p-accordion-panel>
+                </p-accordion>
+            </div>
+
+            <div class="mt-6">
+                <p>{{ qa.answer }}</p>
+            </div>
+
+        </div>
+        }
+    </div>
+    }
+
+</div>
+
+<!-- INPUT (FIXED / ABSOLUTE) -->
+<div class="
+        fixed md:absolute
+        bottom-0 left-0 md:left-auto
+        w-full md:w-full
+        p-3
+        bg-neutral-900
+      ">
+    <div class="rounded-2xl bg-neutral-800 max-w-3xl mx-auto">
+        <textarea rows="1" [(ngModel)]="textareaValue" class="
+            w-full p-2 pr-20 pb-5
+            resize-none
+            max-h-40
+            overflow-y-auto
+            bg-transparent
+            focus:outline-none
+          " placeholder="Type here..."></textarea>
+
+        <div class="flex justify-end gap-2 p-2 rounded-2xl">
+            <button pButton>
+                <i class="pi pi-send" pButtonIcon></i>
+                <span pButtonLabel>Submit</span>
+            </button>
+            <!-- <p-button class="p-1 rounded-full hover:bg-gray-200"/>
+            <p-button pButtonIcon="pi pi-paper-plane"/> -->
+        </div>
+    </div>
+</div>
