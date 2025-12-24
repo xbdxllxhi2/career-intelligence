@@ -38,7 +38,9 @@ dags/*.pyc
 *.xlsx
 *.xls
 *.csv
-*.json
+data-agregator/**/*.json
+internship-matcher/**/*.json
+
 data/
 output/
 results/
