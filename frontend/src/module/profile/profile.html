@@ -1,1 +1,212 @@
-<p>profile works!</p>
+<!-- <div class="h-screen w-screen bg-neutral-900 flex overflow-hidden">
+    <div class="flex-1 overflow-auto p-3 pb-36 justify-center">
+
+        @if (isConversationEmpty()) {
+        <div class="text-center text-4xl mt-12 bg-emerald-700">
+            Let's build your profile!
+        </div>
+
+        <div class="mt-12 max-w-3xl mx-auto">
+            <p class="mb-4">
+                Welcome to the Job Finder module! Here, you can input your skills,
+                experience, and preferences to find job opportunities that align
+                with your profile.
+            </p>
+            <p>
+                Simply type or paste your information into the textarea below, and
+                our AI-powered system will analyze your profile to suggest the best
+                job matches for you.
+            </p>
+        </div>
+        } @else {
+        <div class="max-w-3xl mx-auto mt-6">
+            @for (qa of getConversation(); track $index) {
+            <div class="mb-12">
+
+                <div class="flex justify-end mb-4">
+                    <div class="px-4 py-2 rounded-2xl border border-gray-300/40 bg-neutral-200/10">
+                        {{ qa.question }}
+                    </div>
+                </div>
+
+                <div class="mb-2 p-2 rounded-xl bg-emerald-700/10 border-b border-gray-600">
+                    <h4 class="text-md font-semibold">Summary</h4>
+                    <p>{{ qa.summary }}</p>
+                </div>
+
+                <div class="mb-2">
+                    <p-accordion>
+                        <p-accordion-panel value="1">
+                            <p-accordion-header>Reasoning</p-accordion-header>
+                            <p-accordion-content>
+                                <p>{{ qa.reasoning }}</p>
+                            </p-accordion-content>
+                        </p-accordion-panel>
+                    </p-accordion>
+                </div>
+
+                <div class="mt-6">
+                    <p>{{ qa.answer }}</p>
+                </div>
+
+            </div>
+            }
+        </div>
+        }
+
+    </div>
+
+    <div class="
+        fixed md:absolute
+        bottom-20 left-0 md:left-auto
+        w-full md:w-full
+        p-3
+        bg-neutral-900
+      ">
+
+        <div class="mb-4 max-w-3xl mx-auto">
+            <p-fileupload #fu mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" name="demo[]"
+                url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" maxFileSize="1000000"
+                (onUpload)="handleUpload($event)" />
+                <p-button label="Upload" (onClick)="fu.upload()" severity="secondary" />
+        </div>
+        <div class="rounded-2xl bg-neutral-800 max-w-3xl mx-auto">
+            <textarea rows="1" [(ngModel)]="textareaValue" class="
+            w-full p-2 pr-20 pb-5
+            resize-none
+            max-h-40
+            overflow-y-auto
+            bg-transparent
+            focus:outline-none
+          " placeholder="Type here..."></textarea>
+
+            <div class="flex justify-end gap-2 p-2 rounded-2xl">
+                <button pButton>
+                    <i class="pi pi-send" pButtonIcon></i>
+                    <span pButtonLabel>Submit</span>
+                </button>
+<p-button class="p-1 rounded-full hover:bg-gray-200"/>
+            <p-button pButtonIcon="pi pi-paper-plane"/> 
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="h-screen w-screen flex-col overflow-hidden justify-center items-center">
+    <div class="w-full p-3 flex justify-between items-center">
+        <div>
+            <p-inplace>
+                <ng-template #display>
+                    <span class="inline-flex items-center gap-2">
+                        <span class="pi pi-pen-to-square" style="vertical-align: middle"></span>
+                        <span class="ml-1">Title</span>
+                    </span>
+                </ng-template>
+                <ng-template #content>
+                    <p-inputgroup>
+                        <input pInputText placeholder="Vote" value="some text" />
+                        <p-inputgroup-addon>
+                            <p-button icon="pi pi-check" severity="secondary" />
+                        </p-inputgroup-addon>
+                    </p-inputgroup>
+                </ng-template>
+            </p-inplace>
+        </div>
+
+        <div class="flex gap-2">
+            <button pButton>
+                <i class="pi pi-download" pButtonIcon></i>
+                <span pButtonLabel>Export</span>
+            </button>
+
+            <button pButton>
+                <i class="pi pi-share-alt" pButtonIcon></i>
+                <span pButtonLabel>Share</span>
+            </button>
+        </div>
+    </div>
+    <div class="flex w-full h-full justify-center p-2 border border-gray-100/10">
+        <div class="w-1/2">
+            <div class="p-5 bg-emerald-700 rounded-xl">
+            </div>
+            <div class="p-1 justify-center items-center">
+                <p-skeleton class="mb-2" height="8rem" />
+                <p-skeleton width="25rem" height="10rem" class="mb-2" />
+                <p-skeleton width="5rem" class="mb-2" />
+                <p-skeleton height="2rem" class="mb-2" />
+                <p-skeleton width="10rem" height="4rem" />
+            </div>
+        </div>
+
+        <div class="w-1/2 gap-4 p-3">
+            <div class="mb-8 w-2/3 flex justify-between ">
+                <p-fileupload #fu mode="basic" chooseLabel="Upload your CV" chooseIcon="pi pi-upload" name="demo[]"
+                    url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" maxFileSize="1000000"
+                    (onUpload)="handleUpload($event)" />
+                <p-button label="Upload" (onClick)="fu.upload()" severity="secondary" />
+            </div>
+            <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-2 border border border-gray-100/10">
+                <p-inputgroup>
+                    <p-inputgroup-addon>
+                        <i class="pi pi-user"></i>
+                    </p-inputgroup-addon>
+                    <input pInputText class="w-full bg-neutral-200/10" [(ngModel)]="profileData.firstName"
+                        value="firstName" placeholder="First Name" />
+                </p-inputgroup>
+
+                <p-inputgroup>
+                    <p-inputgroup-addon>
+                        <i class="pi pi-user"></i>
+                    </p-inputgroup-addon>
+                    <input pInputText class="w-full bg-neutral-200/10" [(ngModel)]="profileData.lastName"
+                        value="lastName" placeholder="Last Name" />
+                </p-inputgroup>
+
+                <p-inputgroup>
+                    <p-inputgroup-addon>
+                        <i class="pi pi-phone"></i>
+                    </p-inputgroup-addon>
+                    <input pInputText class="w-full bg-neutral-200/10" [(ngModel)]="profileData.contact.phone"
+                        value="phone" placeholder="Phone" />
+                </p-inputgroup>
+
+                <p-inputgroup>
+                    <p-inputgroup-addon>
+                        <i class="pi pi-map"></i>
+                    </p-inputgroup-addon>
+                    <input pInputText class="w-full bg-neutral-200/10" [(ngModel)]="profileData.contact.phone"
+                        value="phone" placeholder="Phone" />
+                </p-inputgroup>
+            </div>
+            <div class="mt-5">
+                <p-accordion value="0" bg-emeralad>
+                    <p-accordion-panel value="0">
+                        <p-accordion-header>Links</p-accordion-header>
+                        <p-accordion-content>
+                            <div class="flex flex-col gap-2">
+                                <label for="username">LinkedIn</label>
+                                <input pInputText class="w-full bg-neutral-200/10 h-10" id="username"
+                                    aria-describedby="username-help" [(ngModel)]="profileData.firstName" />
+                                <small id="username-help">Enter your username to reset your password.</small>
+                            </div>
+                            <div class="flex flex-col gap-2 mt-6">
+                                <label for="username">Github</label>
+                                <input pInputText class="w-full bg-neutral-200/10 h-10" id="username"
+                                    aria-describedby="username-help" [(ngModel)]="profileData.firstName" />
+                                <small id="username-help">Enter your username to reset your password.</small>
+                            </div>
+                        </p-accordion-content>
+                    </p-accordion-panel>
+
+                    <p-accordion-panel value="1">
+                        <p-accordion-header>Experience</p-accordion-header>
+                        <p-accordion-content>
+                        </p-accordion-content>
+                    </p-accordion-panel>
+                </p-accordion>
+            </div>
+        </div>
+
+
+    </div>
+</div>

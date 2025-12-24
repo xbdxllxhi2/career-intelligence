@@ -7,6 +7,7 @@ import { QuestionAnswer } from '../../models/interface/question-answer';
 import { AiChat } from "../ai-chat/ai-chat";
 import { JobResults } from "../job-results/job-results";
 import { JobOffer } from '../../models/interface/job-offer';
+import { JobService } from '../../service/job-service';
 
 @Component({
   selector: 'app-job-finder',
@@ -20,6 +21,8 @@ export class JobFinder {
   showResults: boolean = true;
   resultsData: any[] = [];
 
+  constructor(private service: JobService) {
+  }
 
 
   isConversationEmpty(): boolean {
@@ -31,29 +34,17 @@ export class JobFinder {
   }
 
   getJobOffers(): JobOffer[] {
-   return [
-    { 
-    title: 'Backend Engineer', 
-    company: 'Proxym Group', 
-    location: 'Nouakchott', 
-    description: 'lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit', 
-    logo: 'https://via.placeholder.com/40?text=P' 
-  },
-  { 
-    title: 'Frontend Engineer', 
-    company: 'Acme Inc', 
-    location: 'Paris', 
-    description: 'Work on Angular projects', 
-    logo: 'https://via.placeholder.com/40?text=A' 
-  },
-  { 
-    title: 'Full Stack Developer', 
-    company: 'Tech Corp', 
-    location: 'Remote', 
-    description: 'Angular + Node.js', 
-    logo: 'https://via.placeholder.com/40?text=T' 
-  },
-];
+    let jobs: JobOffer[] = []
+    this.service.getJobsByAskingAI(this.textareaValue)
+      .subscribe({
+        next: (data) => {
+          jobs = data;
+        }, error: (err) => {
+          console.log(err)
+        }
+      })
+
+      return jobs;
 
   }
 
