@@ -1,3 +1,11 @@
+-- Create read-only AI user
+CREATE USER ai_readonly WITH PASSWORD 'strong_password';
+GRANT CONNECT ON DATABASE jobsdb TO ai_readonly;
+GRANT USAGE ON SCHEMA public TO ai_readonly;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO ai_readonly;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO ai_readonly;
+
+
 CREATE TABLE if NOT EXISTS organizations (
     organization_id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,

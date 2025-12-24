@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TextareaModule } from 'primeng/textarea';
 import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
@@ -15,15 +15,19 @@ import { JobService } from '../../service/job-service';
   templateUrl: './job-finder.html',
   styleUrl: './job-finder.scss',
 })
-export class JobFinder {
+export class JobFinder implements OnInit{
   textareaValue: string = '';
   conversation: QuestionAnswer[] = [];
   showResults: boolean = true;
-  resultsData: any[] = [];
+  resultsData: JobOffer[] = [];
+
 
   constructor(private service: JobService) {
   }
 
+  ngOnInit(){
+    this.getJobOffers()
+  }
 
   isConversationEmpty(): boolean {
     return false;
@@ -33,19 +37,15 @@ export class JobFinder {
     this.showResults = !this.showResults;
   }
 
-  getJobOffers(): JobOffer[] {
-    let jobs: JobOffer[] = []
+  getJobOffers() {
     this.service.getJobsByAskingAI(this.textareaValue)
       .subscribe({
         next: (data) => {
-          jobs = data;
+          this.resultsData = data;
         }, error: (err) => {
           console.log(err)
         }
       })
-
-      return jobs;
-
   }
 
   getConversation(): QuestionAnswer[] {

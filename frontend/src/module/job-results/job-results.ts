@@ -3,19 +3,27 @@ import { CardModule } from 'primeng/card';
 import { JobOffer } from '../../models/interface/job-offer';
 import { ButtonModule } from 'primeng/button';
 import { DrawerModule } from 'primeng/drawer';
+import { JobAddressPipe } from '../../pipes/job-address-pipe';
+import { JobService } from '../../service/job-service';
 
 @Component({
   selector: 'app-job-results',
-  imports: [CardModule, ButtonModule, DrawerModule],
+  imports: [CardModule, ButtonModule, DrawerModule, JobAddressPipe],
   templateUrl: './job-results.html',
   styleUrl: './job-results.scss',
 })
 export class JobResults {
-  @Input() showResults  :boolean = false;
-  @Input() resultsData  :JobOffer[] = [];
-   @Output() closeResults = new EventEmitter<void>();
+  @Input() showResults: boolean = false;
+  @Input() resultsData: JobOffer[] = [];
+  @Output() closeResults = new EventEmitter<void>();
+  
+constructor(private jobService:JobService){
 
-   visible : boolean = false;
+}
+
+  selectedJob: JobOffer | null = null;
+
+  visible: boolean = false;
 
 
   close() {
@@ -23,6 +31,16 @@ export class JobResults {
   }
 
   getSelectedJob(): JobOffer | null {
-    return this.resultsData.length > 0 ? this.resultsData[0] : null;
+    return this.selectedJob ? this.selectedJob : null;
+  }
+
+  showJobDetails(reference:string){
+      this.visible = true
+      this.jobService.getJobDetails(reference)
+      .subscribe({next:(data)=>{
+        this.selectedJob = data;
+      }, error:(err)=>{
+        console.log(err)
+      }})
   }
 }
