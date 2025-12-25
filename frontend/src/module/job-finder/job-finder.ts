@@ -8,10 +8,11 @@ import { JobResults } from "../job-results/job-results";
 import { JobOffer } from '../../models/interface/job-offer';
 import { JobService } from '../../service/job-service';
 import { JobsFilters } from '../jobs-filters/jobs-filters';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-job-finder',
-  imports: [TextareaModule, FormsModule, AccordionModule, SplitterModule, JobsFilters, JobResults],
+  imports: [TextareaModule, FormsModule, AccordionModule, SplitterModule, JobsFilters, JobResults, CommonModule],
   templateUrl: './job-finder.html',
   styleUrl: './job-finder.scss',
 })
@@ -20,7 +21,7 @@ export class JobFinder implements OnInit{
   conversation: QuestionAnswer[] = [];
   showResults: boolean = true;
   resultsData: JobOffer[] = [];
-
+  filterSideLayout: boolean = true
 
   constructor(private service: JobService) {
   }
@@ -33,8 +34,8 @@ export class JobFinder implements OnInit{
     return false;
   }
 
-  closeResult() {
-    this.showResults = !this.showResults;
+  onJobDetailsOpen(isOpen:boolean) {
+    this.filterSideLayout= !isOpen
   }
 
   getJobOffers() {

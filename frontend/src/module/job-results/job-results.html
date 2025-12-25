@@ -1,8 +1,9 @@
-<div class="w-full relative">
-  <div class="flex flex-col w-full h-full items-center justify-center">
+<div class="w-full flex px-5">
+  <div class="flex flex-col h-full items-center justify-center" [ngClass]="visible ? 'w-4/7' : 'w-full'">
     <div class="flex-1 w-full overflow-auto space-y-4 items-center justify-center">
       @for (job of resultsData; track $index) {
-      <p-card class="bg-neutral-800 border border-gray-700 p-2">
+      <p-card class="bg-neutral-800 border p-2" 
+       [ngClass]="job.reference === selectedJob?.reference ? 'border-emerald-200/50' : 'border-gray-800'">
         <ng-template pTemplate="header">
           <div class="flex items-start justify-between">
             <div class="flex items-center">
@@ -15,8 +16,7 @@
             </div>
             <div>
               <button pButton (click)="showJobDetails(job.reference)" icon="pi pi-arrows-v"
-                class="p-button-text p-button-plain">See
-                more</button>
+                class="p-button-text p-button-plain"></button>
             </div>
           </div>
           <div class="mt-1 p-1 flex items-center gap-1 text-center w-fit text-xs text-emerald-200 bg-emerald-900/50">
@@ -29,8 +29,8 @@
         </div>
 
         <div class="mt-2 flex justify-end gap-2">
-          <p-button icon="pi pi-bookmark" label="Save" class="p-button-plain"></p-button>
-          <p-button icon="pi pi-share-alt" label="Share" />
+          <p-button icon="pi pi-share-alt" label="Share" severity="secondary" outlined="true" />
+          <p-button icon="pi pi-bookmark" label="Save" outlined="true" class="p-button-plain"></p-button>
         </div>
       </p-card>
       }
@@ -39,20 +39,15 @@
   </div>
 
   @if (visible) {
-  <div class="absolute inset-0 bg-black/40 z-40" (click)="visible = false"></div>
-
-  }
-
-
-
-  @if (visible) {
   <div
-    class="absolute bottom-0 px-2 pt-2 z-50 overflow-auto mx-auto w-full h-9/10 items-center  rounded-t-2xl shadow-lg transform transition-transform"
+    class="bg-black/40 bottom-0 px-2 pt-2 z-50 overflow-auto mx-auto w-full h-full
+     items-center  rounded-t-2xl shadow-lg transform transition-transform"
+    [class.hidden]="!visible"
     [class.translate-y-full]="!visible">
     <div class="px-2 overflow-auto bg-neutral-900">
-      <button (click)="visible = false" class="p-3 rounded-b-2xl mb-2 text-sm text-gray-400">
+      <!-- <button (click)="visible = false" class="p-3 rounded-b-2xl mb-2 text-sm text-gray-400">
         <i class="pi pi-times"></i> Close
-      </button>
+      </button> -->
 
 
       @if (selectedJob) {
@@ -172,10 +167,10 @@
       </div>
 
       <div class="mt-4 flex gap-2">
-        <p-button icon="pi pi-share-alt" label="Share"></p-button>
-        <p-button icon="pi pi-bookmark" label="Save" class="p-button-plain"></p-button>
+        <p-button icon="pi pi-share-alt" label="Share" severity="secondary" outlined="true"></p-button>
+        <p-button icon="pi pi-bookmark" label="Save" severity="secondary" outlined="true" class="p-button-plain"></p-button>
         <a [href]="selectedJob.job_url" target="_blank">
-          <p-button icon="pi pi-external-link" label="Apply"></p-button>
+          <p-button icon="pi pi-external-link" outlined="true" label="Apply"></p-button>
         </a>
       </div>
       }

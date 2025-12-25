@@ -5,8 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { DrawerModule } from 'primeng/drawer';
 import { JobAddressPipe } from '../../pipes/job-address-pipe';
 import { JobService } from '../../service/job-service';
-import { RouterLink } from "@angular/router";
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { PanelModule } from 'primeng/panel';
 import { MeterGroupModule } from 'primeng/metergroup';
@@ -16,23 +15,27 @@ import { ChartModule } from 'primeng/chart';
 @Component({
   selector: 'app-job-results',
   imports: [CardModule, ButtonModule, DrawerModule, JobAddressPipe, TagModule, PanelModule, MeterGroupModule, DatePipe,
-    ChartModule
-  ],
+    ChartModule, CommonModule],
   templateUrl: './job-results.html',
   styleUrl: './job-results.scss',
 })
 export class JobResults {
-  @Input() showResults: boolean = false;
   @Input() resultsData: JobOffer[] = [];
   @Output() closeResults = new EventEmitter<void>();
+  @Output() isjobDetailsOpen = new EventEmitter<boolean>();
+
+  selectedJob: JobOffer | null = null;
+
+  visible: boolean = false;
 
   constructor(private jobService: JobService, private cd: ChangeDetectorRef) {
 
   }
 
-  selectedJob: JobOffer | null = null;
-
-  visible: boolean = false;
+  emitJobDetailEvent(isOpen:boolean): void {
+    this.visible=true
+    this.isjobDetailsOpen.emit(isOpen);
+  }
 
   value = [
     { label: 'Apps', color1: '#34d399', color2: '#fbbf24', value: 25, icon: 'pi pi-table' },
@@ -41,16 +44,12 @@ export class JobResults {
     { label: 'System', color1: '#c084fc', color2: '#c084fc', value: 10, icon: 'pi pi-cog' }
   ];
 
-  close() {
-    this.closeResults.emit();
-  }
-
   getSelectedJob(): JobOffer | null {
     return this.selectedJob ? this.selectedJob : null;
   }
 
   showJobDetails(reference: string) {
-    this.visible = true
+    this.emitJobDetailEvent(true)
     this.jobService.getJobDetails(reference)
       .subscribe({
         next: (data) => {

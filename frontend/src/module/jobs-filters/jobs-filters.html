@@ -1,11 +1,12 @@
-<div class="p-5 overflow-y-auto ">
-    
+<p-toast></p-toast>
+<div class="p-5 overflow-y-auto" [class.hidden]="!sideFilterActive">
     <div class="flex justify-between items-center p-3">
         <div class="text-xl"><span class="text-emerald-400">2,260</span> Jobs matched</div>
         <button pButton label="clear filters" variant="text" severity="secondary"></button>
     </div>
     <p-floatlabel variant="on">
-        <input class="p-4 w-full bg-neutral-800 rounded" pInputText id="on_label" [(ngModel)]="searchValue" autocomplete="off" />
+        <input class="p-4 w-full bg-neutral-800 rounded" pInputText id="on_label" [(ngModel)]="searchValue"
+            autocomplete="off" />
         <label for="on_label">What do you want to do ?</label>
     </p-floatlabel>
     <p-accordion value="0">
@@ -41,4 +42,15 @@
             </p-accordion-content>
         </p-accordion-panel>
     </p-accordion>
+</div>
+
+<div class="w-full px-5 py-2 bg-emerald-900/10"
+ [class.hidden]="sideFilterActive" >
+    <div class="flex items-center gap-2">
+        <p-floatlabel variant="on">
+            <input class="w-2xl" pInputText id="on_label" [(ngModel)]="searchValue" />
+            <label for="on_label">Search</label>
+        </p-floatlabel>
+        <p-button icon="pi pi-search"></p-button>
+    </div>
 </div>
