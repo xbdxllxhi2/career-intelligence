@@ -9,5 +9,6 @@ export interface JobOffer {
     description?: string;
     logo_url?: string;
     job_url?:string
+    created_at?:Date
 }
 

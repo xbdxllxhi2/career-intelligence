@@ -6,12 +6,12 @@ import { JobOffer } from '../models/interface/job-offer';
 })
 export class JobAddressPipe implements PipeTransform {
 
-  transform(job: JobOffer | null | undefined): unknown {
+  transform(job: JobOffer | null | undefined): string {
     if (!job) return '';
 
     const parts = [
       job.city,  
-      // job.region, 
+      job.region, 
       job.country   
     ].filter(Boolean); 
 

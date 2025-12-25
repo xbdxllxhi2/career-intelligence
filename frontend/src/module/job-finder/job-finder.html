@@ -1,13 +1,15 @@
 <div class="h-screen w-screen bg-neutral-900 flex overflow-hidden">
-  <app-ai-chat class="flex flex-col w-full md:w-1/2 relative" [conversation]="getConversation()"></app-ai-chat>
+  <!-- <app-ai-chat class="flex flex-col w-full md:w-1/2 relative" [conversation]="getConversation()"></app-ai-chat> -->
+  <app-jobs-filters class="w-1/3 h-full border-r border-gray-700"></app-jobs-filters>
   <app-job-results class="
-      hidden md:flex
-      md:w-1/2
+      overflow-hidden md:flex
+      w-2/3
       border-r border-gray-700
       overflow-auto
       p-4
-      bg-neutral-900"  [resultsData]="resultsData" [showResults]="showResults" (closeResults)="closeResult()"></app-job-results>
-</div>  
+      bg-neutral-900" [resultsData]="resultsData" [showResults]="showResults"
+    (closeResults)="closeResult()"></app-job-results>
+</div>
 
 <!-- MOBILE RESULTS OVERLAY -->
 <!-- <div

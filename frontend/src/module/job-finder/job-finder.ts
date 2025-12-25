@@ -4,14 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
 import { SplitterModule } from 'primeng/splitter';
 import { QuestionAnswer } from '../../models/interface/question-answer';
-import { AiChat } from "../ai-chat/ai-chat";
 import { JobResults } from "../job-results/job-results";
 import { JobOffer } from '../../models/interface/job-offer';
 import { JobService } from '../../service/job-service';
+import { JobsFilters } from '../jobs-filters/jobs-filters';
 
 @Component({
   selector: 'app-job-finder',
-  imports: [TextareaModule, FormsModule, AccordionModule, SplitterModule, AiChat, JobResults],
+  imports: [TextareaModule, FormsModule, AccordionModule, SplitterModule, JobsFilters, JobResults],
   templateUrl: './job-finder.html',
   styleUrl: './job-finder.scss',
 })

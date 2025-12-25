@@ -34,7 +34,7 @@ model = ChatHuggingFace(llm=llm)
 #         print(f"Failed to download the file. Status code: {response.status_code}")
 
 
-DATABASE_URL = ""
+DATABASE_URL = "postgresql://ai_readonly:strong_password@localhost:5433/jobsdb"
 
 
 db = SQLDatabase.from_uri(DATABASE_URL)

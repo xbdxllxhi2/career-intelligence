@@ -6,7 +6,7 @@
         <ng-template pTemplate="header">
           <div class="flex items-start justify-between">
             <div class="flex items-center">
-              <img [src]="job.logo_url" alt="{{job.company}} logo" class="w-13 h-13 rounded-full object-cover" />
+              <img [src]="job.logo_url" [alt]="job.company + 'logo'" class="w-13 h-13 object-cover" />
               <div class="flex-col ml-4">
                 <h4 class="font-semibold text-white">{{ job.title }}</h4>
                 <p class="text-sm text-gray-400">{{ job.company }}, <i class="pi pi-map-marker"></i>{{
@@ -50,27 +50,126 @@
     class="absolute bottom-0 px-2 pt-2 z-50 overflow-auto mx-auto w-full h-9/10 items-center  rounded-t-2xl shadow-lg transform transition-transform"
     [class.translate-y-full]="!visible">
     <div class="px-2 overflow-auto bg-neutral-900">
-      <button (click)="visible = false" class="right-0 fixed p-3 rounded-b-2xl mb-2 text-sm text-gray-400">
+      <button (click)="visible = false" class="p-3 rounded-b-2xl mb-2 text-sm text-gray-400">
         <i class="pi pi-times"></i> Close
       </button>
 
 
       @if (selectedJob) {
-      <div class="py-4 flex min-w-full items-center gap-4">
-        <img [src]="selectedJob.logo_url" alt="{{getSelectedJob()?.company}} logo"
-          class="w-16 h-16 rounded-full object-cover" />
-        <div>
-          <h3 class="font-semibold text-white">{{ selectedJob.title }}</h3>
-          <p class="text-sm text-gray-400">{{ selectedJob.company }} •
-            <i class="pi pi-map-marker"></i> {{ selectedJob | jobAddress}}
-          </p>
-          <div class="mt-1 flex items-center gap-1 text-xs text-emerald-200 bg-emerald-900/50 w-fit px-2 py-1 rounded">
-            <i class="pi pi-external-link"></i> <a [href]="selectedJob.job_url" target="_blank">Apply</a>
+      <div class="py-4 flex flex-col min-w-full gap-4">
+        <div class="flex gap-2 items-center">
+          <img [src]="selectedJob.logo_url" [alt]="selectedJob.company+'logo'" class="w-8 h-8 object-cover" />
+          <div>{{ selectedJob.company }}</div>
+        </div>
+        <div class="flex flex-col gap-3">
+          <div class="text-xl text-white">{{ selectedJob.title }}</div>
+          <div class="display flex text-sm text-gray-400 gap-1">
+            <div class="font-light">
+              <p-tag severity="secondary">
+                <i class="pi pi-map-marker"></i>
+                {{ selectedJob | jobAddress}}
+              </p-tag>
+            </div>
+            <div>
+              <p-tag>
+                <i class="pi pi-clock"></i>
+                {{selectedJob.created_at | date: 'longDate'}}
+              </p-tag>
+            </div>
+            <div>
+              <p-tag severity="warn">
+                <i class="pi pi-clock"></i>
+                {{selectedJob.created_at | date: 'longDate'}}
+              </p-tag>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <p-button label="Save" icon="pi pi-bookmark" variant="outlined" severity="secondary" [rounded]="true" />
+            <p-button variant="outlined" [rounded]="true">
+              <i class="pi pi-external-link"></i>
+              <a [href]="selectedJob.job_url" target="_blank">Apply</a>
+            </p-button>
+            <p-button label="Generate CV" icon="pi pi-download" variant="outlined" rounded="true" />
+          </div>
+          <div class="w-full">
+            <p-panel collapsed="true" [toggleable]="true" class="w-full">
+              <ng-template #header>
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-info-circle"></i>
+                  <span class="font-bold">{{selectedJob.company}}</span>
+                </div>
+              </ng-template>
+            </p-panel>
+          </div>
+          <div class="w-full flex gap-1 ">
+            <p-panel collapsed="true" [toggleable]="true" class="w-full">
+              <ng-template #header>
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-objects-column"></i>
+                  <span class="font-bold">Skills Match</span>
+                </div>
+              </ng-template>
+              <div>
+                <p class="m-0">
+                  <p-metergroup [value]="value" labelPosition="start">
+                    <ng-template #label>
+                      <div class="flex flex-wrap gap-4">
+                        @for (meterItem of value; track $index) {
+                        <ng-container>
+                          <p-card class="flex-1 border border-surface shadow-none" styleClass="">
+                            <div class="flex justify-between gap-8">
+                              <div class="flex flex-col gap-1">
+                                <span class="text-surface-500 dark:text-surface-400 text-sm">{{ meterItem.label
+                                  }}</span>
+                                <span class="font-bold text-lg">{{ meterItem.value }}%</span>
+                              </div>
+                              <span class="w-8 h-8 rounded-full inline-flex justify-center items-center text-center"
+                                [style]="{ 'background-color': meterItem.color1, color: '#ffffff' }">
+                                <i [class]="meterItem.icon"></i>
+                              </span>
+                            </div>
+                          </p-card>
+                        </ng-container>
+                        }
+                      </div>
+                    </ng-template>
+                    <ng-template #meter let-value let-class="class" let-width="size">
+                      <span [class]="class"
+                        [style]="{ background: 'linear-gradient(to right, ' + value.color1 + ', ' + value.color2 + ')', width: width }"></span>
+                    </ng-template>
+                    <ng-template #start let-totalPercent="totalPercent">
+                      <div class="flex justify-between mt-4 mb-2 relative">
+                        <span>Overall</span>
+                        <span [style]="{ width: totalPercent + '%' }" class="absolute text-right">{{ totalPercent
+                          }}%</span>
+                        <span class="font-medium">100%</span>
+                      </div>
+                    </ng-template>
+                    <ng-template #end>
+                      <div class="flex justify-between mt-4">
+                        <p-button label="Option 1" [outlined]="true" size="small" />
+                        <p-button label="Update profile" size="small" />
+                      </div>
+                    </ng-template>
+                  </p-metergroup>
+                </p>
+              </div>
+
+            </p-panel>
+            <!-- <p-panel header="Header" [toggleable]="true" class="w-1/2">
+              <p class="m-0 w-full">
+                <p-chart type="radar" [data]="data" [options]="options" class="w-full">
+                </p-chart>
+              </p>
+            </p-panel> -->
           </div>
         </div>
       </div>
 
-      <p class="text-gray-200 whitespace-pre-line">{{ selectedJob.description }}</p>
+      <div class="text-gray-200 whitespace-pre-line border-t border-gray-700 p-2">
+        <div class="text-2xl my-3">About the Job</div>
+        <p>{{ selectedJob.description }}</p>
+      </div>
 
       <div class="mt-4 flex gap-2">
         <p-button icon="pi pi-share-alt" label="Share"></p-button>
