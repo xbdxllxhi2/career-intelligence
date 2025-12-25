@@ -5,7 +5,7 @@ import { Sidebar } from "../shared/sidebar/sidebar";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ButtonModule, Sidebar, Sidebar],
+  imports: [RouterOutlet, ButtonModule, Sidebar],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

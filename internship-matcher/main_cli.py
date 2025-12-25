@@ -53,7 +53,10 @@ def generate_cv():
     if not job_data:
         typer.echo(f"No job found with reference: {user_input}")
         raise typer.Exit(code=1)
-    create_cv(job_data)
+    with open("./input/context/profile.json", "r", encoding="utf-8") as f:
+            profile = json.load(f)
+            
+    create_cv(job_data,profile=profile)
 
 @app.command()
 def get_jobs():

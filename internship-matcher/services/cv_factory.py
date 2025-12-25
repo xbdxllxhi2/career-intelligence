@@ -39,10 +39,11 @@ def _compile_pdf(tex_file_name:string):
 
 def generate_cv(job, context):
     logger.debug("complete cv context %s: ", json.dumps(context, indent=4))
-    output_file_name = job['checksum']
+    output_file_name = job.reference
 
     _render_template(output_file_name, context)
     _compile_pdf(output_file_name)
-    logger.info("CV generated to output/cv/%s.pdf",output_file_name)
+    print("CV generated to output/cv/%s.pdf",output_file_name)
+    return f"output/cv/{output_file_name}.pdf"
 
 

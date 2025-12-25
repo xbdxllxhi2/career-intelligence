@@ -2,8 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from jobs.api import router as jobs_router
+from resume.resume_api import router as resume_router
 
-app = FastAPI()
+app = FastAPI() 
 
 
 origins = ["http://localhost:4200"]
@@ -17,3 +18,4 @@ app.add_middleware(
 )
 
 app.include_router(jobs_router)
+app.include_router(resume_router)

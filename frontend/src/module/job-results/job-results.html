@@ -84,7 +84,7 @@
               <i class="pi pi-external-link"></i>
               <a [href]="selectedJob.job_url" target="_blank">Apply</a>
             </p-button>
-            <p-button label="Generate CV" icon="pi pi-download" variant="outlined" rounded="true" />
+            <p-button label="Generate CV" icon="pi pi-download" (onClick)="generateResume(selectedJob)" variant="outlined" rounded="true" />
           </div>
           <div class="w-full">
             <p-panel collapsed="true" [toggleable]="true" class="w-full">

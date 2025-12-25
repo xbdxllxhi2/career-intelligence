@@ -1,5 +1,5 @@
 from fastapi import FastAPI, APIRouter
-from services.job_service import getJobs, getJobByReference
+from .job_service import getJobs, getJobByReference
 from models.Job import JobDetail
 
 

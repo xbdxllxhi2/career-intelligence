@@ -1,3 +1,4 @@
+import models.Job
 import json
 from services.keyword_extractor import extract_keywords
 from services.matcher import match_profile_sections
@@ -6,16 +7,15 @@ from services.jobs_supplier import get_jobs
 from services.profile_supplier import get_profile
 from services.cv_factory import generate_cv, load_data
 import logging
+from models.Job import JobDetail
 
 logger = logging.getLogger(__name__)
 
-def create_cv(job, profile):
-    logger.info("Creating CV for job[title: %s, company: %s]", job["title"], job["organization"])
-
-    description = job.get("description_text", "")
-    keywords = extract_keywords(description)
+def generate_resume(job:JobDetail, profile):
+    logger.info("Generating Cv...")
+    keywords = extract_keywords(job.description)
     context = match_profile_sections(profile, keywords)
-    print(f"Context got after matching {context}")
+    logger.info("Context got after matching %s", context)
 
     cv_generated_text = generate_cv_section(context)    
     cv_generated_text = cv_generated_text.replace("%", r"\%")
@@ -25,4 +25,5 @@ def create_cv(job, profile):
     static_cv_parts = load_data()
     complete_cv = {**static_cv_parts, **generated_cv_parts}
 
-    generate_cv(job,complete_cv)
+    return generate_cv(job,complete_cv)
+    

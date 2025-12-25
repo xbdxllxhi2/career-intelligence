@@ -8,7 +8,7 @@ import { Observable, of } from 'rxjs';
   providedIn: 'root',
 })
 export class JobService {
-  private readonly apiUrl = environment.apiUrl;
+  private readonly apiUrl = environment.apiUrl+ "/jobs";
 
   dummy = [
     {

@@ -10,6 +10,7 @@ import { TagModule } from 'primeng/tag';
 import { PanelModule } from 'primeng/panel';
 import { MeterGroupModule } from 'primeng/metergroup';
 import { ChartModule } from 'primeng/chart';
+import { ResumeService } from '../../service/resume-service';
 
 
 @Component({
@@ -28,14 +29,15 @@ export class JobResults {
 
   visible: boolean = false;
 
-  constructor(private jobService: JobService, private cd: ChangeDetectorRef) {
+  constructor(private jobService: JobService, private resumeService: ResumeService) {
 
   }
 
-  emitJobDetailEvent(isOpen:boolean): void {
-    this.visible=true
+  emitJobDetailEvent(isOpen: boolean): void {
+    this.visible = true
     this.isjobDetailsOpen.emit(isOpen);
   }
+
 
   value = [
     { label: 'Apps', color1: '#34d399', color2: '#fbbf24', value: 25, icon: 'pi pi-table' },
@@ -58,6 +60,21 @@ export class JobResults {
           console.log(err)
         }
       })
+  }
+
+
+  generateResume(job: JobOffer) {
+    this.resumeService.generateResume(job.reference)
+      .subscribe((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = job.company+'_cv.pdf';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      });
   }
 
 

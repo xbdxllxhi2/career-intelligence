@@ -6,7 +6,7 @@ from prompts.prompts_bank import *
 
 logger = logging.getLogger(__name__)
 
-client = Groq(api_key="{api key here, groq is free btw you can use it}")
+client = Groq(api_key="")
 
 def generate_cv_section(context):
     prompt =  get_PROMPT_V1_fr(context)
