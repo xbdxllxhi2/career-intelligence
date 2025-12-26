@@ -9,6 +9,9 @@ import { JobOffer } from '../../models/interface/job-offer';
 import { JobService } from '../../service/job-service';
 import { JobsFilters } from '../jobs-filters/jobs-filters';
 import { CommonModule } from '@angular/common';
+import { PageRequest, toPageRequest } from '../../models/interface/page-request';
+import { Page } from '../../models/interface/page';
+import { PaginatorState } from 'primeng/paginator';
 
 @Component({
   selector: 'app-job-finder',
@@ -16,30 +19,37 @@ import { CommonModule } from '@angular/common';
   templateUrl: './job-finder.html',
   styleUrl: './job-finder.scss',
 })
-export class JobFinder implements OnInit{
+export class JobFinder implements OnInit {
   textareaValue: string = '';
   conversation: QuestionAnswer[] = [];
   showResults: boolean = true;
-  resultsData: JobOffer[] = [];
   filterSideLayout: boolean = true
+
+  resultsData: Page<JobOffer> = {
+    content: [],
+    page: 0,
+    size: 10,
+    totalElements: 0,
+    totalPages: 0
+  };
 
   constructor(private service: JobService) {
   }
 
-  ngOnInit(){
-    this.getJobOffers()
+  ngOnInit() {
+    this.getJobOffers({ page: 0, size: 10 })
   }
 
   isConversationEmpty(): boolean {
     return false;
   }
 
-  onJobDetailsOpen(isOpen:boolean) {
-    this.filterSideLayout= !isOpen
+  onJobDetailsOpen(isOpen: boolean) {
+    this.filterSideLayout = !isOpen
   }
 
-  getJobOffers() {
-    this.service.getJobsByAskingAI(this.textareaValue)
+  getJobOffers(request: PageRequest) {
+    this.service.getJobs(request)
       .subscribe({
         next: (data) => {
           this.resultsData = data;
@@ -47,6 +57,11 @@ export class JobFinder implements OnInit{
           console.log(err)
         }
       })
+  }
+
+  onPageChangeEvent(event:PaginatorState){
+    let pageRequest = toPageRequest(event.first,event.rows)
+    this.getJobOffers(pageRequest)
   }
 
   getConversation(): QuestionAnswer[] {

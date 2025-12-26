@@ -1,14 +1,14 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Query
 from .job_service import getJobs, getJobByReference
-from models.Job import JobDetail
-
+from models.Job import JobBasic, JobDetail
+from models.page import Page
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])
 
 
-@router.get("", summary="Get Jobs")
-def root():
-    return getJobs()
+@router.get("", summary="Get Jobs", response_model=Page[JobBasic])
+def root(page: int = Query(0, ge=0), size: int = Query(10, ge=1, le=100)):
+    return getJobs(page=page, size=size)
 
 @router.get("/{reference}", response_model=JobDetail)
 def get_job_by_hash(reference: str):

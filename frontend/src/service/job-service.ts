@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../environments/environments';
 import { JobOffer } from '../models/interface/job-offer';
 import { Observable, of } from 'rxjs';
+import { Page } from '../models/interface/page';
+import { PageRequest } from '../models/interface/page-request';
 
 @Injectable({
   providedIn: 'root',
@@ -38,8 +40,8 @@ export class JobService {
   }
 
 
-  getJobsByAskingAI(query: String): Observable<JobOffer[]> {
-    return this.client.get<JobOffer[]>(`${this.apiUrl}`);
+  getJobs(query: PageRequest): Observable<Page<JobOffer>> {
+    return this.client.get<Page<JobOffer>>(`${this.apiUrl}`, {params:{"page":query.page,"size":query.size}});
   }
 
   getJobDetails(reference:string): Observable<JobOffer>{

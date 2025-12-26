@@ -18,6 +18,8 @@ import { InputTextModule } from 'primeng/inputtext';
 })
 export class JobsFilters {
   @Input() sideFilterActive: boolean = false;
+  @Input({required:true}) totalSearchResults: number = 0;
+  
   items: MenuItem[] | undefined;
   searchValue: string = ''
 

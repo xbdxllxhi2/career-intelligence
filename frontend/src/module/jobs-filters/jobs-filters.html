@@ -1,7 +1,7 @@
 <p-toast></p-toast>
 <div class="p-5 overflow-y-auto" [class.hidden]="!sideFilterActive">
     <div class="flex justify-between items-center p-3">
-        <div class="text-xl"><span class="text-emerald-400">2,260</span> Jobs matched</div>
+        <div class="text-xl"><span class="text-emerald-400">{{totalSearchResults | number}}</span> Jobs matched</div>
         <button pButton label="clear filters" variant="text" severity="secondary"></button>
     </div>
     <p-floatlabel variant="on">

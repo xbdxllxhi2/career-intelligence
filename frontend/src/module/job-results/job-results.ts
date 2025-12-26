@@ -15,20 +15,24 @@ import { ResumeService } from '../../service/resume-service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ChipModule } from 'primeng/chip';
+import { PaginatorState } from 'primeng/types/paginator';
+import { PaginatorModule } from 'primeng/paginator';
+import { Page } from '../../models/interface/page';
 
 
 @Component({
   selector: 'app-job-results',
   imports: [CardModule, ButtonModule, DrawerModule, JobAddressPipe, TagModule, PanelModule, MeterGroupModule, DatePipe,
-    ChartModule, CommonModule, ProgressSpinnerModule, ToastModule,ChipModule],
+    ChartModule, CommonModule, ProgressSpinnerModule, ToastModule, ChipModule,PaginatorModule],
   providers: [MessageService],
   templateUrl: './job-results.html',
   styleUrl: './job-results.scss',
 })
 export class JobResults {
-  @Input() resultsData: JobOffer[] = [];
+  @Input({required:true}) resultsData!: Page<JobOffer>;
   @Output() closeResults = new EventEmitter<void>();
   @Output() isjobDetailsOpen = new EventEmitter<boolean>();
+  @Output() onPageChangeEvent = new EventEmitter<PaginatorState>();
 
   generatingCv: boolean = false;
   selectedJob: JobOffer | null = null;
@@ -36,8 +40,8 @@ export class JobResults {
   visible: boolean = false;
 
   constructor(private jobService: JobService, private resumeService: ResumeService, private messageService: MessageService) {
-
   }
+
 
   emitJobDetailEvent(isOpen: boolean): void {
     this.visible = true
@@ -91,8 +95,13 @@ export class JobResults {
   }
 
 
-  // Radar
+  //Paginator
+  onPageChange(event: PaginatorState) {
+    this.onPageChangeEvent.emit(event)
+  }
 
+
+  // Radar
   title = 'GFG';
   data = {
     labels: ['GeeksforGeeks', 'Tutorial Point', 'W3 Schools',

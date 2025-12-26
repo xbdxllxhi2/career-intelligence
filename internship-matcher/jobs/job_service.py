@@ -1,11 +1,10 @@
 from typing import List
-from unittest import result
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
 from pydantic import HttpUrl
 
 from models.Job import JobBasic, JobDetail
-
+from models.page import Page
 
 DATABASE_URL = "postgresql://ai_readonly:strong_password@localhost:5433/jobsdb"
 
@@ -62,7 +61,10 @@ def getJobByReference(reference: str) -> JobDetail | None:
     return None
 
 
-def getJobs(limit: int = 50, offset: int = 0) -> List[JobBasic]:
+def getJobs(page:int, size:int) -> Page[JobBasic]:
+    limit: int = size
+    offset: int = page * size
+    
     sql = text(
         """
         SELECT
@@ -92,13 +94,25 @@ def getJobs(limit: int = 50, offset: int = 0) -> List[JobBasic]:
             ON j.location_id = l.location_id
         LEFT JOIN sources s
             ON j.source_id = s.source_id
-        ORDER BY j.posted_at DESC
+        ORDER BY j.expires_at ASC
         LIMIT :limit OFFSET :offset;
         """
     )
 
+    count_query = text("SELECT COUNT(*) FROM jobs;")
+    
     with engine.connect() as conn:
         result = conn.execute(sql, {"limit": limit, "offset": offset})
         rows = [dict(row._mapping) for row in result]
+        
+        fetchable_rows_count = conn.execute(count_query).scalar_one()
 
-    return [JobBasic.model_validate(row) for row in rows]
+    items = [JobBasic.model_validate(row) for row in rows]
+
+    return Page[JobBasic](
+        content=items,
+        page=page,
+        size=size,
+        totalElements=fetchable_rows_count,
+        totalPages=(fetchable_rows_count + size - 1) // size
+    )
