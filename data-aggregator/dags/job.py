@@ -40,18 +40,22 @@ OR "Stage SQL"
 OR "Stage Python Data"
 OR "Stage Data Analytics"
 OR "Stage Data Visualization"
+OR "Stage Ingénierie logicielle"
+OR "Full Stack Developer"
+OR "Java"
+OR "DevOps"
 '''
 # scrape >> transform >> export
 with DAG(
-    "job_pipelineV3",
-    start_date=datetime(2025,11,22),
+    "job_pipelineV4",
+    start_date=datetime(2025,12,26),
     schedule="@daily"
 ):
-    # scrape = PythonOperator(
-    #     task_id="scrape",
-    #     python_callable=scrape_and_save_jobs,
-    #     op_kwargs={"title_filter": TITLE_FITER}
-    # )
+    scrape = PythonOperator(
+        task_id="scrape",
+        python_callable=scrape_and_save_jobs,
+        op_kwargs={"title_filter": TITLE_FITER}
+    )
 
     transform = PythonOperator(
         task_id="transform",
@@ -64,4 +68,4 @@ with DAG(
         op_kwargs={"jobs_file_path": "/opt/airflow/output/jobs/jobs.json"}
     )
 
-    transform >> export
+    scrape >> transform >> export
