@@ -1,6 +1,6 @@
 from typing import List, Optional, Dict, Any
 from datetime import datetime
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, field_validator
 
 class Source(BaseModel):
     name: str
@@ -18,7 +18,7 @@ class Job(BaseModel):
     employment_type: List[str] = Field(default_factory=list)
     location_type: Optional[str] 
     url: Optional[HttpUrl]
-
+    source_apply_url: Optional[HttpUrl]
     domain: Optional[str]
     description: str
     posted_at: Optional[datetime]
@@ -47,6 +47,12 @@ class Organization(BaseModel):
 
     founded_date: Optional[datetime]
     specialities: List[str] = Field(default_factory=list)
+    
+    @field_validator("website", mode="before")
+    def normalize_website(cls, v):
+        if v and not v.startswith(("http://", "https://")):
+            return f"https://{v}"  # prepend default scheme
+        return v
 
 
 class Location(BaseModel):

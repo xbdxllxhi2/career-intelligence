@@ -2,14 +2,15 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
 from mappers.map_rllinkedin_jobs import map_linkedin_job
 from repositories.read_jobs_from_file import get_jobs_dict
 import json
+from models.local_schemaV1 import Job, JobSchema, Location, Organization, Source
+
 
 def export_to_postgres(jobs_file_path="/opt/airflow/output/jobs/jobs.json"):
-    jobs = (map_linkedin_job(j) for j in get_jobs_dict(file=jobs_file_path).values())
-
+    jobs:list[JobSchema]= [map_linkedin_job(j) for j in get_jobs_dict(file=jobs_file_path).values()]
+    hook = PostgresHook(postgres_conn_id="my_postgres")
+    
     for j in jobs:
         org_data, source_data, location_data, job_data = j.organization, j.source, j.location, j.job
-
-        hook = PostgresHook(postgres_conn_id="my_postgres")
 
         # 1. Insert or get org_id
         org_id = hook.get_first(
@@ -19,18 +20,56 @@ def export_to_postgres(jobs_file_path="/opt/airflow/output/jobs/jobs.json"):
         if not org_id:
             org_id = hook.get_first(
                 """
-                INSERT INTO organizations (name, website, logo_url, industry, size_bucket, employees)
-                VALUES (%s, %s, %s, %s, %s, %s) RETURNING organization_id
+                INSERT INTO organizations (name, logo_url, industry, slogan,
+                size_bucket, website, description, org_type, employees, followers,
+                founded_date)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING organization_id
                 """,
                 parameters=(
                     org_data.name,
-                    str(org_data.website),
                     str(org_data.logo),
                     org_data.industry,
+                    org_data.slogan,
                     org_data.size_bucket,
-                    org_data.employees
+                    str(org_data.website),
+                    org_data.description,
+                    org_data.type,
+                    org_data.employees,
+                    org_data.followers,
+                    org_data.founded_date
                 )
             )
+            
+            # Inserting specialities
+            for spec_name in org_data.specialities:
+                hook.run(
+                    """
+                    INSERT INTO specialities (name)
+                    VALUES (%s)
+                    ON CONFLICT (name) DO NOTHING
+                    """,
+                    parameters=(spec_name,)
+                )
+                
+            speciality_ids = hook.get_pandas_df(
+                """
+                SELECT speciality_id, name
+                FROM specialities
+                WHERE name = ANY(%s)
+                """,
+                parameters=(org_data.specialities,)
+            )['speciality_id'].tolist()
+            
+            for spec_id in speciality_ids:
+                hook.run(
+                    """
+                    INSERT INTO organization_specialities (organization_id, speciality_id)
+                    VALUES (%s, %s)
+                    ON CONFLICT (organization_id, speciality_id) DO NOTHING
+                    """,
+                    parameters=(org_id, spec_id)
+                )
+
 
         # 2. Insert or get source_id
         source_id = hook.get_first(
@@ -67,16 +106,43 @@ def export_to_postgres(jobs_file_path="/opt/airflow/output/jobs/jobs.json"):
             parameters=(job_data.job_checksum,)
         )
         if not existing_job:
-            hook.run(
+            job_id = hook.get_first(
                 """
                 INSERT INTO jobs
-                (title, description, job_url, external_id, seniority, employment_type, remote, posted_at, expires_at, source_id, organization_id, location_id, has_easy_apply, job_checksum, raw)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                (title, description, job_url, source_apply_url, external_id, seniority, remote, posted_at, expires_at, source_id, organization_id, location_id, has_easy_apply, job_checksum, raw)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)  RETURNING job_id
                 """,
                 parameters=(
-                    job_data.title, job_data.description, str(job_data.url), j.source.external_id,
-                    job_data.seniority, job_data.employment_type, job_data.is_remote,
+                    job_data.title, job_data.description, str(job_data.url), str(job_data.source_apply_url), j.source.external_id,
+                    job_data.seniority, job_data.is_remote,
                     job_data.posted_at, job_data.expires_at,
                     source_id, org_id, location_id, job_data.has_easy_apply, job_data.job_checksum, json.dumps(j.raw)
                 )
             )
+            
+            #Inserting emp type
+            emp_type_ids = []
+            for emp_type in job_data.employment_type or []:
+                existing = hook.get_first(
+                    "SELECT id FROM employment_types WHERE name=%s",
+                    parameters=(emp_type,)
+                )
+                if existing:
+                    emp_type_ids.append(existing)
+                else:
+                    new_id = hook.get_first(
+                        "INSERT INTO employment_types(name) VALUES(%s) RETURNING id",
+                        parameters=(emp_type,)
+                    )
+                    emp_type_ids.append(new_id)
+
+            # 4. Link job to employment types
+            for emp_id in emp_type_ids:
+                hook.run(
+                    """
+                    INSERT INTO job_employment_types(job_id, employment_type_id)
+                    VALUES(%s,%s)
+                    ON CONFLICT DO NOTHING
+                    """,
+                    parameters=(job_id, emp_id)
+                )
