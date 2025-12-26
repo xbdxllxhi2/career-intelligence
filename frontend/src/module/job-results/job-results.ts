@@ -14,12 +14,13 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ResumeService } from '../../service/resume-service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { ChipModule } from 'primeng/chip';
 
 
 @Component({
   selector: 'app-job-results',
   imports: [CardModule, ButtonModule, DrawerModule, JobAddressPipe, TagModule, PanelModule, MeterGroupModule, DatePipe,
-    ChartModule, CommonModule, ProgressSpinnerModule, ToastModule],
+    ChartModule, CommonModule, ProgressSpinnerModule, ToastModule,ChipModule],
   providers: [MessageService],
   templateUrl: './job-results.html',
   styleUrl: './job-results.scss',

@@ -21,9 +21,20 @@ def getJobByReference(reference: str) -> JobDetail | None:
         SELECT
             j.job_checksum AS reference,
             j.title,
-            job_url,
-            o.name        AS company,
+            J.job_url,
             j.description,
+            j.seniority,
+            j.source_apply_url,
+            o.name        AS company,
+            o.description AS company_description,
+            o.org_type    AS company_type,
+            o.website     AS company_website,
+            o.founded_date AS company_founded_date,
+            o.employees  AS company_employees_count,
+            o.followers  AS company_followers_count,
+            s.name AS source,
+            s.domain AS source_domain,
+            j.has_easy_apply AS has_direct_apply,
             l.city,
             l.region,
             l.country,
@@ -35,6 +46,8 @@ def getJobByReference(reference: str) -> JobDetail | None:
             ON j.organization_id = o.organization_id
         LEFT JOIN locations l
             ON j.location_id = l.location_id
+        LEFT JOIN sources s
+            ON j.source_id = s.source_id
         WHERE j.job_checksum = :reference
         LIMIT 1;
         """
@@ -52,22 +65,33 @@ def getJobByReference(reference: str) -> JobDetail | None:
 def getJobs(limit: int = 50, offset: int = 0) -> List[JobBasic]:
     sql = text(
         """
-         SELECT
-            j.job_checksum as reference,
+        SELECT
+            j.job_checksum AS reference,
             j.title,
+            J.job_url,
+            j.seniority,
+            j.source_apply_url,
             o.name        AS company,
             o.description AS company_description,
-            l.city        AS city,
-            l.region      AS region,
-            l.country     AS country,
+            o.org_type    AS company_type,
+            o.website     AS company_website,
+            o.founded_date AS company_founded_date,
+            s.name AS source,
+            s.domain AS source_domain,
+            j.has_easy_apply AS has_direct_apply,
+            l.city,
+            l.region,
+            l.country,
             o.logo_url,
-            j.posted_at AS created_at,
+            j.posted_at as created_at,
             j.expires_at
         FROM jobs j
         LEFT JOIN organizations o
             ON j.organization_id = o.organization_id
         LEFT JOIN locations l
             ON j.location_id = l.location_id
+        LEFT JOIN sources s
+            ON j.source_id = s.source_id
         ORDER BY j.posted_at DESC
         LIMIT :limit OFFSET :offset;
         """

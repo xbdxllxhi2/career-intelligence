@@ -20,16 +20,24 @@
                 class="p-button-text p-button-plain"></button>
             </div>
           </div>
-          <div class="mt-1 p-1 flex items-center gap-1 text-center w-fit text-xs text-emerald-200 bg-emerald-900/50">
-            <i class="pi pi-briefcase"></i> Freelance
+          <div class="flex gap-2">
+            @if (job.has_direct_apply) {
+            <div class="mt-1 p-1 flex items-center gap-1 text-center w-fit text-xs text-emerald-200 bg-neutral-900/50">
+              <i class="pi pi-linkedin"></i>Easy apply
+            </div>
+            }
+            <div class="mt-1 p-1 flex items-center gap-1 text-center w-fit text-xs text-emerald-200 bg-neutral-900/50">
+              <i class="pi pi-briefcase"></i>{{job.seniority}}
+            </div>
           </div>
         </ng-template>
 
-        <div class="">
-          <p>{{ job.org_description }}</p>
+        <div class="h-xl">
+          <p>
+          </p>
         </div>
 
-        <div class="mt-2 flex justify-end gap-2">
+        <div class="mt-2 flex items-center justify-end gap-2">
           <p-button icon="pi pi-share-alt" label="Share" severity="secondary" outlined="true" />
           <p-button icon="pi pi-bookmark" label="Save" outlined="true" class="p-button-plain"></p-button>
         </div>
@@ -73,16 +81,24 @@
             <div>
               <p-tag severity="warn">
                 <i class="pi pi-clock"></i>
-                {{selectedJob.created_at | date: 'longDate'}}
+                {{selectedJob.expires_at | date: 'longDate'}}
               </p-tag>
             </div>
           </div>
           <div class="flex gap-2">
             <p-button label="Save" icon="pi pi-bookmark" variant="outlined" severity="secondary" [rounded]="true" />
+            @if(selectedJob.source_apply_url){
+            <p-button variant="outlined" [rounded]="true">
+              <i class="pi pi-linkedin"></i>
+              <a [href]="selectedJob.source_apply_url" target="_blank">LinkedIn</a>
+            </p-button>
+            }
+            @if (selectedJob.job_url) {
             <p-button variant="outlined" [rounded]="true">
               <i class="pi pi-external-link"></i>
               <a [href]="selectedJob.job_url" target="_blank">Apply</a>
             </p-button>
+            }
             <p-button label="Generate CV" (onClick)="generateResume(selectedJob)" variant="outlined" rounded="true">
               <span>
                 @if (generatingCv) {
@@ -91,10 +107,24 @@
                 }@else {
                 <i class="pi pi-download"></i>
                 }
-
-
               </span>
             </p-button>
+          </div>
+          <div class="flex gap-2">
+            @if(selectedJob.company_employees_count){
+            <p-tag severity="secondary">
+              <i class="pi pi-users"></i>
+              {{selectedJob.company_employees_count | number }}
+            </p-tag>
+            }
+
+            @if (selectedJob.company_followers_count) {
+            <p-tag severity="secondary">
+              <i class="pi pi-thumbs-up"></i>
+              {{selectedJob.company_followers_count | number }}
+            </p-tag>
+
+            }
           </div>
           <div class="w-full">
             <p-panel collapsed="true" [toggleable]="true" class="w-full">
@@ -102,8 +132,13 @@
                 <div class="flex items-center gap-2">
                   <i class="pi pi-info-circle"></i>
                   <span class="font-bold">{{selectedJob.company}}</span>
+                  <!-- <p-chip [label]="'something interesting'"/>
+                  <p-chip label="Action"/> -->
                 </div>
               </ng-template>
+              <p class="m-0 text-gray-100 text-sm whitespace-pre-line overflow-auto">
+                {{selectedJob.company_description || 'NO DESCRIPTION' }}
+              </p>
             </p-panel>
           </div>
           <div class="w-full flex gap-1 ">
