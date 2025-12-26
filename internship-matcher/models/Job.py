@@ -8,14 +8,15 @@ class JobBasic(BaseModel):
     title: str
     # org_description: Optional[str]
     company: Optional[str] = None
+    company_description:Optional[str]=None
     city: Optional[str] = None
     region: Optional[str] = None
     country: Optional[str] = None
     logo_url: Optional[str] = None
     created_at: Optional[datetime] = None
+    expires_at: Optional[datetime] = None
 
 
 class JobDetail(JobBasic):
     job_url: Optional[str] = None
-    expires_at: Optional[str] = None
     description: Optional[str] = None

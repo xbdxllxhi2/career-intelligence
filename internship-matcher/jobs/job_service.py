@@ -28,7 +28,7 @@ def getJobByReference(reference: str) -> JobDetail | None:
             l.region,
             l.country,
             o.logo_url,
-            j.created_at,
+            j.posted_at as created_at,
             j.expires_at
         FROM jobs j
         LEFT JOIN organizations o
@@ -56,11 +56,13 @@ def getJobs(limit: int = 50, offset: int = 0) -> List[JobBasic]:
             j.job_checksum as reference,
             j.title,
             o.name        AS company,
+            o.description AS company_description,
             l.city        AS city,
             l.region      AS region,
             l.country     AS country,
             o.logo_url,
-            j.created_at
+            j.posted_at AS created_at,
+            j.expires_at
         FROM jobs j
         LEFT JOIN organizations o
             ON j.organization_id = o.organization_id

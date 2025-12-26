@@ -45,7 +45,7 @@ def _map_job_details(raw: Dict[str, Any]) -> Job:
         employment_type=raw.get("employment_type") or [],
         location_type=raw.get("location_type"),
         domain=raw.get("domain"),
-        posted_at=parse_datetime(raw.get("posted_at")),
+        posted_at=parse_datetime(raw.get("date_posted")),
         expires_at=parse_datetime(raw.get("date_validthrough")),
         remote_type=raw.get("remote_type"),
         is_remote=raw.get("is_remote"),
