@@ -10,13 +10,17 @@ import { TagModule } from 'primeng/tag';
 import { PanelModule } from 'primeng/panel';
 import { MeterGroupModule } from 'primeng/metergroup';
 import { ChartModule } from 'primeng/chart';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ResumeService } from '../../service/resume-service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 
 @Component({
   selector: 'app-job-results',
   imports: [CardModule, ButtonModule, DrawerModule, JobAddressPipe, TagModule, PanelModule, MeterGroupModule, DatePipe,
-    ChartModule, CommonModule],
+    ChartModule, CommonModule, ProgressSpinnerModule, ToastModule],
+  providers: [MessageService],
   templateUrl: './job-results.html',
   styleUrl: './job-results.scss',
 })
@@ -25,11 +29,12 @@ export class JobResults {
   @Output() closeResults = new EventEmitter<void>();
   @Output() isjobDetailsOpen = new EventEmitter<boolean>();
 
+  generatingCv: boolean = false;
   selectedJob: JobOffer | null = null;
 
   visible: boolean = false;
 
-  constructor(private jobService: JobService, private resumeService: ResumeService) {
+  constructor(private jobService: JobService, private resumeService: ResumeService, private messageService: MessageService) {
 
   }
 
@@ -64,16 +69,23 @@ export class JobResults {
 
 
   generateResume(job: JobOffer) {
+    this.generatingCv = true
     this.resumeService.generateResume(job.reference)
-      .subscribe((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = job.company+'_cv.pdf';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
+      .subscribe({
+        next: (blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = job.company + '_cv.pdf';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(url);
+        }, error: (err) => {
+          this.messageService.add({ summary: "Error", detail: "Try again later...", severity: "error" });
+          this.generatingCv = false
+        },
+        complete: () => { this.generatingCv = false }
       });
   }
 
