@@ -3,10 +3,23 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from jobs.api import router as jobs_router
 from resume.resume_api import router as resume_router
+import logging
+
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+    handlers=[
+        logging.FileHandler("app.log", mode="w", encoding="utf-8"),
+        logging.StreamHandler()
+    ]
+)
+logging.getLogger("watchfiles.main").setLevel(logging.WARNING)
+logger = logging.getLogger("myapp")
+
 
 app = FastAPI() 
-
-
 origins = ["http://localhost:4200"]
 
 app.add_middleware(
