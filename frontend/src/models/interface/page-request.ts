@@ -15,3 +15,11 @@ export function toPageRequest(
 
     return { page, size, sort };
 }
+
+
+export function toHttpParams(request: PageRequest): Record<string, string | number | boolean> {
+   return {
+        page: request.page.toString(),
+        size: request.size.toString(),
+    }; 
+}

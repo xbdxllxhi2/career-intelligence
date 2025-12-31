@@ -40,8 +40,8 @@
       }
       <div id="paginator">
         <div class="card flex justify-center">
-          <p-paginator (onPageChange)="onPageChange($event)" [first]="resultsData.page * resultsData.size" [rows]="resultsData.size" [totalRecords]="resultsData.totalElements"
-            [rowsPerPageOptions]="[10, 20, 30]" />
+          <p-paginator (onPageChange)="onPageChange($event)" [first]="resultsData.page * resultsData.size"
+            [rows]="resultsData.size" [totalRecords]="resultsData.totalElements" [rowsPerPageOptions]="[10, 20, 30]" />
         </div>
       </div>
     </div>
@@ -56,6 +56,7 @@
         <i class="pi pi-times"></i> Close
       </button> -->
 
+      <app-application-info-modal (modalCloseEvent)="onModalClose()" [applicationModalVisible]="showApplicationModalFlag"></app-application-info-modal>
 
       @if (selectedJob) {
       <div class="py-4 flex flex-col min-w-full gap-4">
@@ -90,13 +91,13 @@
             @if(selectedJob.source_apply_url){
             <p-button variant="outlined" [rounded]="true">
               <i class="pi pi-linkedin"></i>
-              <a [href]="selectedJob.source_apply_url" target="_blank">LinkedIn</a>
+              <a [href]="selectedJob.source_apply_url" (click)="showApplicationModal()" target="_blank">LinkedIn</a>
             </p-button>
             }
             @if (selectedJob.job_url) {
             <p-button variant="outlined" [rounded]="true">
               <i class="pi pi-external-link"></i>
-              <a [href]="selectedJob.job_url" target="_blank">Apply</a>
+              <a [href]="selectedJob.job_url" (click)="showApplicationModal()" target="_blank">Apply</a>
             </p-button>
             }
             <p-button label="Generate CV" (onClick)="generateResume(selectedJob)" variant="outlined" rounded="true">

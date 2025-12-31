@@ -5,7 +5,17 @@ GRANT USAGE ON SCHEMA public TO ai_readonly;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO ai_readonly;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO ai_readonly;
 
+-- create schema and user for application layer extension
+CREATE USER app_admin WITH PASSWORD 'very_strong_password';
+GRANT CONNECT ON DATABASE jobsdb TO app_admin;
+CREATE SCHEMA IF NOT EXISTS app AUTHORIZATION app_admin;
+--- Grant read access to app_admin on public schema
+GRANT USAGE ON SCHEMA public TO app_admin;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO app_admin;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO app_admin;
 
+
+-- Create tables for job data aggregation
 CREATE TABLE if NOT EXISTS organizations (
     organization_id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,

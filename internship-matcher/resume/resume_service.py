@@ -1,4 +1,4 @@
-import models.Job
+import jobs.Job
 import json
 from services.keyword_extractor import extract_keywords
 from services.matcher import match_profile_sections
@@ -7,7 +7,7 @@ from services.jobs_supplier import get_jobs
 from services.profile_supplier import get_profile
 from services.cv_factory import generate_cv, load_data
 import logging
-from models.Job import JobDetail
+from jobs.Job import JobDetail
 from models.llm_resume_generation_response import (
     ExperienceEntry,
     ProjectEntry,

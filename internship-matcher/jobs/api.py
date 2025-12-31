@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter, Query
 from .job_service import getJobs, getJobByReference
-from models.Job import JobBasic, JobDetail
+from .Job import JobBasic, JobDetail
 from models.page import Page
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])

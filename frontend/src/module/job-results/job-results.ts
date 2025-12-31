@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { JobOffer } from '../../models/interface/job-offer';
 import { ButtonModule } from 'primeng/button';
@@ -18,12 +18,13 @@ import { ChipModule } from 'primeng/chip';
 import { PaginatorState } from 'primeng/types/paginator';
 import { PaginatorModule } from 'primeng/paginator';
 import { Page } from '../../models/interface/page';
+import { ApplicationInfoModal } from '../application-info-modal/application-info-modal';
 
 
 @Component({
   selector: 'app-job-results',
   imports: [CardModule, ButtonModule, DrawerModule, JobAddressPipe, TagModule, PanelModule, MeterGroupModule, DatePipe,
-    ChartModule, CommonModule, ProgressSpinnerModule, ToastModule, ChipModule,PaginatorModule],
+    ChartModule, CommonModule ,ProgressSpinnerModule, ToastModule, ChipModule,PaginatorModule, ApplicationInfoModal],
   providers: [MessageService],
   templateUrl: './job-results.html',
   styleUrl: './job-results.scss',
@@ -39,13 +40,27 @@ export class JobResults {
 
   visible: boolean = false;
 
+  showApplicationModalFlag!: boolean;
+
   constructor(private jobService: JobService, private resumeService: ResumeService, private messageService: MessageService) {
+  }
+
+  ngOnInit() {
+    this.showApplicationModalFlag = false;
   }
 
 
   emitJobDetailEvent(isOpen: boolean): void {
     this.visible = true
     this.isjobDetailsOpen.emit(isOpen);
+  }
+
+  showApplicationModal() {
+    this.showApplicationModalFlag = true;
+  }
+
+  onModalClose() {
+    this.showApplicationModalFlag = false;
   }
 
 
@@ -56,6 +71,7 @@ export class JobResults {
     { label: 'System', color1: '#c084fc', color2: '#c084fc', value: 10, icon: 'pi pi-cog' }
   ];
 
+  
   getSelectedJob(): JobOffer | null {
     return this.selectedJob ? this.selectedJob : null;
   }

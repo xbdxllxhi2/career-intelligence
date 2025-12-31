@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
 from pydantic import HttpUrl
 
-from models.Job import JobBasic, JobDetail
+from .Job import JobBasic, JobDetail
 from models.page import Page
 
 DATABASE_URL = "postgresql://ai_readonly:strong_password@localhost:5433/jobsdb"
