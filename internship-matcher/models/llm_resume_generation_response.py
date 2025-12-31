@@ -24,6 +24,7 @@ class ProjectEntry(BaseModel):
 
 
 class ResumeGenerationResponse(BaseModel):
+    objective: str
     skills: Skills
     experience: list[ExperienceEntry]
     projects: list[ProjectEntry]

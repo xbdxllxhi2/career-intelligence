@@ -39,6 +39,7 @@ def escape_latex(text: str) -> str:
 
 def latex_safe_resume(resume: ResumeGenerationResponse) -> ResumeGenerationResponse:
     return ResumeGenerationResponse(
+        objective=escape_latex(resume.objective),
         skills=Skills(
             technical=[escape_latex(s) for s in resume.skills.technical],
             soft=[escape_latex(s) for s in resume.skills.soft],

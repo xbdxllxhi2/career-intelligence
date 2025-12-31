@@ -517,8 +517,11 @@ Règles de génération (STRICTES) :
 
 Sortie :
 - Générer UNIQUEMENT un objet JSON sans aucun texte hors JSON
-- Clés attendues exactement : "skills", "experience", "projects" ; aucune autre clé
+- Clés attendues exactement : "objective", "skills", "experience", "projects" ; aucune autre clé
 - Tableaux possibles vides en l'absence d'information
+
+"objective":
+- Une phrase concise (20 à 30 mots) résumant le profil du candidat, son niveau d'expérience, ses compétences clés, et son objectif de stage ou poste visé.
 
 "skills" :
 - Trois catégories attendues : "technical", "soft", "tools"
@@ -556,12 +559,14 @@ Contraintes techniques :
 
 ## Output Format
 Le résultat est un objet JSON contenant uniquement les trois clés suivantes exactement :
+- "objective": une phrase concise (20 à 30 mots) résumant le profil du candidat, son niveau d'expérience, ses compétences clés, et son objectif de stage ou poste visé.
 - "skills" : objet avec "technical", "soft", "tools" (chacun tableau de 5 à 8 éléments(55 caractères max) si possible, sinon moins, sans doublons)
 - "experience" : liste d’objets avec "title", "company", "start_date", "end_date", "location", "bullets" (1-2 bullets, 40-80 caractères chacune, verbe d’action, format précisé)
 - "projects" : tableau de 1 à 3 objets ("title" et "description", 120-220 caractères) ; si aucun projet pertinent, utiliser un tableau vide
 
 Exemple :
 {
+  "objective":"Étudiant en Master 1 Data Engineering for AI avec 2 ans d'expérience en ingénierie logicielle et DevOps, à la recherched'un stage en Data Engineering / IA, à partir de Mars 2026."
   "skills": {
     "technical": ["Java", "Spring Boot", ...],
     "soft": ["gestion de projet", "esprit d’équipe", ...],
