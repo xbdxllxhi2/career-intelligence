@@ -29,6 +29,12 @@
             <div class="mt-1 p-1 flex items-center gap-1 text-center w-fit text-xs text-emerald-200 bg-neutral-900/50">
               <i class="pi pi-briefcase"></i>{{job.seniority}}
             </div>
+
+            @if (job.applied) {
+              <div class="mt-1 p-1 flex items-center gap-1 text-center w-fit text-xs text-emerald-200 bg-neutral-900/50">
+              <i class="pi pi-check"></i>Already applied
+            </div>
+            }
           </div>
         </ng-template>
 

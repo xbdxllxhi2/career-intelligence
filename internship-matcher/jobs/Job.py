@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import BaseModel, HttpUrl
 
 
-class JobBasic(BaseModel):
+class JobBasic(BaseModel):  
     reference: str
     title: str
     seniority:Optional[str]=None
@@ -21,6 +21,7 @@ class JobBasic(BaseModel):
     has_direct_apply: Optional[bool]=None
     created_at: Optional[datetime] = None
     expires_at: Optional[datetime] = None
+    applied: bool = False
 
 
 

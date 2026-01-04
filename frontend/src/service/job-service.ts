@@ -5,6 +5,7 @@ import { JobOffer } from '../models/interface/job-offer';
 import { Observable, of } from 'rxjs';
 import { Page } from '../models/interface/page';
 import { PageRequest } from '../models/interface/page-request';
+import { JobFilters } from '../models/filters/job-filters';
 
 @Injectable({
   providedIn: 'root',
@@ -40,8 +41,8 @@ export class JobService {
   }
 
 
-  getJobs(query: PageRequest): Observable<Page<JobOffer>> {
-    return this.client.get<Page<JobOffer>>(`${this.apiUrl}`, {params:{"page":query.page,"size":query.size}});
+  getJobs(query: PageRequest, filters:JobFilters| undefined): Observable<Page<JobOffer>> {
+    return this.client.get<Page<JobOffer>>(`${this.apiUrl}`, {params:{"page":query.page,"size":query.size,...filters}});
   }
 
   getJobDetails(reference:string): Observable<JobOffer>{

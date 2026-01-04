@@ -18,5 +18,6 @@ export interface JobOffer {
     has_direct_apply?:boolean
     created_at?:Date
     expires_at?:Date
+    applied?:boolean
 }
 
