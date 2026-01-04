@@ -13,7 +13,7 @@ class UserApplicationEntity(BaseEntity):
     job_offer_title = Column(String, nullable=False)
     job_offer_url = Column(String, nullable=False)
     applied_through = Column(String, nullable=True)
-    status = Column(String, nullable=False, server_default="applied")
+    status = Column(String, nullable=False, server_default="APPLIED")
     applied_at = Column(DateTime(timezone=True), server_default=func.now())
     application_experience = Column(Integer, nullable=True)
     notes = Column(String, nullable=True)

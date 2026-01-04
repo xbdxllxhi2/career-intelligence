@@ -6,16 +6,21 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { RatingModule } from 'primeng/rating';
 
-import { ApplicationInfo } from '../../models/interface/application-info';
+import { UserApplicationInfo, saveApplicationRequest } from '../../models/interface/application-info';
+import { UserApplicationService } from '../../service/user-application-service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { JobOffer } from '../../models/interface/job-offer';
 
 @Component({
   selector: 'app-application-info-modal',
-  imports: [DialogModule, FileUploadModule, SelectModule, FormsModule, ButtonModule,RatingModule],
+  imports: [DialogModule, FileUploadModule, SelectModule, FormsModule, ButtonModule,RatingModule,ToastModule],
   templateUrl: './application-info-modal.html',
   styleUrl: './application-info-modal.scss',
 })
 export class ApplicationInfoModal {
   @Input({required: true})  applicationModalVisible!: boolean ;
+  @Input({required:true}) selectedJob!: JobOffer;
   @Output() modalCloseEvent = new EventEmitter<void>();
 
   selectedApplicationPortal: string | undefined ;
@@ -31,6 +36,8 @@ export class ApplicationInfoModal {
   ];
 
 
+  constructor(private userApplicaitonService: UserApplicationService, private primengMessageService: MessageService) {}
+
   onModalUpload($event: any) {
     console.log($event);
   }
@@ -40,15 +47,25 @@ export class ApplicationInfoModal {
   }
 
   saveApplicationInfo() {
-    let modalInfo : ApplicationInfo = {
-      portal: this.selectedApplicationPortal,
-      rating: this.ratingValue
+    let saveApplicationRequest: saveApplicationRequest = {
+      job_reference: this.selectedJob.reference,
+      date: new Date(),
+      portal: this.selectedApplicationPortal || 'Other',
+      rating: this.ratingValue,
+      notes: '',
     }
 
-    this.modalSer
-    
- 
+
+    this.userApplicaitonService.saveApplication(saveApplicationRequest).subscribe({
+      next: (response) => {
+        this.primengMessageService.add({severity:'success', summary: 'Success', detail: 'Application information saved successfully.'});
+      },
+      error: (error) => {
+        this.primengMessageService.add({severity:'error', summary: 'Error', detail: 'Failed to save application information.'});
+      },complete: () => {
        this.onModalClose()
+      }
+    });
   }
 
   cancelApplicationInfo() {

@@ -1,10 +1,11 @@
+<p-toast></p-toast>
 <div class="card flex justify-center">
     <p-dialog header="Save Application" [modal]="true" [(visible)]="applicationModalVisible"
         [style]="{ width: '30rem' }" [closable]="false">
         <div class="flex items-center gap-4 mb-8">
             <label for="email" class="font-semibold w-24">Portal</label>
             <p-select [options]="applicationPortalOptions" [(ngModel)]="selectedApplicationPortal" optionLabel="name"
-                placeholder="Select a platform" class="w-full md:w-56 " />
+                optionValue="name"  placeholder="Select a platform" class="w-full md:w-56 " />
         </div>
         <div class="flex items-center gap-4 mb-4">
             <label for="resume" class="font-semibold w-24">Resume</label>

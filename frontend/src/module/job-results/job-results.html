@@ -56,9 +56,11 @@
         <i class="pi pi-times"></i> Close
       </button> -->
 
-      <app-application-info-modal (modalCloseEvent)="onModalClose()" [applicationModalVisible]="showApplicationModalFlag"></app-application-info-modal>
 
       @if (selectedJob) {
+      <app-application-info-modal (modalCloseEvent)="onModalClose()" [selectedJob]="selectedJob"
+        [applicationModalVisible]="showApplicationModalFlag"></app-application-info-modal>
+
       <div class="py-4 flex flex-col min-w-full gap-4">
         <div class="flex gap-2 items-center">
           <img [src]="selectedJob.logo_url" [alt]="selectedJob.company+'logo'" class="w-8 h-8 object-cover" />

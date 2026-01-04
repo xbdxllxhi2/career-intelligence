@@ -1,11 +1,11 @@
-enum ApplicationStatus {
+export enum ApplicationStatus {
   APPLIED = 'APPLIED',
   REJECTED = 'REJECTED',
   ACCEPTED = 'ACCEPTED',
   INTERVIEW_SCHEDULED = 'INTERVIEW_SCHEDULED',
 }
 
-export interface ApplicationInfo {
+export interface UserApplicationInfo {
   reference?: string;
   jobReference?: string;
   date?: Date;
@@ -18,7 +18,7 @@ export interface ApplicationInfo {
 
 
 export interface saveApplicationRequest{
-  jobReference: string;
+  job_reference: string;
   date: Date;
   portal: string;
   rating: number;

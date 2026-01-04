@@ -24,6 +24,7 @@ def map_to_model(entity: UserApplicationEntity) -> GetUserApplicationResponse:
         company=entity.company,
         company_reference=entity.company,
         date=entity.applied_at,
+        status=entity.status,
         portal=entity.applied_through,
         rating=entity.application_experience,
         notes=entity.notes

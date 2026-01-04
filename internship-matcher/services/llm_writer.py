@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 client = Groq(api_key="{key here}")
 open_Ai_client = OpenAI(api_key="{key here}")
-groq_open_ai_client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key="{key here}")
+groq_open_ai_client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key="")
 
 
 def _build_messages(context):

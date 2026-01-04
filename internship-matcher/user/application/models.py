@@ -6,7 +6,6 @@ from pydantic import BaseModel
 
 class CreateUserApplicationCommand(BaseModel):
     job_reference: str
-    company_reference: str
     date: datetime
     portal: str
     rating: int
