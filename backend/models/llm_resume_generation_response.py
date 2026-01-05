@@ -18,9 +18,9 @@ class ExperienceEntry(BaseModel):
 
 class ProjectEntry(BaseModel):    
     title: str
+    url: str | None = None
     description: str
     # technologies: list[str]
-    # link: str | None = None
 
 
 class ResumeGenerationResponse(BaseModel):

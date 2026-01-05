@@ -8,6 +8,10 @@
 \exhyphenpenalty=10000
 \setlength{\emergencystretch}{3em}
 
+\usepackage[sfdefault]{FiraSans} % Police moderne sans-serif
+\renewcommand{\familydefault}{\sfdefault}
+
+
 \usepackage{hyperref}
 
 \usepackage{xcolor}
@@ -58,8 +62,8 @@ Tools & {{ skills.tools | join(', ') }} \\
 
 \begin{rSection}{PROJETS}
 {% for proj in projects %}
-\item \textbf{ {{ proj.title }} } \\
-{{ proj.description }}{% if proj.link %} \href{ {{ proj.link }} }{(Link)}{% endif %}
+\item \textbf{ {{ proj.title }} } {% if proj.url %} \href{ {{ proj.url }} }{(GitHub)}{% endif %}\\
+{{ proj.description }}
 \vspace{0.5em}  % optional: adds spacing between items
 {% endfor %}
 \end{rSection}

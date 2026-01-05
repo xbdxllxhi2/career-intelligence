@@ -541,7 +541,7 @@ Sortie :
 
 "projects" :
 - 1 à 2 projets pertinents pour le poste
-- Chaque objet : "title" et "description"
+- Chaque objet : "title", "url" et "description"
 - "description" : objectif, technologie utilisée, impact/valeur ; 120 à 220 caractères
 - En l’absence de projet pertinent, laisser un tableau vide
 - Faire ressortir en quoi ces projets ont contribué à l'acquisition des compétences clés nécessaires au poste ciblé
@@ -562,7 +562,7 @@ Le résultat est un objet JSON contenant uniquement les trois clés suivantes ex
 - "objective": une phrase concise (20 à 30 mots) résumant le profil du candidat, son niveau d'expérience, ses compétences clés, et son objectif de stage ou poste visé.
 - "skills" : objet avec "technical", "soft", "tools" (chacun tableau de 5 à 8 éléments(55 caractères max) si possible, sinon moins, sans doublons)
 - "experience" : liste d’objets avec "title", "company", "start_date", "end_date", "location", "bullets" (1-2 bullets, 40-80 caractères chacune, verbe d’action, format précisé)
-- "projects" : tableau de 1 à 3 objets ("title" et "description", 120-220 caractères) ; si aucun projet pertinent, utiliser un tableau vide
+- "projects" : tableau de 1 à 3 objets ("title", "url" et "description", 120-220 caractères) ; si aucun projet pertinent, utiliser un tableau vide
 
 Exemple :
 {
@@ -588,6 +588,7 @@ Exemple :
   "projects": [
     {
       "title": "Migration Cloud",
+      "url":"https://github.com/xbdxllxhi2/clavis",
       "description": "Migration d’une infrastructure monolithique vers AWS en utilisant Docker et Terraform, réduisant les coûts de 18% et le time-to-market de 2 semaines."
     }
   ]

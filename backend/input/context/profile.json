@@ -176,13 +176,14 @@
       ]
     },
     {
-      "title": "Stagiaire Développeur Jeux Vidéo",
+      "title": "Stagiaire Développeur Unity 3D (Jeux Vidéo)",
       "company": "CGI Studio",
       "period": "Jan 2023 – Mai 2023",
       "location": "Tunisie",
       "tags": ["unity", "csharp", "3d", "game-dev"],
       "bullets": [
         "Implémentation de mécaniques de gameplay, intégration 3D et optimisation des performances visuelles.",
+        "Integration d'IA pour les NPC",
         "Participation à la production artistique et technique sous Unity."
       ]
     }
@@ -190,7 +191,8 @@
 
   "projects": [
     {
-      "name": "Career Intelligence Tool",
+      "name": "Career Intelligence Platform",
+      "url":"https://github.com/xbdxllxhi2/career-intelligence",
       "year": "2025",
       "tags": ["airflow", "etl", "postgresql", "angular", "nlp", "llm", "dashboard", "matching", "scoring", "job-intelligence","LangChain","OpenAi"],
       "bullets": [
@@ -222,6 +224,7 @@
     },
     {
       "name": "Airflow Data Pipeline",
+      "url":"https://github.com/xbdxllxhi2/career-intelligence/tree/main/data-aggregator",
       "year": "2025",
       "tags": ["airflow", "etl", "pipelines"],
       "bullets": [
@@ -231,6 +234,7 @@
     },
     {
       "name": "Spring Keycloak OAuth2 SDK",
+      "url":"https://github.com/xbdxllxhi2/clavis",
       "year": "2024",
       "tags": ["keycloak", "oauth2", "oidc", "jwt", "kafka", "sdk", "authentication"],
       "bullets": [
@@ -250,10 +254,11 @@
     },
     {
       "name": "Hackathon IA – Visualisation socio-démographique",
+      "url":"https://github.com/xbdxllxhi2/PACA-Demographical-Data-Chatbot",
       "year": "2025",
       "tags": ["ai", "visualisation", "leadership"],
       "bullets": [
-        "Lead d’une équipe de 4 et développement d’une plateforme IA permettant d’interroger et visualiser des indicateurs socio-démographiques.",
+        "Lead d’une équipe de 4 et développement d’une plateforme IA permettant d’interroger et visualiser des indicateurs socio-démographiques de la zone Provence-Alpes-Côte d'Azur.",
         "Mise en place d’un pipeline data complet avec automatisation et analyse avancée."
       ]
     }
