@@ -22,4 +22,4 @@ def get_user_applications_api():
 @router.delete("/{application_id}", summary="Delete a user application by ID")
 def delete_user_application_api(application_id: int):
     service.delete_user_application(application_id)
-    return JSONResponse(status_code=204)
+    return JSONResponse(status_code=204,content={"message": "User application deleted successfully"})

@@ -1,4 +1,5 @@
 from datetime import datetime
+from tkinter import NO
 from typing import Optional
 from grpc import Status
 from pydantic import BaseModel
@@ -14,9 +15,13 @@ class CreateUserApplicationCommand(BaseModel):
 
 class GetUserApplicationResponse(BaseModel):
     id: int
-    job_reference: str
+    job_reference: Optional[str]=None
     job_title: str
+    job_country: Optional[str]=None
+    job_region: Optional[str]=None
+    job_city: Optional[str]=None
     company: str
+    company_logo_url:Optional[str]=None
     date: datetime
     portal: str
     status: str

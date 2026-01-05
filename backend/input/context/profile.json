@@ -35,12 +35,8 @@
   ],
 
   "skills": {
-    "programming_languages": [
-      "Java", "Python", "SQL", "Bash", "TypeScript"
-    ],
-    "frontend_frameworks": [
-      "Angular", "HTML5", "CSS3", "Bootstrap"
-    ],
+    "programming_languages": ["Java", "Python", "SQL", "Bash", "TypeScript"],
+    "frontend_frameworks": ["Angular", "HTML5", "CSS3", "Bootstrap"],
     "backend_frameworks": [
       "Spring Boot",
       "Spring Security",
@@ -158,11 +154,21 @@
 
   "experience": [
     {
-      "title": "Développeur Full Stack Java/React",
+      "title": "Développeur Full Stack Java/Python/React",
       "company": "Proxym Group",
-      "period": "Sep 2023 – Sep 2025",
+      "period": "Octobre 2023 – Septembre 2025",
       "location": "Technopole de Sousse, Tunisie",
-      "tags": ["java", "spring", "banking", "microservices", "workflow-engine", "iso20022", "postgresql", "kubernetes", "state-machine"],
+      "tags": [
+        "java",
+        "spring",
+        "banking",
+        "microservices",
+        "workflow-engine",
+        "iso20022",
+        "postgresql",
+        "kubernetes",
+        "state-machine"
+      ],
       "bullets": [
         "Développement de modules bancaires critiques (gestion des cartes, paiements, virements) en respectant DDD et CQRS.",
         "Conception d'une machine à états interne pour gérer les workflows de validation et d’approbation Corporate (multi-niveaux, rôles, règles métiers dynamiques).",
@@ -176,6 +182,29 @@
       ]
     },
     {
+      "title": "Stagiaire Machine Learning – Détection de Fraude Bancaire",
+      "company": "Proxym Group",
+      "period": "Juillet 2023 – Octobre 2023",
+      "location": "Technopole de Sousse, Tunisie",
+      "tags": [
+        "ml",
+        "python",
+        "scikit-learn",
+        "tensorflow",
+        "xgboost",
+        "streaming",
+        "kafka",
+        "docker",
+        "data-engineering"
+      ],
+      "bullets": [
+        "Développé et déployé des modèles ML pour détecter les transactions frauduleuses en temps réel.",
+        "Conçu un pipeline complet de données, de l’ingestion à la prédiction, incluant feature engineering et prétraitement.",
+        "Implémenté des dashboards et alertes pour le suivi des performances et la détection des anomalies.",
+        "Utilisé des outils d’Explainable AI (SHAP, LIME) pour expliquer les décisions des modèles aux équipes métier."
+      ]
+    },
+    {
       "title": "Stagiaire Développeur Unity 3D (Jeux Vidéo)",
       "company": "CGI Studio",
       "period": "Jan 2023 – Mai 2023",
@@ -183,7 +212,7 @@
       "tags": ["unity", "csharp", "3d", "game-dev"],
       "bullets": [
         "Implémentation de mécaniques de gameplay, intégration 3D et optimisation des performances visuelles.",
-        "Integration d'IA pour les NPC",
+        "Implémentation de systèmes d’IA pour les NPC incluant pathfinding, machines à états et comportements adaptatifs.",
         "Participation à la production artistique et technique sous Unity."
       ]
     }
@@ -192,9 +221,22 @@
   "projects": [
     {
       "name": "Career Intelligence Platform",
-      "url":"https://github.com/xbdxllxhi2/career-intelligence",
+      "url": "https://github.com/xbdxllxhi2/career-intelligence",
       "year": "2025",
-      "tags": ["airflow", "etl", "postgresql", "angular", "nlp", "llm", "dashboard", "matching", "scoring", "job-intelligence","LangChain","OpenAi"],
+      "tags": [
+        "airflow",
+        "etl",
+        "postgresql",
+        "angular",
+        "nlp",
+        "llm",
+        "dashboard",
+        "matching",
+        "scoring",
+        "job-intelligence",
+        "LangChain",
+        "OpenAi"
+      ],
       "bullets": [
         "Création d’un moteur de matching profiles–offres combinant scoring pondéré, distance géographique et similarité textuelle pour les etudiants recherchant des stages.",
         "Développement du frontend Angular pour visualiser les résultats, dashboards analytiques et suivi des KPIs.",
@@ -213,9 +255,56 @@
       ]
     },
     {
+      "name": "Analyse de Sentiment et Recommandation de Produits",
+      "year": "2026",
+      "tags": [
+        "ml",
+        "nlp",
+        "sentiment-analysis",
+        "recommendation",
+        "transformers",
+        "pytorch",
+        "fastapi",
+        "docker"
+      ],
+      "bullets": [
+        "Développé un modèle d’analyse de sentiment sur les avis clients pour améliorer les recommandations de produits.",
+        "Implémenté un moteur de recommandation basé sur embeddings et similarité sémantique pour suggestions personnalisées.",
+        "Construit un pipeline complet NLP incluant nettoyage des textes, tokenisation, vectorisation et API de déploiement avec FastAPI."
+      ]
+    },
+    {
+      "name": "Système de Pointage Biométrique IoT",
+      "year": "2026",
+      "tags": [
+        "ml",
+        "computer-vision",
+        "biométrie",
+        "face-recognition",
+        "fingerprint",
+        "opencv",
+        "raspberry-pi",
+        "iot",
+        "docker"
+      ],
+      "bullets": [
+        "Développé un système de pointage en temps réel utilisant reconnaissance faciale et empreintes digitales sur dispositifs IoT.",
+        "Intégré la détection et la vérification biométrique avec OpenCV et algorithmes d’apprentissage supervisé pour précision optimale.",
+        "Déployé le pipeline IoT complet avec Raspberry Pi, Docker et interface de suivi des présences en temps réel."
+      ]
+    },
+    {
       "name": "TF-IDF Search Engine + Chatbot RAG",
       "year": "2025",
-      "tags": ["rag", "nlp", "tf-idf", "semantic-search", "retrieval", "transformers", "embeddings"],
+      "tags": [
+        "rag",
+        "nlp",
+        "tf-idf",
+        "semantic-search",
+        "retrieval",
+        "transformers",
+        "embeddings"
+      ],
       "bullets": [
         "Développement d’un moteur de recherche basé sur TF-IDF avec ranking dynamique et vectorisation optimisée.",
         "Conception d’un chatbot RAG combinant retrieval sémantique, embeddings et modèles LLM.",
@@ -224,7 +313,7 @@
     },
     {
       "name": "Airflow Data Pipeline",
-      "url":"https://github.com/xbdxllxhi2/career-intelligence/tree/main/data-aggregator",
+      "url": "https://github.com/xbdxllxhi2/career-intelligence/tree/main/data-aggregator",
       "year": "2025",
       "tags": ["airflow", "etl", "pipelines"],
       "bullets": [
@@ -234,9 +323,17 @@
     },
     {
       "name": "Spring Keycloak OAuth2 SDK",
-      "url":"https://github.com/xbdxllxhi2/clavis",
+      "url": "https://github.com/xbdxllxhi2/clavis",
       "year": "2024",
-      "tags": ["keycloak", "oauth2", "oidc", "jwt", "kafka", "sdk", "authentication"],
+      "tags": [
+        "keycloak",
+        "oauth2",
+        "oidc",
+        "jwt",
+        "kafka",
+        "sdk",
+        "authentication"
+      ],
       "bullets": [
         "Création d’un SDK Keycloak pour unifier l’authentification et l’autorisation dans un écosystème microservices Spring.",
         "Développement d’un Event Listener SPI Keycloak émettant des événements vers Kafka pour audit distribué.",
@@ -246,7 +343,13 @@
     {
       "name": "Blockchain Settlement PoC",
       "year": "2024",
-      "tags": ["blockchain", "ethereum", "smart-contracts", "cbs", "settlement"],
+      "tags": [
+        "blockchain",
+        "ethereum",
+        "smart-contracts",
+        "cbs",
+        "settlement"
+      ],
       "bullets": [
         "Réalisation d’un PoC remplaçant un Core Banking System par un smart contract Ethereum pour le règlement interbancaire.",
         "Implémentation de primitives de paiement, journalisation on-chain et automatisation des validations."
@@ -254,7 +357,7 @@
     },
     {
       "name": "Hackathon IA – Visualisation socio-démographique",
-      "url":"https://github.com/xbdxllxhi2/PACA-Demographical-Data-Chatbot",
+      "url": "https://github.com/xbdxllxhi2/PACA-Demographical-Data-Chatbot",
       "year": "2025",
       "tags": ["ai", "visualisation", "leadership"],
       "bullets": [

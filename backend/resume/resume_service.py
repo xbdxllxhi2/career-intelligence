@@ -59,7 +59,7 @@ def latex_safe_resume(resume: ResumeGenerationResponse) -> ResumeGenerationRespo
         projects=[
             ProjectEntry(
                 title=escape_latex(p.title),
-                url=escape_latex(p.url),
+                url=p.url,
                 description=escape_latex(p.description),
                 # technologies=[escape_latex(t) for t in p.technologies],
                 # link=p.link,  # URLs handled separately if needed

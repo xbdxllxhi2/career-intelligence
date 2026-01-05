@@ -28,7 +28,7 @@ def _groq_open_api_oss_120b_generate_resume_section(context):
         model="openai/gpt-oss-120b",
         temperature=0.2,
         instructions=get_PROMPT_V5_fr(context),
-        input=f"description {context['job_description']}\n profile {context['profile']}",
+        input=f"description: {context['job_description']}\n profile: {context['profile']}",
         # max_tokens=5000,
         text_format= ResumeGenerationResponse
     )

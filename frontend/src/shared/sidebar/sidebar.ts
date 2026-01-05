@@ -18,7 +18,7 @@ export class Sidebar {
   items:MenuItem[] = [
     { label: "Home", icon: "pi pi-home", routerLink: ["/" ], routerLinkActiveOptions: { exact: true }},
     { label: "Profile", icon: "pi pi-user", routerLink: ["/profile" ]},
-    { label: "AI Job Finder", icon: "pi pi-code", routerLink: ["/ai-job-finder" ]},
+    { label: "Jobs", icon: "pi pi-code", routerLink: ["/jobs" ]},
     { label: "Applications", icon: "pi pi-briefcase", routerLink: ["/applications" ]},
     {label: "Messages", icon: "pi pi-inbox", routerLink: ["/messages" ] }
   ]

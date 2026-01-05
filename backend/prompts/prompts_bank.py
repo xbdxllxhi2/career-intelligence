@@ -526,7 +526,8 @@ Sortie :
 "skills" :
 - Trois catégories attendues : "technical", "soft", "tools"
 - 5 à 8 éléments par catégorie uniquement si le contexte le permet ; pas de doublons entre ou au sein des catégories ; si moins d’éléments disponibles, n'en mettre que ceux existants
-- Chaque compétence : entre 1 et 3 mots, 25 caractères max, au format mot-clé (ex : Java, Spring Boot, Kubernetes, esprit d’équipe)
+- Chaque compétence : entre 1 et 3 mots, 25 caractères maximum, au format mot-clé (ex : Java, Spring Boot, Kubernetes, esprit d’équipe)
+- La longueur totale de chaque catégorie ne doit pas dépasser 65 caractères
 - Ordonner selon les mots-clés du poste, puis par niveau de maîtrise du contexte ; sinon, ordre d’apparition
 
 "experience" :
