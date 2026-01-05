@@ -1,0 +1,267 @@
+{
+  "profile": {
+    "first_name": "Abdellahi",
+    "last_name": "Abdellahi",
+    "location": "Nice, France",
+    "summary": "Étudiant en Data Engineering et Software Engineering, spécialisé dans les pipelines de données, l'analyse quantitative, les architectures backend distribuées et les solutions IA/NLP. Expérience dans les systèmes bancaires, l'orchestration Airflow, l'IAM Keycloak (OAuth2, OIDC, JWT, SSO), la blockchain Ethereum et la conception d’algorithmes financiers. Passionné par la recherche d’information, l'automatisation à grande échelle et le développement de solutions analytiques orientées décisionnel."
+  },
+
+  "education": [
+    {
+      "degree": "Master en Data Engineering (M1)",
+      "school": "DSTI School of Engineering",
+      "year": "2025 (en cours)"
+    },
+    {
+      "degree": "Master en Software Engineering & DevOps",
+      "school": "Horizon School of Digital Technologies",
+      "year": "2023–2025"
+    },
+    {
+      "degree": "Licence en Génie Logiciel & Systèmes d’Information",
+      "school": "ESSTHS Hammam-Sousse",
+      "year": "2020–2023"
+    },
+    {
+      "degree": "Certificat — Banking and Financial Institutions",
+      "school": "University of Illinois",
+      "year": "2024"
+    },
+    {
+      "degree": "AWS Cloud Practitioner",
+      "school": "Amazon Web Services",
+      "year": "2024"
+    }
+  ],
+
+  "skills": {
+    "programming_languages": [
+      "Java", "Python", "SQL", "Bash", "TypeScript"
+    ],
+    "frontend_frameworks": [
+      "Angular", "HTML5", "CSS3", "Bootstrap"
+    ],
+    "backend_frameworks": [
+      "Spring Boot",
+      "Spring Security",
+      "Hibernate",
+      "JPA",
+      "REST API design",
+      "Jakarta EE",
+      "Unity3D (C#)",
+      "numpy",
+      "pandas",
+      "scikit-learn",
+      "keras",
+      "tensorflow",
+      "LangChain",
+      "LangGraph",
+      "Hugging Face"
+    ],
+    "identity_and_access_management": [
+      "Keycloak",
+      "OAuth2",
+      "OpenID Connect",
+      "JWT",
+      "SSO",
+      "RBAC",
+      "ABAC",
+      "User Federation",
+      "Identity Provider Integration",
+      "Keycloak Event Listener SPI"
+    ],
+    "data_engineering": [
+      "Apache Airflow",
+      "ETL/ELT pipelines",
+      "Data ingestion",
+      "Data transformation",
+      "Data modeling",
+      "Data quality",
+      "Batch processing",
+      "Scheduling",
+      "Workflow orchestration",
+      "PostgreSQL",
+      "Oracle SQL"
+    ],
+    "nlp_and_search": [
+      "spaCy",
+      "Transformers",
+      "Sentence Embeddings",
+      "TF-IDF",
+      "Cosine similarity",
+      "Keyword extraction",
+      "NER",
+      "RAG (Retrieval-Augmented Generation)",
+      "Semantic search"
+    ],
+    "quantitative_analysis": [
+      "Modélisation financière",
+      "Black-Scholes",
+      "Pricing d’options",
+      "Analyse de volatilité",
+      "Actualisation de flux (DCF)",
+      "Gordon Growth Model (GGM)",
+      "WACC",
+      "Modèles stochastiques",
+      "Sensibilité Delta/Gamma/Vega"
+    ],
+    "blockchain": [
+      "Ethereum",
+      "Smart Contracts",
+      "Settlement on-chain",
+      "PoC remplacement d’un CBS par validateur Ethereum",
+      "EVM",
+      "Transactions et gas optimization"
+    ],
+    "cloud_and_devops": [
+      "Docker",
+      "Kubernetes",
+      "Helm",
+      "Argo CD",
+      "GitLab CI/CD",
+      "Terraform",
+      "Linux",
+      "Cluster deployment",
+      "Gorq-api",
+      "OpenAI"
+    ],
+    "event_driven_architecture": [
+      "Kafka",
+      "Event sourcing",
+      "Asynchronous messaging",
+      "Outbox Pattern",
+      "Real-time streaming"
+    ],
+    "tools": [
+      "Git",
+      "Maven",
+      "BPMN",
+      "ISO20022",
+      "PCI DSS",
+      "Mermaid",
+      "IntelliJ",
+      "Kibana",
+      "Jenkins",
+      "Power BI"
+    ],
+    "soft_skills": [
+      "Leadership",
+      "Autonomie",
+      "Travail d’équipe",
+      "Communication",
+      "Organisation",
+      "Résolution de problèmes",
+      "Curiosité",
+      "Esprit analytique"
+    ]
+  },
+
+  "experience": [
+    {
+      "title": "Développeur Full Stack Java/React",
+      "company": "Proxym Group",
+      "period": "Sep 2023 – Sep 2025",
+      "location": "Technopole de Sousse, Tunisie",
+      "tags": ["java", "spring", "banking", "microservices", "workflow-engine", "iso20022", "postgresql", "kubernetes", "state-machine"],
+      "bullets": [
+        "Développement de modules bancaires critiques (gestion des cartes, paiements, virements) en respectant DDD et CQRS.",
+        "Conception d'une machine à états interne pour gérer les workflows de validation et d’approbation Corporate (multi-niveaux, rôles, règles métiers dynamiques).",
+        "Pilotage d’un projet réseau social interne avec déploiement complet sur Kubernetes (CI/CD, monitoring, microservices, stockage).",
+        "Optimisation avancée de tests Spring, identification et correction d’un Hikari connection leak dans le pipeline GitLab.",
+        "Collaboration avec équipes produit et architecture en environnement Agile Scrum.",
+        "Rédaction de documentation technique et formation des nouveaux développeurs.",
+        "Deploiment de la solution bancaire dans +200 banques et filiales en Europoe, Afrique et Moyen-Orient.",
+        "Implementation de ecrans frontend React pour la gestion des cartes bancaires et des transactions.",
+        "Integration de messages ISO20022 pour les virements et transactions interbancaires."
+      ]
+    },
+    {
+      "title": "Stagiaire Développeur Jeux Vidéo",
+      "company": "CGI Studio",
+      "period": "Jan 2023 – Mai 2023",
+      "location": "Tunisie",
+      "tags": ["unity", "csharp", "3d", "game-dev"],
+      "bullets": [
+        "Implémentation de mécaniques de gameplay, intégration 3D et optimisation des performances visuelles.",
+        "Participation à la production artistique et technique sous Unity."
+      ]
+    }
+  ],
+
+  "projects": [
+    {
+      "name": "Career Intelligence Tool",
+      "year": "2025",
+      "tags": ["airflow", "etl", "postgresql", "angular", "nlp", "llm", "dashboard", "matching", "scoring", "job-intelligence","LangChain","OpenAi"],
+      "bullets": [
+        "Création d’un moteur de matching profiles–offres combinant scoring pondéré, distance géographique et similarité textuelle pour les etudiants recherchant des stages.",
+        "Développement du frontend Angular pour visualiser les résultats, dashboards analytiques et suivi des KPIs.",
+        "Pipeline Airflow complet : ingestion, mapping vers schéma SQL, transformation et harmonisation des données.",
+        "Utilisation de NLP et LLM pour extraction de compétences, scoring sémantique et génération automatique de rapports PDF.",
+        "Optimisation du workflow pour fiabilité et scalabilité sur PostgreSQL et intégration continue.",
+        "Utilisation de fastapi comme backend pour servir les données au frontend Angular.",
+        "Integration de l'api OpenAI pour améliorer les capacités de traitement du langage naturel.",
+        "Benchmarking et optimisation des performances du pipeline ETL et du moteur de matching.",
+        "Optimization et évaluation des modèles NLP pour une extraction de compétences plus précise.",
+        "Evaluation et optimisation continue des prompts utilisés avec les LLM pour améliorer la qualité et la pertinence des reponses",
+        "Implementation des bonnes pratique et recommendation d'openAI pour assurer la sécurité et maximiser l'efficacité des appels API et réduire les coûts associés.",
+        "Travail de recherche pour identifier et intégrer des sources de données supplémentaires pertinentes pour enrichir le moteur d'intelligence du marché de l'emploi.",
+        "Travail de recherche et developpement pour intégrer des techniques avancées de matching basées sur l'apprentissage automatique afin d'améliorer la précision et la pertinence des correspondances entre CV et offres d'emploi.",
+        "Utilisation de pandas et numpy pour le traitement et l'analyse des données et enrichissement des fonctionnalités analytiques du tableau de bord."
+      ]
+    },
+    {
+      "name": "TF-IDF Search Engine + Chatbot RAG",
+      "year": "2025",
+      "tags": ["rag", "nlp", "tf-idf", "semantic-search", "retrieval", "transformers", "embeddings"],
+      "bullets": [
+        "Développement d’un moteur de recherche basé sur TF-IDF avec ranking dynamique et vectorisation optimisée.",
+        "Conception d’un chatbot RAG combinant retrieval sémantique, embeddings et modèles LLM.",
+        "Pipeline NLP complet : nettoyage, tokenisation, extraction de mots-clés, scoring et similarité vectorielle."
+      ]
+    },
+    {
+      "name": "Airflow Data Pipeline",
+      "year": "2025",
+      "tags": ["airflow", "etl", "pipelines"],
+      "bullets": [
+        "Conception d’un pipeline ETL complet orchestré avec Airflow : ingestion, enrichissement, calculs, scoring et export.",
+        "Utilisation avancée de PythonOperator, BashOperator et DAGs modulaires."
+      ]
+    },
+    {
+      "name": "Spring Keycloak OAuth2 SDK",
+      "year": "2024",
+      "tags": ["keycloak", "oauth2", "oidc", "jwt", "kafka", "sdk", "authentication"],
+      "bullets": [
+        "Création d’un SDK Keycloak pour unifier l’authentification et l’autorisation dans un écosystème microservices Spring.",
+        "Développement d’un Event Listener SPI Keycloak émettant des événements vers Kafka pour audit distribué.",
+        "Gestion complète des rôles, permissions, tokens, refresh flows et user provisioning."
+      ]
+    },
+    {
+      "name": "Blockchain Settlement PoC",
+      "year": "2024",
+      "tags": ["blockchain", "ethereum", "smart-contracts", "cbs", "settlement"],
+      "bullets": [
+        "Réalisation d’un PoC remplaçant un Core Banking System par un smart contract Ethereum pour le règlement interbancaire.",
+        "Implémentation de primitives de paiement, journalisation on-chain et automatisation des validations."
+      ]
+    },
+    {
+      "name": "Hackathon IA – Visualisation socio-démographique",
+      "year": "2025",
+      "tags": ["ai", "visualisation", "leadership"],
+      "bullets": [
+        "Lead d’une équipe de 4 et développement d’une plateforme IA permettant d’interroger et visualiser des indicateurs socio-démographiques.",
+        "Mise en place d’un pipeline data complet avec automatisation et analyse avancée."
+      ]
+    }
+  ],
+
+  "languages": {
+    "arabic": "natif",
+    "french": "B2",
+    "english": "B2"
+  }
+}
