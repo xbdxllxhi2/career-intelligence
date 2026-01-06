@@ -39,7 +39,7 @@ def _map_job_details(raw: Dict[str, Any]) -> Job:
         title=raw.get("title"),
         job_checksum=raw.get("checksum"),
         description=raw.get("description_text", ""),
-        url=raw.get("external_apply_url", ""),
+        url=raw.get("external_apply_url") or None,
         source_apply_url=raw.get("url",""),
         seniority=raw.get("seniority"),
         employment_type=raw.get("employment_type") or [],

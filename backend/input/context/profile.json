@@ -220,6 +220,29 @@
 
   "projects": [
     {
+      "name": "Détection de Types d’Attaques en Cybersécurité",
+      "year": "2026",
+      "tags": [
+        "machine-learning",
+        "cybersecurity",
+        "anomaly-detection",
+        "classification",
+        "data-science",
+        "data-engineering",
+        "ml-pipeline",
+        "flask",
+        "streamlit",
+        "deployment"
+      ],
+      "bullets": [
+        "Dirigé une équipe pluridisciplinaire (Data Analytics, Data Science, Data Engineering) pour concevoir un pipeline machine learning de bout en bout destiné à la classification des types d’attaques cyber.",
+        "Réalisé l’analyse exploratoire, le nettoyage et l’ingénierie des caractéristiques sur un dataset brut de 40 000 lignes et 25 métriques issues de logs et trafics réseau.",
+        "Entraîné, comparé et évalué plusieurs modèles de classification multi-classes afin de sélectionner la solution la plus performante pour la détection des attaques.",
+        "Conçu et déployé une application web (Flask / Streamlit) permettant la prédiction en temps réel du type d’attaque à partir d’entrées manuelles ou de fichiers CSV.",
+        "Assuré la reproductibilité et la qualité du projet via un dépôt GitHub structuré (README, requirements.txt), un rapport technique détaillé et une démonstration vidéo de l’application."
+      ]
+    },
+    {
       "name": "Career Intelligence Platform",
       "url": "https://github.com/xbdxllxhi2/career-intelligence",
       "year": "2025",

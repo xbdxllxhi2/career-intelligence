@@ -41,9 +41,6 @@ OR "Stage Python Data"
 OR "Stage Data Analytics"
 OR "Stage Data Visualization"
 OR "Stage Ingénierie logicielle"
-OR "Full Stack Developer"
-OR "Java"
-OR "DevOps"
 '''
 # scrape >> transform >> export
 with DAG(

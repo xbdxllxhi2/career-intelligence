@@ -74,6 +74,10 @@ def getJobs(filters: JobFilters, page: int, size: int) -> Page[JobBasic]:
     if filters.title_contains:
         where_clauses.append("LOWER(j.title) LIKE LOWER(:title)")
         params["title"] = f"%{filters.title_contains}%"
+        
+    if filters.description_contains:
+        where_clauses.append("LOWER(j.description) LIKE LOWER(:description)")
+        params["description"] = f"%{filters.description_contains}%"
 
     if not filters.include_expired:
         where_clauses.append("j.expires_at >= NOW()")

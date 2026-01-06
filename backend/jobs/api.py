@@ -13,7 +13,7 @@ def root(
     page: int = Query(0, ge=0),
     size: int = Query(10, ge=1, le=100),
 ):
-    return getJobs(filters,page=page, size=size)
+    return getJobs(filters, page=page, size=size)
 
 
 @router.get("/{reference}", response_model=JobDetail)

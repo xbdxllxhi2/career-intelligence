@@ -21,7 +21,7 @@ class GetUserApplicationResponse(BaseModel):
     job_region: Optional[str]=None
     job_city: Optional[str]=None
     company: str
-    company_logo_url:Optional[str]=None
+    company_logo_url:Optional[str]=None 
     date: datetime
     portal: str
     status: str

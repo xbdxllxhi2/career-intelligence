@@ -17,7 +17,7 @@ class Job(BaseModel):
     seniority: Optional[str]
     employment_type: List[str] = Field(default_factory=list)
     location_type: Optional[str] 
-    url: Optional[HttpUrl]
+    url: Optional[HttpUrl]=None
     source_apply_url: Optional[HttpUrl]
     domain: Optional[str]
     description: str

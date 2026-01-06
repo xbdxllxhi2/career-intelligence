@@ -49,8 +49,16 @@
  [class.hidden]="sideFilterActive" >
     <div class="flex items-center gap-2">
         <p-floatlabel variant="on">
-            <input class="w-2xl" pInputText id="on_label" [(ngModel)]="filters.title_contains" />
+            <input class="w-sm" pInputText id="on_label" [(ngModel)]="filters.title_contains" />
             <label for="on_label">Search</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on">
+            <input class="w-sm" pInputText id="description_contains" [(ngModel)]="filters.description_contains" />
+            <label for="description_contains">Description contains</label>
+        </p-floatlabel>
+                <p-floatlabel variant="on">
+            <input class="" pInputText id="city_filter" [(ngModel)]="filters.city" />
+            <label for="city_filter">City</label>
         </p-floatlabel>
         <p-button icon="pi pi-search" (onClick)="emitSearchEvent()"></p-button>
     </div>
