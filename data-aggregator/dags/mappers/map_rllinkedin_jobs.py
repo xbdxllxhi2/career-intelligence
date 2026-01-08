@@ -39,13 +39,14 @@ def _map_job_details(raw: Dict[str, Any]) -> Job:
         title=raw.get("title"),
         job_checksum=raw.get("checksum"),
         description=raw.get("description_text", ""),
-        url=raw.get("external_apply_url", ""),
+        url=raw.get("external_apply_url") or None,
+        source_apply_url=raw.get("url",""),
         seniority=raw.get("seniority"),
-        employment_type=raw.get("employment_type", []),
+        employment_type=raw.get("employment_type") or [],
         location_type=raw.get("location_type"),
         domain=raw.get("domain"),
-        posted_at=parse_datetime(raw.get("posted_at")),
-        expires_at=parse_datetime(raw.get("expires_at")),
+        posted_at=parse_datetime(raw.get("date_posted")),
+        expires_at=parse_datetime(raw.get("date_validthrough")),
         remote_type=raw.get("remote_type"),
         is_remote=raw.get("is_remote"),
         has_easy_apply= raw.get("directapply")
@@ -68,33 +69,17 @@ def _map_organization(raw: Dict[str, Any]) -> Optional[Organization]:
         employees=raw.get("linkedin_org_employees"),
         followers=raw.get("linkedin_org_followers"),
         founded_date=parse_datetime(raw.get("linkedin_org_foundeddate")),
-        specialities=raw.get("linkedin_org_specialties", []),
+        specialities=raw.get("linkedin_org_specialties") or [],
     )
 
 
 def _map_location(raw: Dict[str, Any]) -> Optional[Location]:
-    # Prefer derived fields (cleaner)
-    if raw.get("cities_derived"):
-        return Location(
-            country=raw.get("countries_derived", [None])[0],
-            region=raw.get("regions_derived", [None])[0],
-            city=raw.get("cities_derived", [None])[0],
-            lat=raw.get("lats_derived", [None])[0],
-            lng=raw.get("lngs_derived", [None])[0],
+    return Location(
+            country=(raw.get("countries_derived") or [None])[0],
+            region=(raw.get("regions_derived") or [None])[0],
+            city=(raw.get("cities_derived") or [None])[0],
+            lat=(raw.get("lats_derived") or [None])[0],
+            lng=(raw.get("lngs_derived") or [None])[0],
             timezone=raw.get("timezones_derived", [None])[0],
         )
 
-    # Fallback to raw structured location
-    locations = raw.get("locations_raw")
-    if locations:
-        loc = locations[0]
-        addr = loc.get("address", {})
-        return {
-            "country": addr.get("addressCountry"),
-            "region": addr.get("addressRegion"),
-            "city": addr.get("addressLocality"),
-            "lat": loc.get("latitude"),
-            "lng": loc.get("longitude"),
-        }
-
-    return None

@@ -1,0 +1,23 @@
+<p-toast></p-toast>
+<div class="w-full flex items-center justify-center gap-20">
+    <div class="w-56 p-3">
+        <!-- Applications list will be here. -->
+    </div>
+    <div class="w-3/8">
+        <div id="title" class="py-3 text-2xl">My Applications</div>
+        <div class="flex flex-col gap-2 border border-emerald-100  overflow-y-auto">
+            @for (item of userApplications() ; track $index) {
+                <div class="w-full flex p-3 gap-2"> 
+                    <div class="w-13 h-13">
+                        <img [src]="item.company_logo_url" class="h-full w-full"/>
+                    </div>
+                    <div class="w-full flex flex-col border-t border-emerald-100">
+                        <div class="font-semibold">{{item.job_title}}</div>
+                        <div class="font-light">{{item.company}}</div>
+                        <!-- <div class="font-light text-gray-400">Location</div> -->
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

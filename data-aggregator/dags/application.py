@@ -2,8 +2,6 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime
 
-# from scripts.resume_generator import generate_resume
-
 
 with DAG("application_pipelineV2",
          start_date=datetime(2025,11,22),

@@ -1,0 +1,65 @@
+<p-toast></p-toast>
+<div class="p-5 overflow-y-auto" [class.hidden]="!sideFilterActive">
+    <div class="flex justify-between items-center p-3">
+        <div class="text-xl"><span class="text-emerald-400">{{totalSearchResults | number}}</span> Jobs matched</div>
+        <button pButton label="clear filters" variant="text" (onclick)="clearFilters()" severity="secondary"></button>
+    </div>
+    <p-floatlabel variant="on">
+        <input class="p-4 w-full bg-neutral-800 rounded" pInputText id="on_label" [(ngModel)]="filters.title_contains"
+            autocomplete="off" />
+        <label for="on_label">What do you want to do ?</label>
+    </p-floatlabel>
+     <p-button icon="pi pi-search" (onClick)="emitSearchEvent()"></p-button>
+    <p-accordion value="0">
+        <p-accordion-panel value="0">
+            <p-accordion-header>Locations I</p-accordion-header>
+            <p-accordion-content>
+                <p class="m-0">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore
+                    magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+                    ea commodo
+                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                    nulla
+                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
+                    anim id est
+                    laborum.
+                </p>
+            </p-accordion-content>
+        </p-accordion-panel>
+
+        <p-accordion-panel value="1">
+            <p-accordion-header>Experience</p-accordion-header>
+            <p-accordion-content>
+                <p class="m-0">
+                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
+                    totam rem
+                    aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt
+                    explicabo. Nemo
+                    enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni
+                    dolores eos
+                    qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                </p>
+            </p-accordion-content>
+        </p-accordion-panel>
+    </p-accordion>
+</div>
+
+<div class="w-full px-5 py-2 bg-emerald-900/10"
+ [class.hidden]="sideFilterActive" >
+    <div class="flex items-center gap-2">
+        <p-floatlabel variant="on">
+            <input class="w-sm" pInputText id="on_label" [(ngModel)]="filters.title_contains" />
+            <label for="on_label">Search</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on">
+            <input class="w-sm" pInputText id="description_contains" [(ngModel)]="filters.description_contains" />
+            <label for="description_contains">Description contains</label>
+        </p-floatlabel>
+                <p-floatlabel variant="on">
+            <input class="" pInputText id="city_filter" [(ngModel)]="filters.city" />
+            <label for="city_filter">City</label>
+        </p-floatlabel>
+        <p-button icon="pi pi-search" (onClick)="emitSearchEvent()"></p-button>
+    </div>
+</div>

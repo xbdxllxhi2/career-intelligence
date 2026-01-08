@@ -1,0 +1,34 @@
+{
+  "name": "Abdellahi Abdellahi",
+  "phone": "+33 7 59 20 85 22",
+  "city": "Antibes, Alpes-Maritimes, France",
+  "email": "abdellahi.abdellahi@edu.dsti.institute",
+  "linkedin": "https://www.linkedin.com/in/abdellahi-abdellahi",
+  "github": "https://www.github.com/xbdxllxhi2",
+
+  "education": [
+    {
+      "degree": "Applied MsC Data Engineering for AI",
+      "institution": "DSTI School of Engineering",
+      "year": "en cours",
+      "coursework": "Machine Learning, Powershell, Azure, R, Python, Data Wrangling"
+    },
+    {
+      "degree": "Master Ingénierie Logiciel et DevOps",
+      "institution": "Horizon School of Digital Technologies",
+      "year": "2025",
+      "coursework": "Spring Boot, Microservices, Keycloak, Kafka, DevOps"
+    },
+    {
+      "degree": "License Génie Logiciel et Système d’Information",
+      "institution": "École supérieure des sciences et technologies",
+      "year": "2023",
+      "coursework": "Python, Java, C++, Architecture, Réseaux et Sécurité"
+    }
+  ],
+  "extra_curricular": [
+    "Analyses quantitatives et implémentation de modèles financiers (Black-Scholes, Gordon Growth, CAPM…).",
+    "Projets personnels en Data Engineering, IA générative et automatisation (Airflow, Terraform, Kubernetes).",
+    "Organisation d’événements étudiants rassemblant jusqu’à 200 participants."
+  ]
+}

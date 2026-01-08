@@ -1,0 +1,39 @@
+@use 'tailwindcss';
+
+
+/* You can add global styles to this file, and also import other style files */
+html, body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+               'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+
+.drawer-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--p-emerald-900) transparent;
+}
+
+/* Chromium / WebKit */
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color:var(--p-emerald-900);
+  border-radius: 9999px;
+}
+

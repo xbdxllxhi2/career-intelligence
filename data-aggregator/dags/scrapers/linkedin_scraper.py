@@ -80,7 +80,7 @@ def fetch_jobs(title_filter='"Stage Data Engineer"', location_filter='"France" O
             "description_type": "text"
         }
 
-        response = safe_request(conn_id="rapidapi_linkedin_jobs_api", endpoint="/active-jb-7d", params=params)
+        response = safe_request(conn_id="rapidapi_linkedin_jobs_api", endpoint="", params=params)
         if response is None:
             break
 

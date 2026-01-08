@@ -1,0 +1,15 @@
+:host ::ng-deep .p-menuitem-active > .p-menuitem-content {
+  background: linear-gradient(135deg, #6366f1, #9333ea);
+  color: white;
+  border-radius: 8px;
+}
+
+:host ::ng-deep .p-menuitem-active .pi {
+  color: white;
+}
+
+.active{
+    background: linear-gradient(135deg, #6366f1, #9333ea);
+    color: white;
+    border-radius: 8px;
+}

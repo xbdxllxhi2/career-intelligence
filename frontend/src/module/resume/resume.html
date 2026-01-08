@@ -1,0 +1,27 @@
+<div class="w-full h-full flex flex-col justify-center items-center">
+    <div class="h-50">
+        <div
+            class="text-4xl font-bold bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 bg-clip-text text-transparent">
+            Generate Resume
+        </div>
+
+
+    </div>
+    <div class="max-w-3xl mx-auto">
+        <p-floatlabel variant="on">
+            <textarea pTextarea id="offer_description" [(ngModel)]="offerDescription" rows="10" cols="100"
+                style="resize: none" class="w-full p-2 pr-20 pb-5 resize-none overflow-y-auto bg-transparent
+            focus:outline-none"></textarea>
+            <label for="offer_description">Offer description</label>
+        </p-floatlabel>
+
+        <div class="flex justify-end gap-2 p-2 rounded-2xl">
+            <button pButton loadingIcon="pi pi-paper-plane" [loading]="isGeneratingResume"
+                [disabled]="!offerDescription" class="p-2 rounded-2xl bg-emerald-900" (click)="generateResume()">
+                <i class="pi pi-download" pButtonIcon></i>
+                <span pButtonLabel> Resume</span>
+            </button>
+        </div>
+    </div>
+
+</div>
