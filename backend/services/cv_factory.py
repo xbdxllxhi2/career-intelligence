@@ -37,10 +37,8 @@ def _compile_pdf(tex_file_name:string):
         stderr=subprocess.DEVNULL
     )
 
-def generate_cv(job, context):
+def generate_cv(output_file_name, context):
     logger.debug("complete cv context %s: ", json.dumps(context, indent=4))
-    output_file_name = job.reference
-
     _render_template(output_file_name, context)
     _compile_pdf(output_file_name)
     print("CV generated to output/cv/%s.pdf",output_file_name)

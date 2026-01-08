@@ -15,4 +15,10 @@ export class ResumeService {
       responseType: 'blob'  
     });
   }
+
+  generateResumeFromDescription(offerDescription: string): Observable<Blob>{
+     return this.client.post(`${this.apiUrl}/from/description`, { job_description: offerDescription },{
+      responseType: 'blob'  
+    });
+  }
 }

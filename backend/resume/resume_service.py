@@ -1,5 +1,6 @@
 import jobs.Job
 import json
+import uuid
 from services.keyword_extractor import extract_keywords
 from services.matcher import match_profile_sections
 from services.llm_writer import generate_cv_section
@@ -70,7 +71,7 @@ def latex_safe_resume(resume: ResumeGenerationResponse) -> ResumeGenerationRespo
 
 
 def generate_resume(job: JobDetail, profile):
-    logger.info("Generating Cv...")
+    logger.info("Generating Resume...")
     keywords = extract_keywords(job.description)
     context = match_profile_sections(profile, keywords)
     logger.info("Context got after matching %s", context)
@@ -83,4 +84,23 @@ def generate_resume(job: JobDetail, profile):
     static_cv_parts = load_data()
     complete_cv = {**static_cv_parts, **generated_resume_parts}
 
-    return generate_cv(job, complete_cv)
+    return generate_cv(job.reference, complete_cv)
+
+def generate_resume_for_description(offer_description:str, profile):
+    logger.info("Generating Resume for the given description...")
+    keywords = extract_keywords(offer_description)
+    context = match_profile_sections(profile, keywords)
+    
+    logger.info("Context got after matching %s", context)
+
+    context["job_description"] = offer_description
+    context["profile"] = profile
+    resume_generated_reponse: ResumeGenerationResponse = latex_safe_resume(generate_cv_section(context))
+    
+    generated_resume_parts = resume_generated_reponse.model_dump()
+    static_cv_parts = load_data()
+    complete_cv = {**static_cv_parts, **generated_resume_parts}
+
+    random_uuid = uuid.uuid4()
+    return generate_cv(f'from_job_description_{random_uuid}', complete_cv)
+    

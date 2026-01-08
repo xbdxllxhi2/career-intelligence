@@ -25,4 +25,4 @@ def create_cv(job, profile):
     static_cv_parts = load_data()
     complete_cv = {**static_cv_parts, **generated_cv_parts}
 
-    generate_cv(job,complete_cv)
+    generate_cv(job.get("reference"),complete_cv)

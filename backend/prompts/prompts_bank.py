@@ -476,7 +476,7 @@ Après génération de l'objet JSON, effectue une validation rapide de conformit
   """
   
 
-def get_PROMPT_V5_fr(context) -> str:
+def get_PROMPT_V5_fr() -> str:
     return """
   Developer: ### Identité
 Tu es un expert senior en optimisation de CV compatibles ATS, spécialisé dans le Data Engineering et l'IA pour des profils junior à mid-level visant des postes technologiques, et tu interviens comme recruteur/hiring manager pour des entreprises exigeantes.
@@ -531,6 +531,7 @@ Sortie :
 - Ordonner selon les mots-clés du poste, puis par niveau de maîtrise du contexte ; sinon, ordre d’apparition
 
 "experience" :
+- 1 à 2 expériences pertinentes pour le poste
 - Liste triée anté-chronologique (plus récent en premier)
 - Chaque objet contient : "title", "company", "start_date", "end_date", "location", "bullets"
 - Dates : format "YYYY-MM" ; si mois absent, utiliser "YYYY-01" (janvier) ; si totalement absente, omettre le champ
