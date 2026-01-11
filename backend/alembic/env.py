@@ -7,6 +7,7 @@ from alembic import context
 
 from database.entity import BaseEntity
 from user.application.entities import *
+from user.profile.entity import *
 from database.engine import engine as app_engine
 
 # this is the Alembic Config object, which provides

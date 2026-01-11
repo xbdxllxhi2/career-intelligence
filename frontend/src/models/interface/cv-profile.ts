@@ -1,32 +1,49 @@
-export interface CvProfile {
+export interface UserProfile {
   firstName?: string;
   lastName?: string;
-  title?: string;                // e.g. "Java Software Engineer | DevOps"
-  summary?: string;              // 2–4 lines, ATS-optimized
+  phone?: string;
+  city?: string;
+  country?: string;
+  email?: string;
+  linkedin?: string;
+  github?: string;
+  summary?: string;
 
-  yearsOfExperience?: number;
+  education?: EducationEntry[];
+  skills?: SkillCategory[];
+  experience?: ExperienceEntry[];
+  projects?: ProjectEntry[];
+  languages?: { [language: string]: string };
+  extra_curricular?: string[];
+}
 
-  location: {
-    city?: string;
-    country?: string;
-    remote?: boolean;
-  };
+export interface SkillCategory {
+  category: string;    // Programming Languages", "Backend Frameworks"
+  skills: string[];    // list of skills in that category
+}
 
-  availability?: string;        // e.g. "Immediate", "1 month notice"
-  contractType?: 'Internship' | 'Full-time' | 'Part-time' | 'Freelance';
+export interface EducationEntry {
+  degree: string;
+  school?: string;
+  institution?: string;
+  year: string;
+  coursework?: string;
+}
 
-  contact: {
-    email?: string;
-    phone?: string;
-    linkedin?: string;
-    github?: string;
-    portfolio?: string;
-  };
+export interface ExperienceEntry {
+  title: string;
+  company?: string;
+  period?: string;
+  location?: string;
+  tags?: string[];
+  bullets?: string[];
+}
 
-  languages: Array<{
-    name: string;
-    level: 'Native' | 'Fluent' | 'Professional' | 'Intermediate' | 'Basic';
-  }>;
-
-  keywords?: string[];           // Explicit ATS keywords (Java, Spring Boot, Keycloak…)
+export interface ProjectEntry {
+  name: string;
+  description?:string;
+  url?: string;
+  year?: string;
+  tags?: string[];
+  bullets?: string[];
 }

@@ -5,44 +5,50 @@ import { FloatLabel } from 'primeng/floatlabel';
 import { TextareaModule } from 'primeng/textarea';
 import { ResumeService } from '../../service/resume-service';
 import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-resume',
-  imports: [TextareaModule, FloatLabel, ButtonModule, FormsModule],
+  imports: [TextareaModule, FloatLabel, ButtonModule, FormsModule, ToastModule],
   templateUrl: './resume.html',
-  providers:[MessageService],
+  providers: [MessageService],
   styleUrl: './resume.scss',
 })
 export class Resume implements OnInit {
   offerDescription!: string;
   isGeneratingResume!: boolean;
 
-  constructor(private resumeService: ResumeService, private messageService:MessageService) {}
+  constructor(private resumeService: ResumeService, private messageService: MessageService) {}
 
   ngOnInit(): void {
     this.offerDescription = '';
-    this.isGeneratingResume=false;
+    this.isGeneratingResume = false;
   }
 
   generateResume() {
-   this.isGeneratingResume = true
-    this.resumeService.generateResumeFromDescription(this.offerDescription)
-      .subscribe({
-        next: (blob) => {
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'resume.pdf';
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          window.URL.revokeObjectURL(url);
-        }, error: (err) => {
-          this.messageService.add({ summary: "Error", detail: "Try again later...", severity: "error" });
-          this.isGeneratingResume = false
-        },
-        complete: () => { 
-          this.isGeneratingResume = false }
-      });
+    this.isGeneratingResume = true;
+    this.resumeService.generateResumeFromDescription(this.offerDescription).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'resume.pdf';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        this.messageService.add({
+          summary: 'Error',
+          detail: 'Try again later...',
+          severity: 'error',
+        });
+        this.isGeneratingResume = false;
+      },
+      complete: () => {
+        this.isGeneratingResume = false;
+      },
+    });
   }
 }

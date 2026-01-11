@@ -92,6 +92,7 @@
     </div>
 </div> -->
 
+<p-toast></p-toast>
 <div class="h-screen w-screen flex-col overflow-hidden justify-center items-center">
     <div class="w-full p-3 flex justify-between items-center">
         <div>
@@ -138,75 +139,160 @@
             </div>
         </div>
 
-        <div class="w-1/2 gap-4 p-3">
-            <div class="mb-8 w-2/3 flex justify-between ">
-                <p-fileupload #fu mode="basic" chooseLabel="Upload your CV" chooseIcon="pi pi-upload" name="demo[]"
-                    url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" maxFileSize="1000000"
-                    (onUpload)="handleUpload($event)" />
-                <p-button label="Upload" (onClick)="fu.upload()" severity="secondary" />
-            </div>
-            <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-2 border border border-gray-100/10">
-                <p-inputgroup>
-                    <p-inputgroup-addon>
-                        <i class="pi pi-user"></i>
-                    </p-inputgroup-addon>
-                    <input pInputText class="w-full bg-neutral-200/10" [(ngModel)]="profileData.firstName"
-                        value="firstName" placeholder="First Name" />
-                </p-inputgroup>
 
-                <p-inputgroup>
-                    <p-inputgroup-addon>
-                        <i class="pi pi-user"></i>
-                    </p-inputgroup-addon>
-                    <input pInputText class="w-full bg-neutral-200/10" [(ngModel)]="profileData.lastName"
-                        value="lastName" placeholder="Last Name" />
-                </p-inputgroup>
+        <div class="w-1/2 gap-4 p-3  overflow-y-auto">
+            <form [formGroup]="profileForm" (ngSubmit)="submitProfileFrom()">
+                <div class="mb-8 w-2/3 flex justify-between ">
+                    <p-fileupload #fu mode="basic" chooseLabel="Upload your CV" chooseIcon="pi pi-upload" name="demo[]"
+                        url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" maxFileSize="1000000"
+                        (onUpload)="handleUpload($event)" />
+                    <p-button label="Upload" (onClick)="fu.upload()" severity="secondary" />
+                </div>
+                <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-2 border border border-gray-100/10">
 
-                <p-inputgroup>
-                    <p-inputgroup-addon>
-                        <i class="pi pi-phone"></i>
-                    </p-inputgroup-addon>
-                    <input pInputText class="w-full bg-neutral-200/10" [(ngModel)]="profileData.contact.phone"
-                        value="phone" placeholder="Phone" />
-                </p-inputgroup>
+                    <p-inputgroup>
+                        <p-inputgroup-addon>
+                            <i class="pi pi-user"></i>
+                        </p-inputgroup-addon>
+                        <input formControlName="firstName" pInputText class="w-full p-1 bg-neutral-200/10" />
+                    </p-inputgroup>
 
-                <p-inputgroup>
-                    <p-inputgroup-addon>
-                        <i class="pi pi-map"></i>
-                    </p-inputgroup-addon>
-                    <input pInputText class="w-full bg-neutral-200/10" [(ngModel)]="profileData.contact.phone"
-                        value="phone" placeholder="Phone" />
-                </p-inputgroup>
-            </div>
-            <div class="mt-5">
-                <p-accordion value="0" bg-emeralad>
-                    <p-accordion-panel value="0">
-                        <p-accordion-header>Links</p-accordion-header>
-                        <p-accordion-content>
-                            <div class="flex flex-col gap-2">
-                                <label for="username">LinkedIn</label>
-                                <input pInputText class="w-full bg-neutral-200/10 h-10" id="username"
-                                    aria-describedby="username-help" [(ngModel)]="profileData.firstName" />
-                                <small id="username-help">Enter your username to reset your password.</small>
-                            </div>
-                            <div class="flex flex-col gap-2 mt-6">
-                                <label for="username">Github</label>
-                                <input pInputText class="w-full bg-neutral-200/10 h-10" id="username"
-                                    aria-describedby="username-help" [(ngModel)]="profileData.firstName" />
-                                <small id="username-help">Enter your username to reset your password.</small>
-                            </div>
-                        </p-accordion-content>
-                    </p-accordion-panel>
+                    <p-inputgroup>
+                        <p-inputgroup-addon>
+                            <i class="pi pi-user"></i>
+                        </p-inputgroup-addon>
+                        <input pInputText formControlName="lastName" class="w-full p-1 bg-neutral-200/10"/>
+                    </p-inputgroup>
 
-                    <p-accordion-panel value="1">
-                        <p-accordion-header>Experience</p-accordion-header>
-                        <p-accordion-content>
-                        </p-accordion-content>
-                    </p-accordion-panel>
-                </p-accordion>
-            </div>
+                    <p-inputgroup>
+                        <p-inputgroup-addon>
+                            <i class="pi pi-phone"></i>
+                        </p-inputgroup-addon>
+                        <input pInputText formControlName="phone" class="w-full p-1 bg-neutral-200/10"/>
+                    </p-inputgroup>
+
+                    <p-inputgroup>
+                        <p-inputgroup-addon>
+                            <i class="pi pi-map"></i>
+                        </p-inputgroup-addon>
+                        <input pInputText formControlName="city" class="w-full p-1 bg-neutral-200/10"
+                            placeholder="Location" />
+                    </p-inputgroup>
+                </div>
+                <div class="mt-5">
+                    <p-accordion value="0" multiple="true">
+                        <p-accordion-panel value="0">
+                            <p-accordion-header>Links</p-accordion-header>
+                            <p-accordion-content>
+                                <div class="flex flex-col gap-2">
+                                    <label for="username">LinkedIn</label>
+                                    <input pInputText formControlName="linkedin" class="w-full p-1 bg-neutral-200/10 h-10" id="username"
+                                        aria-describedby="username-help" />
+                                    <!-- <small id="username-help">Enter your username to reset your password.</small> -->
+                                </div>
+                                <div class="flex flex-col gap-2 mt-6">
+                                    <label for="username">Github</label>
+                                    <input pInputText formControlName="github" class="w-full p-1 bg-neutral-200/10 h-10"
+                                        id="username" aria-describedby="username-help" />
+                                </div>
+                            </p-accordion-content>
+                        </p-accordion-panel>
+
+                        <p-accordion-panel value="1">
+                            <p-accordion-header>Experience</p-accordion-header>
+                            <p-accordion-content>
+                                <div formArrayName="experience" class="w-full">
+                                    <div *ngFor="let exp of experience.controls; let i = index" [formGroupName]="i"
+                                        class="w-full mb-4 border border-gray-100/10 p-3 rounded">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <h3>Experience {{ i + 1 }}</h3>
+                                            <button pButton type="button" icon="pi pi-trash" class="p-button-danger"
+                                                (click)="removeExperience(i)"></button>
+                                        </div>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-3">
+                                            <p-inputgroup class="mb-2">
+                                                <p-inputgroup-addon><i class="pi pi-briefcase"></i></p-inputgroup-addon>
+                                                <input pInputText class="w-full bg-neutral-200/10"
+                                                    formControlName="title" placeholder="Job Title" />
+                                            </p-inputgroup>
+                                            <p-inputgroup class="mb-2">
+                                                <p-inputgroup-addon><i class="pi pi-building"></i></p-inputgroup-addon>
+                                                <input pInputText class="w-full bg-neutral-200/10 p-2"
+                                                    formControlName="company" placeholder="Company Name">
+                                            </p-inputgroup>
+                                            <p-inputgroup class="mb-2">
+                                                <p-inputgroup-addon><i class="pi pi-calendar"></i></p-inputgroup-addon>
+                                                <p-datepicker variant="filled" view="month" dateFormat="mm/yy"
+                                                    [readonlyInput]="true" />
+                                            </p-inputgroup>
+                                            <p-inputgroup class="mb-2">
+                                                <p-inputgroup-addon><i
+                                                        class="pi pi-map-marker"></i></p-inputgroup-addon>
+                                                <input pInputText class="w-full bg-neutral-200/10" `
+                                                    formControlName="location" placeholder="Location">
+                                            </p-inputgroup>
+                                        </div>
+                                        <!-- <p-floatlabel variant="on" class="my-5">
+                                            <textarea pTextarea id="on_label" rows="3" cols="50" style="resize: none"
+                                                class="h-full"></textarea>
+                                            <label for="on_label">Description</label>
+                                        </p-floatlabel> -->
+
+                                        <!-- Tags -->
+                                        <!-- <div formArrayName="tags" class="mb-2">
+                                            <label>Tags:</label>
+                                            <div *ngFor="let tag of exp.get('tags').controls; let t = index"
+                                                class="flex gap-2 mb-1">
+                                                <input pInputText [formControlName]="t" placeholder="Tag">
+                                                <button pButton type="button" icon="pi pi-times" class="p-button-danger"
+                                                    (click)="removeTag(i, t)"></button>
+                                            </div>
+                                            <button pButton type="button" label="Add Tag" (click)="addTag(i)"></button>
+                                             </div> -->
+
+                                        <!-- Bullets -->
+                                        <div formArrayName="bullets">
+
+                                            <div *ngFor="let bullet of getBullets(exp).controls; let b = index"
+                                                class="flex gap-2 mb-1">
+                                                <input pInputText [formControlName]="b"
+                                                    class="w-full bg-neutral-200/10 rounded-r-2xl">
+                                                <button pButton type="button" icon="pi pi-times" class="p-button-danger"
+                                                    (click)="removeBullet(i, b)"></button>
+                                            </div>
+                                            <button pButton type="button" label="Add Bullet" icon="pi pi-plus"
+                                                severity="secondary" (click)="addBullet(i)"></button>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <button pButton type="button" label="Add Experience" icon="pi pi-plus"
+                                    (click)="addExperience()"></button>
+
+                            </p-accordion-content>
+                        </p-accordion-panel>
+                        <p-accordion-panel>
+                            <p-accordion-header>Projects</p-accordion-header>
+                            <p-accordion-content>
+                                <div class="flex flex-col gap-2 my-6">
+                                    <label for="project_title">Title</label>
+                                    <input pInputText  class="w-2/3 bg-neutral-200/10 h-10"
+                                        id="username" aria-describedby="username-help" />
+                                </div>
+                                <p-floatlabel variant="on">
+                                    <textarea pTextarea  id="on_label" rows="5" cols="72" style="resize: none"
+                                        class="h-full"></textarea>
+                                    <label for="on_label">Description</label>
+                                </p-floatlabel>
+                            </p-accordion-content>
+                        </p-accordion-panel>
+                    </p-accordion>
+                    <button pButton type="submit" icon="" label="save"></button>
+                </div>
+
+            </form>
         </div>
-
 
     </div>
 </div>
