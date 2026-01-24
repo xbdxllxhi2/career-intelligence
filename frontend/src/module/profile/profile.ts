@@ -47,7 +47,7 @@ import { MessageService } from 'primeng/api';
     FloatLabelModule,
     ToastModule,
   ],
-  providers:[MessageService],
+  providers: [MessageService],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })
@@ -61,7 +61,7 @@ export class Profile {
   constructor(
     private fb: FormBuilder,
     private messageService: MessageService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
   ) {}
 
   ngOnInit(): void {
@@ -70,12 +70,20 @@ export class Profile {
   }
 
   private initProfileData(): void {
-    this.profileService.getUserProfile()
-    .subscribe({next:(profile)=>{
-      console.log("Got Profile ",profile)
-      this.profileData=profile
-      this.profileForm.patchValue(this.profileData);
-    }})
+    this.profileService.getUserProfile().subscribe({
+      next: (profile) => {
+        console.log('Got Profile ', profile);
+        this.profileData = profile;
+        this.profileForm.patchValue(this.profileData);
+        if (profile.experience?.length) {
+          this.patchExperience(profile.experience);
+        }
+
+        if (profile.projects?.length) {
+          this.patchProjects(profile.projects);
+        }
+      },
+    });
   }
 
   private initForm(): void {
@@ -91,8 +99,51 @@ export class Profile {
       linkedin: [''],
       github: [''],
       experience: this.fb.nonNullable.array<FormGroup>([]),
-      projects: this.fb.array([]),
+      projects: this.fb.nonNullable.array<FormGroup>([]),
       languages: this.fb.nonNullable.group<Record<string, string>>({}),
+    });
+  }
+
+  private patchExperience(experiences: any[]): void {
+    const experienceArray = this.experience;
+    experienceArray.clear();
+
+    experiences.forEach((exp) => {
+      experienceArray.push(
+        this.fb.nonNullable.group({
+          title: [exp.title ?? ''],
+          company: [exp.company ?? ''],
+          period: [exp.period ?? ''],
+          location: [exp.location ?? ''],
+          tags: this.fb.nonNullable.array(
+            (exp.tags ?? []).map((t: string) => this.fb.nonNullable.control(t)),
+          ),
+          bullets: this.fb.nonNullable.array(
+            (exp.bullets ?? []).map((b: string) => this.fb.nonNullable.control(b)),
+          ),
+        }),
+      );
+    });
+  }
+
+  private patchProjects(projects: any[]): void {
+    const projectsArray = this.projects;
+    projectsArray.clear();
+
+    projects.forEach((project) => {
+      projectsArray.push(
+        this.fb.nonNullable.group({
+          name: [project.name ?? ''],
+          description: [project.description ?? ''],
+          period: [project.period ?? ''],
+          technologies: this.fb.nonNullable.array(
+            (project.technologies ?? []).map((t: string) => this.fb.nonNullable.control(t)),
+          ),
+          bullets: this.fb.nonNullable.array(
+            (project.bullets ?? []).map((b: string) => this.fb.nonNullable.control(b)),
+          ),
+        }),
+      );
     });
   }
 
@@ -123,6 +174,50 @@ export class Profile {
     this.languages.removeAt(index);
   }
 
+  get projects(): FormArray {
+    return this.profileForm.get('projects') as FormArray;
+  }
+
+  getProjectBullets(projectIndex: number): FormArray {
+    return this.projects.at(projectIndex).get('bullets') as FormArray;
+  }
+
+  addProject() {
+    this.projects.push(
+      this.fb.nonNullable.group({
+        name: [''],
+        description: [''],
+        period: [''],
+        technologies: this.fb.nonNullable.array<string>([]),
+        bullets: this.fb.nonNullable.array<string>([]),
+      }),
+    );
+  }
+
+  removeProject(index: number) {
+    this.projects.removeAt(index);
+  }
+
+  addProjectBullet(projectIndex: number, bullet: string = '') {
+    const bullets = this.getProjectBullets(projectIndex);
+    bullets.push(this.fb.nonNullable.control(bullet));
+  }
+
+  removeProjectBullet(projectIndex: number, bulletIndex: number) {
+    const bullets = this.getProjectBullets(projectIndex);
+    bullets.removeAt(bulletIndex);
+  }
+
+  addProjectTechnology(projectIndex: number, tech: string = '') {
+    const techs = this.projects.at(projectIndex).get('technologies') as FormArray;
+    techs.push(this.fb.nonNullable.control(tech));
+  }
+
+  removeProjectTechnology(projectIndex: number, techIndex: number) {
+    const techs = this.projects.at(projectIndex).get('technologies') as FormArray;
+    techs.removeAt(techIndex);
+  }
+
   addExperience() {
     this.experience.push(
       this.fb.nonNullable.group({
@@ -132,7 +227,7 @@ export class Profile {
         location: [''],
         tags: this.fb.nonNullable.array<string>([]),
         bullets: this.fb.nonNullable.array<string>([]),
-      })
+      }),
     );
   }
 
@@ -187,6 +282,13 @@ export class Profile {
         location: exp.location,
         tags: exp.tags ?? [],
         bullets: exp.bullets ?? [],
+      })),
+      projects: raw.projects.map((proj: any) => ({
+        name: proj.name,
+        description: proj.description,
+        period: proj.period,
+        technologies: proj.technologies ?? [],
+        bullets: proj.bullets ?? [],
       })),
     };
 

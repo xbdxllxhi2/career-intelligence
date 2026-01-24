@@ -20,6 +20,9 @@ class UserProfileService:
         saved_entity = self.repo.create(entity)
         return saved_entity
     
+    def createOrUpdate(self, entity:UserProfile) -> UserProfile:
+        entity = self.repo.createOrUpdate(entity=entity)
+    
 
     def get_profile(self, user_id: int) -> UserProfile:
         entity = self.repo.get_by_id(user_id)

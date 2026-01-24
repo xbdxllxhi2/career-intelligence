@@ -5,7 +5,7 @@ import json
 from models.local_schemaV1 import Job, JobSchema, Location, Organization, Source
 
 
-def export_to_postgres(jobs_file_path="/opt/airflow/output/jobs/jobs.json"):
+def  export_to_postgres(jobs_file_path="/opt/airflow/output/jobs/jobs.json"):
     jobs:list[JobSchema]= [map_linkedin_job(j) for j in get_jobs_dict(file=jobs_file_path).values()]
     hook = PostgresHook(postgres_conn_id="my_postgres")
     

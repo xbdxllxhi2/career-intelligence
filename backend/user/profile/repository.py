@@ -40,10 +40,19 @@ class UserProfileRepository:
         existing.experience = entity.experience
         existing.projects = entity.projects
 
+        existing = self.session.merge(entity)
         self.session.commit()
         self.session.refresh(existing)
         return existing
 
+
+    def createOrUpdate(self, user_id: int, entity: UserProfileEntity):
+        existing = self.session.query(UserProfileEntity).filter_by(id=user_id).first()
+        if not existing:
+            return self.create(entity=entity)
+        else:
+            return self.update(user_id=user_id, entity=entity)
+            
 
     def delete(self, user_id: int) -> bool:
         entity = self.session.query(UserProfileEntity).filter_by(id=user_id).first()
