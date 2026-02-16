@@ -702,7 +702,8 @@ Contenu obligatoire :
 1. Niveau du candidat M1
 2. Champ data général (ex : data, analytics, data science, decision support)
 3. Valeur principale apportée (analyse, automatisation, aide à la décision, produits data)
-4. Objectif clair (stage ou poste, durée si stage)
+4. Objectif clair (stage ou poste, durée si stage
+)
 
 Règles d’adaptation :
 - Si l’offre est orientée analyse / BI :

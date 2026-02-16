@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { JobOffer } from '../../models/interface/job-offer';
 import { ButtonModule } from 'primeng/button';
@@ -29,11 +29,13 @@ import { ApplicationInfoModal } from '../application-info-modal/application-info
   templateUrl: './job-results.html',
   styleUrl: './job-results.scss',
 })
-export class JobResults {
+export class JobResults implements OnChanges {
   @Input({required:true}) resultsData!: Page<JobOffer>;
+  @Input() selectedJobRef: string | null = null;
   @Output() closeResults = new EventEmitter<void>();
   @Output() isjobDetailsOpen = new EventEmitter<boolean>();
   @Output() onPageChangeEvent = new EventEmitter<PaginatorState>();
+  @Output() onJobSelected = new EventEmitter<string>();
 
   generatingCv: boolean = false;
   selectedJob: JobOffer | null = null;
@@ -47,6 +49,26 @@ export class JobResults {
 
   ngOnInit() {
     this.showApplicationModalFlag = false;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // Load job details if selectedJobRef is provided (e.g., from URL on refresh)
+    if (changes['selectedJobRef'] && this.selectedJobRef) {
+      this.loadJobFromRef(this.selectedJobRef);
+    }
+  }
+
+  private loadJobFromRef(jobRef: string) {
+    this.jobService.getJobDetails(jobRef).subscribe({
+      next: (data) => {
+        this.selectedJob = data;
+        this.visible = true;
+        this.isjobDetailsOpen.emit(true);
+      },
+      error: (err) => {
+        console.log('Failed to load job from URL:', err);
+      }
+    });
   }
 
 
@@ -71,13 +93,14 @@ export class JobResults {
     { label: 'System', color1: '#c084fc', color2: '#c084fc', value: 10, icon: 'pi pi-cog' }
   ];
 
-  
+
   getSelectedJob(): JobOffer | null {
     return this.selectedJob ? this.selectedJob : null;
   }
 
   showJobDetails(reference: string) {
-    this.emitJobDetailEvent(true)
+    this.emitJobDetailEvent(true);
+    this.onJobSelected.emit(reference);
     this.jobService.getJobDetails(reference)
       .subscribe({
         next: (data) => {

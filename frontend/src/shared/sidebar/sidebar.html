@@ -1,16 +1,30 @@
-<div id="navbar" class="flex items-center justify-between py-1 px-5">
-  <div>
-    <p-button (click)="visible = true" icon="pi pi-bars" class="" />
+<nav class="flex items-center justify-between py-3 px-6 bg-neutral-900 border-b border-neutral-800">
+  <div class="flex items-center gap-4">
+    <p-button (click)="visible = true" icon="pi pi-bars" [text]="true" severity="secondary" />
+    <div class="flex items-center gap-2">
+      <i class="pi pi-briefcase text-emerald-400 text-xl"></i>
+      <span class="text-lg font-semibold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+        JobMatch AI
+      </span>
+    </div>
   </div>
-  <div>
-      Jonh Doe
+
+  <div class="flex items-center gap-4">
+    <p-button icon="pi pi-bell" [text]="true" severity="secondary" [badge]="'3'" badgeSeverity="danger" />
+    <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-neutral-800/50 hover:bg-neutral-800 cursor-pointer transition-colors">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center text-sm font-semibold text-neutral-900">
+        JD
+      </div>
+      <span class="text-sm text-neutral-200">John Doe</span>
+      <i class="pi pi-chevron-down text-xs text-neutral-400"></i>
+    </div>
   </div>
-</div>
+</nav>
 
-<p-drawer [(visible)]="visible" header="Menu" [modal]="false" position="left">
-  <div class="drawer-content">
-    <p-menu [model]="items" routerLinkActive="active" class="border border-emerald-200/50"></p-menu>
-
-    <p-menu [model]="items2" class="border border-emerald-200/50"></p-menu>
+<p-drawer [(visible)]="visible" header="Navigation" [modal]="false" position="left" styleClass="w-72">
+  <div class="flex flex-col gap-4 h-full">
+    <p-menu [model]="items" styleClass="w-full border-none bg-transparent" />
+    <div class="flex-1"></div>
+    <p-menu [model]="items2" styleClass="w-full border-none bg-transparent" />
   </div>
 </p-drawer>

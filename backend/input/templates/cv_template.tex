@@ -60,18 +60,6 @@ Tools & {{ skills.tools | join(', ') }} \\
 \end{rSection}
 
 
-\begin{rSection}{Projets Pertinents}
-{% for proj in projects %}
-\item \textbf{ {{ proj.title }} }{% if proj.url %} \href{ {{ proj.url }} }{(GitHub)}{% endif %}\\
-{{ proj.description }}
-{% if not loop.last %}
-\vspace{0.5em}
-{% endif %}
-{% endfor %}
-\end{rSection}
-
-
-
 \begin{rSection}{Expérience Professionnelle}
 {% for exp in experience %}
 \textbf{ {{ exp.title }} } \hfill {{ exp.start_date }} | {{ exp.end_date }}\\
@@ -84,6 +72,18 @@ Tools & {{ skills.tools | join(', ') }} \\
 \vspace{0.5em}  % spacing between experiences
 {% endfor %}
 \end{rSection}
+
+
+\begin{rSection}{Projets Pertinents}
+{% for proj in projects %}
+\item \textbf{ {{ proj.title }} }{% if proj.url %} \href{ {{ proj.url }} }{(GitHub)}{% endif %}\\
+{{ proj.description }}
+{% if not loop.last %}
+\vspace{0.5em}
+{% endif %}
+{% endfor %}
+\end{rSection}
+
 
 
 \begin{rSection}{Langues \& Certifications}

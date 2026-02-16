@@ -1,65 +1,385 @@
-<p-toast></p-toast>
-<div class="p-5 overflow-y-auto" [class.hidden]="!sideFilterActive">
-    <div class="flex justify-between items-center p-3">
-        <div class="text-xl"><span class="text-emerald-400">{{totalSearchResults | number}}</span> Jobs matched</div>
-        <button pButton label="clear filters" variant="text" (onclick)="clearFilters()" severity="secondary"></button>
-    </div>
-    <p-floatlabel variant="on">
-        <input class="p-4 w-full bg-neutral-800 rounded" pInputText id="on_label" [(ngModel)]="filters.title_contains"
-            autocomplete="off" />
-        <label for="on_label">What do you want to do ?</label>
-    </p-floatlabel>
-     <p-button icon="pi pi-search" (onClick)="emitSearchEvent()"></p-button>
-    <p-accordion value="0">
-        <p-accordion-panel value="0">
-            <p-accordion-header>Locations I</p-accordion-header>
-            <p-accordion-content>
-                <p class="m-0">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore
-                    magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-                    ea commodo
-                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                    nulla
-                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-                    anim id est
-                    laborum.
-                </p>
-            </p-accordion-content>
-        </p-accordion-panel>
 
-        <p-accordion-panel value="1">
-            <p-accordion-header>Experience</p-accordion-header>
-            <p-accordion-content>
-                <p class="m-0">
-                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
-                    totam rem
-                    aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt
-                    explicabo. Nemo
-                    enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni
-                    dolores eos
-                    qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                </p>
-            </p-accordion-content>
-        </p-accordion-panel>
-    </p-accordion>
-</div>
-
-<div class="w-full px-5 py-2 bg-emerald-900/10"
- [class.hidden]="sideFilterActive" >
+<!-- Side Filter Panel (Expanded View) -->
+<div class="p-5 flex flex-col gap-4 h-full overflow-y-auto" [class.hidden]="!sideFilterActive">
+  <!-- Header -->
+  <div class="flex justify-between items-center pb-3 border-b border-neutral-700">
     <div class="flex items-center gap-2">
-        <p-floatlabel variant="on">
-            <input class="w-sm" pInputText id="on_label" [(ngModel)]="filters.title_contains" />
-            <label for="on_label">Search</label>
-        </p-floatlabel>
-        <p-floatlabel variant="on">
-            <input class="w-sm" pInputText id="description_contains" [(ngModel)]="filters.description_contains" />
-            <label for="description_contains">Description contains</label>
-        </p-floatlabel>
-                <p-floatlabel variant="on">
-            <input class="" pInputText id="city_filter" [(ngModel)]="filters.city" />
-            <label for="city_filter">City</label>
-        </p-floatlabel>
-        <p-button icon="pi pi-search" (onClick)="emitSearchEvent()"></p-button>
+      <span class="text-xl font-semibold">
+        <span class="text-emerald-400">{{ totalSearchResults | number }}</span> Jobs matched
+      </span>
+      @if (getActiveFilterCount() > 0) {
+        <p-chip [label]="getActiveFilterCount() + ' filters'" styleClass="bg-emerald-600 text-white text-xs" />
+      }
     </div>
+    <p-button
+      label="Clear all"
+      icon="pi pi-times"
+      [text]="true"
+      severity="secondary"
+      size="small"
+      (onClick)="clearFilters()"
+    />
+  </div>
+
+  <!-- Search Input -->
+  <div class="flex flex-col gap-3">
+    <p-floatlabel variant="on">
+      <input
+        class="w-full"
+        pInputText
+        id="title_search"
+        [(ngModel)]="filters.title_contains"
+        autocomplete="off"
+      />
+      <label for="title_search">Job title or keywords</label>
+    </p-floatlabel>
+
+    <p-floatlabel variant="on">
+      <input
+        class="w-full"
+        pInputText
+        id="description_search"
+        [(ngModel)]="filters.description_contains"
+        autocomplete="off"
+      />
+      <label for="description_search">Description contains</label>
+    </p-floatlabel>
+  </div>
+
+  <!-- Location Filters Accordion -->
+  <p-accordion [multiple]="true" [value]="['location', 'job-type', 'source']">
+    <p-accordion-panel value="location">
+      <p-accordion-header>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-map-marker text-emerald-400"></i>
+          <span>Location</span>
+        </div>
+      </p-accordion-header>
+      <p-accordion-content>
+        <div class="flex flex-col gap-3 pt-2">
+          <p-floatlabel variant="on">
+            <p-select
+              id="country_select"
+              [options]="countryOptions()"
+              [(ngModel)]="selectedCountry"
+              optionLabel="label"
+              [filter]="true"
+              filterPlaceholder="Search countries..."
+              [showClear]="true"
+              styleClass="w-full"
+              appendTo="body"
+            />
+            <label for="country_select">Country</label>
+          </p-floatlabel>
+
+          <p-floatlabel variant="on">
+            <p-autoComplete
+              id="region_autocomplete"
+              [(ngModel)]="selectedRegion"
+              [suggestions]="filteredRegions()"
+              (completeMethod)="filterRegions($event)"
+              field="label"
+              [dropdown]="true"
+              [showClear]="true"
+              styleClass="w-full"
+              appendTo="body"
+            />
+            <label for="region_autocomplete">Region / State</label>
+          </p-floatlabel>
+
+          <p-floatlabel variant="on">
+            <p-autoComplete
+              id="city_autocomplete"
+              [(ngModel)]="selectedCity"
+              [suggestions]="filteredCities()"
+              (completeMethod)="filterCities($event)"
+              field="label"
+              [dropdown]="true"
+              [showClear]="true"
+              styleClass="w-full"
+              appendTo="body"
+            />
+            <label for="city_autocomplete">City</label>
+          </p-floatlabel>
+        </div>
+      </p-accordion-content>
+    </p-accordion-panel>
+
+    <p-accordion-panel value="job-type">
+      <p-accordion-header>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-briefcase text-emerald-400"></i>
+          <span>Job Type</span>
+        </div>
+      </p-accordion-header>
+      <p-accordion-content>
+        <div class="flex flex-col gap-3 pt-2">
+          <p-floatlabel variant="on">
+            <p-select
+              id="seniority_select"
+              [options]="seniorityOptions()"
+              [(ngModel)]="selectedSeniority"
+              optionLabel="label"
+              [showClear]="true"
+              styleClass="w-full"
+              appendTo="body"
+            />
+            <label for="seniority_select">Experience Level</label>
+          </p-floatlabel>
+
+          <div class="flex items-center justify-between p-3 bg-neutral-800/50 rounded-lg">
+            <div class="flex items-center gap-2">
+              <i class="pi pi-bolt text-yellow-400"></i>
+              <span class="text-sm">Easy Apply Only</span>
+            </div>
+            <p-toggleSwitch [(ngModel)]="hasEasyApply" />
+          </div>
+
+          <div class="flex items-center justify-between p-3 bg-neutral-800/50 rounded-lg">
+            <div class="flex items-center gap-2">
+              <i class="pi pi-history text-neutral-400"></i>
+              <span class="text-sm">Include Expired Jobs</span>
+            </div>
+            <p-toggleSwitch [(ngModel)]="includeExpired" />
+          </div>
+        </div>
+      </p-accordion-content>
+    </p-accordion-panel>
+
+    <p-accordion-panel value="source">
+      <p-accordion-header>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-globe text-emerald-400"></i>
+          <span>Source</span>
+        </div>
+      </p-accordion-header>
+      <p-accordion-content>
+        <div class="flex flex-col gap-3 pt-2">
+          <p-floatlabel variant="on">
+            <p-select
+              id="source_select"
+              [options]="sourceOptions()"
+              [(ngModel)]="selectedSource"
+              optionLabel="label"
+              [showClear]="true"
+              styleClass="w-full"
+              appendTo="body"
+            />
+            <label for="source_select">Job Board</label>
+          </p-floatlabel>
+        </div>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
+
+  <!-- Search Button -->
+  <p-button
+    label="Search Jobs"
+    icon="pi pi-search"
+    styleClass="w-full"
+    (onClick)="emitSearchEvent()"
+  />
 </div>
+
+<!-- Compact Filter Bar (Collapsed View) -->
+<div
+  class="w-full bg-gradient-to-r from-neutral-900 via-neutral-900/95 to-neutral-900 backdrop-blur-md border-b border-neutral-700/50 sticky top-0 z-30"
+  [class.hidden]="sideFilterActive"
+>
+  <!-- Main Filter Row -->
+  <div class="flex items-center gap-2 px-4 py-2.5">
+    <!-- Search Input with Icon -->
+    <div class="relative flex-1 min-w-56 max-w-md">
+      <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm"></i>
+      <input
+        pInputText
+        class="w-full pl-9 pr-3 py-2 bg-neutral-800/80 border-neutral-700 rounded-lg text-sm placeholder:text-neutral-500 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition-all"
+        placeholder="Search jobs, titles, keywords..."
+        [(ngModel)]="filters.title_contains"
+        (keydown.enter)="emitSearchEvent()"
+      />
+    </div>
+
+    <!-- Divider -->
+    <div class="h-6 w-px bg-neutral-700/50"></div>
+
+    <!-- Location Group -->
+    <div class="flex items-center gap-2">
+      <p-select
+        [options]="countryOptions()"
+        [(ngModel)]="selectedCountry"
+        optionLabel="label"
+        [filter]="true"
+        [showClear]="true"
+        placeholder="Country"
+        styleClass="w-36 text-sm"
+        appendTo="body"
+      >
+        <ng-template pTemplate="selectedItem" let-selected>
+          <div class="flex items-center gap-1.5">
+            <i class="pi pi-globe text-emerald-400 text-xs"></i>
+            <span class="truncate">{{ selected?.label }}</span>
+          </div>
+        </ng-template>
+      </p-select>
+
+      <p-autoComplete
+        [(ngModel)]="selectedCity"
+        [suggestions]="filteredCities()"
+        (completeMethod)="filterCities($event)"
+        field="label"
+        [dropdown]="true"
+        [showClear]="true"
+        placeholder="City"
+        styleClass="w-32 text-sm"
+        appendTo="body"
+      >
+        <ng-template pTemplate="selectedItem" let-selected>
+          <div class="flex items-center gap-1.5">
+            <i class="pi pi-map-marker text-emerald-400 text-xs"></i>
+            <span class="truncate">{{ selected?.label }}</span>
+          </div>
+        </ng-template>
+      </p-autoComplete>
+    </div>
+
+    <!-- Divider -->
+    <div class="h-6 w-px bg-neutral-700/50"></div>
+
+    <!-- Experience Level -->
+    <p-select
+      [options]="seniorityOptions()"
+      [(ngModel)]="selectedSeniority"
+      optionLabel="label"
+      [showClear]="true"
+      placeholder="Experience"
+      styleClass="w-36 text-sm"
+      appendTo="body"
+    >
+      <ng-template pTemplate="selectedItem" let-selected>
+        <div class="flex items-center gap-1.5">
+          <i class="pi pi-briefcase text-emerald-400 text-xs"></i>
+          <span class="truncate">{{ selected?.label }}</span>
+        </div>
+      </ng-template>
+    </p-select>
+
+    <!-- Source -->
+    <p-select
+      [options]="sourceOptions()"
+      [(ngModel)]="selectedSource"
+      optionLabel="label"
+      [showClear]="true"
+      placeholder="Source"
+      styleClass="w-32 text-sm"
+      appendTo="body"
+    >
+      <ng-template pTemplate="selectedItem" let-selected>
+        <div class="flex items-center gap-1.5">
+          <i class="pi pi-link text-emerald-400 text-xs"></i>
+          <span class="truncate">{{ selected?.label }}</span>
+        </div>
+      </ng-template>
+    </p-select>
+
+    <!-- Divider -->
+    <div class="h-6 w-px bg-neutral-700/50"></div>
+
+    <!-- Easy Apply Toggle Chip -->
+    <div
+      class="flex items-center gap-2 px-3 py-1.5 rounded-full cursor-pointer transition-all border"
+      [ngClass]="hasEasyApply ? 'bg-yellow-500/20 border-yellow-500/50 text-yellow-300' : 'bg-neutral-800/50 border-neutral-700 text-neutral-400 hover:bg-neutral-800'"
+      (click)="hasEasyApply = !hasEasyApply; emitSearchEvent()"
+    >
+      <i class="pi pi-bolt text-sm" [ngClass]="hasEasyApply ? 'text-yellow-400' : 'text-neutral-500'"></i>
+      <span class="text-xs font-medium whitespace-nowrap">Easy Apply</span>
+    </div>
+
+    <!-- Include Expired Toggle Chip -->
+    <div
+      class="flex items-center gap-2 px-3 py-1.5 rounded-full cursor-pointer transition-all border"
+      [ngClass]="includeExpired ? 'bg-neutral-600/30 border-neutral-500/50 text-neutral-300' : 'bg-neutral-800/50 border-neutral-700 text-neutral-400 hover:bg-neutral-800'"
+      (click)="includeExpired = !includeExpired; emitSearchEvent()"
+    >
+      <i class="pi pi-history text-sm" [ngClass]="includeExpired ? 'text-neutral-300' : 'text-neutral-500'"></i>
+      <span class="text-xs font-medium whitespace-nowrap">Expired</span>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-1.5 ml-auto">
+      <p-button
+        icon="pi pi-search"
+        label="Search"
+        size="small"
+        styleClass="bg-emerald-600 hover:bg-emerald-500 border-emerald-600 text-sm"
+        (onClick)="emitSearchEvent()"
+      />
+
+      @if (getActiveFilterCount() > 0) {
+        <p-button
+          icon="pi pi-filter-slash"
+          size="small"
+          severity="secondary"
+          [outlined]="true"
+          [badge]="getActiveFilterCount().toString()"
+          badgeSeverity="danger"
+          (onClick)="clearFilters()"
+          pTooltip="Clear all filters"
+          tooltipPosition="bottom"
+        />
+      }
+    </div>
+  </div>
+
+  <!-- Active Filters Pills (show only when filters are active) -->
+  @if (getActiveFilterCount() > 0) {
+    <div class="flex items-center gap-2 px-4 pb-2.5 pt-0 overflow-x-auto">
+      <span class="text-xs text-neutral-500">Active:</span>
+      @if (filters.title_contains) {
+        <p-chip
+          [label]="filters.title_contains"
+          [removable]="true"
+          (onRemove)="filters.title_contains = ''; emitSearchEvent()"
+          styleClass="text-xs bg-emerald-900/50 text-emerald-300 border border-emerald-700/50"
+        />
+      }
+      @if (selectedCountry) {
+        <p-chip
+          [label]="selectedCountry.label"
+          [removable]="true"
+          (onRemove)="selectedCountry = null; emitSearchEvent()"
+          styleClass="text-xs bg-neutral-800 text-neutral-300"
+        >
+          <i class="pi pi-globe text-xs mr-1"></i>
+        </p-chip>
+      }
+      @if (selectedCity) {
+        <p-chip
+          [label]="selectedCity.label"
+          [removable]="true"
+          (onRemove)="selectedCity = null; emitSearchEvent()"
+          styleClass="text-xs bg-neutral-800 text-neutral-300"
+        >
+          <i class="pi pi-map-marker text-xs mr-1"></i>
+        </p-chip>
+      }
+      @if (selectedSeniority) {
+        <p-chip
+          [label]="selectedSeniority.label"
+          [removable]="true"
+          (onRemove)="selectedSeniority = null; emitSearchEvent()"
+          styleClass="text-xs bg-neutral-800 text-neutral-300"
+        />
+      }
+      @if (selectedSource) {
+        <p-chip
+          [label]="selectedSource.label"
+          [removable]="true"
+          (onRemove)="selectedSource = null; emitSearchEvent()"
+          styleClass="text-xs bg-neutral-800 text-neutral-300"
+        />
+      }
+    </div>
+  }
+</div>
+

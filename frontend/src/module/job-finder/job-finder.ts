@@ -13,6 +13,7 @@ import { PageRequest, toPageRequest } from '../../models/interface/page-request'
 import { Page } from '../../models/interface/page';
 import { PaginatorState } from 'primeng/paginator';
 import { JobFilters } from '../../models/filters/job-filters';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-job-finder',
@@ -33,11 +34,16 @@ export class JobFinder implements OnInit {
   conversation: QuestionAnswer[] = [];
   showResults: boolean = true;
   filterSideLayout: boolean = true;
+  selectedJobRef: string | null = null;
 
   pageRequest: PageRequest;
   resultsData: Page<JobOffer>;
 
-  constructor(private service: JobService) {
+  constructor(
+    private service: JobService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.pageRequest = { page: 0, size: 10 };
     this.resultsData = {
       content: [],
@@ -49,6 +55,15 @@ export class JobFinder implements OnInit {
   }
 
   ngOnInit() {
+    // Subscribe to query params to handle job reference from URL
+    this.route.queryParams.subscribe(params => {
+      const jobRef = params['job'];
+      if (jobRef) {
+        this.selectedJobRef = jobRef;
+        this.filterSideLayout = false;
+      }
+    });
+
     this.getJobOffers(this.pageRequest);
   }
 
@@ -58,6 +73,25 @@ export class JobFinder implements OnInit {
 
   onJobDetailsOpen(isOpen: boolean) {
     this.filterSideLayout = !isOpen;
+    if (!isOpen) {
+      // Remove job param from URL when closing details
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { job: null },
+        queryParamsHandling: 'merge'
+      });
+      this.selectedJobRef = null;
+    }
+  }
+
+  onJobSelected(jobRef: string) {
+    this.selectedJobRef = jobRef;
+    // Update URL with job reference for refresh persistence
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { job: jobRef },
+      queryParamsHandling: 'merge'
+    });
   }
 
   getJobOffers(request: PageRequest, filters:JobFilters|undefined = undefined) {

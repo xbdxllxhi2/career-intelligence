@@ -1,0 +1,29 @@
+// Custom scrollbar styling for the filter panel
+:host {
+  display: block;
+  height: 100%;
+}
+
+// Hide scrollbar but keep functionality (webkit browsers)
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.neutral.600') transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: theme('colors.neutral.600');
+    border-radius: 3px;
+
+    &:hover {
+      background-color: theme('colors.neutral.500');
+    }
+  }
+}
+

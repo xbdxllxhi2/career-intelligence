@@ -1,6 +1,9 @@
 import jobs.Job
 import json
 import uuid
+import re
+import unicodedata
+
 from services.keyword_extractor import extract_keywords
 from services.matcher import match_profile_sections
 from services.llm_writer import generate_cv_section
@@ -31,12 +34,42 @@ LATEX_SPECIAL_CHARS = {
     "^": r"\textasciicircum{}",
 }
 
+_LATEX_ESCAPE_RE = re.compile(r"([\\%$#&_{}~^])")
+
+UNICODE_SPACES = r"[\u00A0\u2000-\u200B\u202F\u205F\u3000]"  # NBSP + various spaces
+ZERO_WIDTH = r"[\u200B\u200C\u200D\uFEFF]"                  # zero-width chars
+
+def normalize_llm_text(text: str) -> str:
+    if text is None:
+        return ""
+
+    # Normalize compatibility forms (good default for CV content)
+    text = unicodedata.normalize("NFKC", text)
+
+    # Replace non-standard spaces with normal space
+    text = re.sub(UNICODE_SPACES, " ", text)
+
+    # Remove zero-width characters
+    text = re.sub(ZERO_WIDTH, "", text)
+
+    # Normalize runs of spaces/tabs
+    text = re.sub(r"[ \t]+", " ", text)
+
+    # Keep newlines but prevent excessive blank lines
+    text = re.sub(r"\n{3,}", "\n\n", text)
+
+    return text.strip()
+
+
+
+# def escape_latex(text: str) -> str:
+#     for char, replacement in LATEX_SPECIAL_CHARS.items():
+#         text = text.replace(char, replacement)
+#     return text
 
 def escape_latex(text: str) -> str:
-    for char, replacement in LATEX_SPECIAL_CHARS.items():
-        text = text.replace(char, replacement)
-    return text
-
+    text = normalize_llm_text(text)
+    return _LATEX_ESCAPE_RE.sub(lambda m: LATEX_SPECIAL_CHARS[m.group(1)], text)
 
 def latex_safe_resume(resume: ResumeGenerationResponse) -> ResumeGenerationResponse:
     return ResumeGenerationResponse(
