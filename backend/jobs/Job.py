@@ -26,6 +26,8 @@ class JobBasic(BaseModel):
 
 class JobDetail(JobBasic):
     job_url: Optional[str] = None
+    description: Optional[str] = None
+    source_apply_url: Optional[str] = None
 
 
 class FilterOptions(BaseModel):

@@ -7,17 +7,17 @@
       (searchEvent)="search($event)"
       class="flex-shrink-0 w-full"
     />
-  }
+   }
 
   <!-- Main Content Area -->
-  <div class="flex flex-1 min-h-0 overflow-hidden">
+  <div class="flex flex-1 overflow-hidden">
     <!-- Side Filter Panel (when expanded) -->
     @if (filterSideLayout) {
       <app-jobs-filters
         [sideFilterActive]="true"
         [totalSearchResults]="resultsData.totalElements"
         (searchEvent)="search($event)"
-        class="w-80 flex-shrink-0 border-r border-neutral-700/50 h-full overflow-y-auto"
+        class="w-130 flex-shrink-0 border-r border-neutral-700/50 h-full overflow-y-auto"
       />
     }
 

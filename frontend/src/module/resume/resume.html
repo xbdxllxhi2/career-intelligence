@@ -1,28 +1,64 @@
 <p-toast></p-toast>
-<div class="w-full h-full flex flex-col justify-center items-center">
-    <div class="h-50">
-        <div
-            class="text-4xl font-bold bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 bg-clip-text text-transparent">
-            Generate Resume
-        </div>
-
-
-    </div>
+<div class="h-full w-full bg-neutral-900 flex flex-col overflow-hidden">
+  <!-- Simple Header -->
+  <div class="flex-shrink-0 px-6 py-6 border-b border-neutral-800">
     <div class="max-w-3xl mx-auto">
-        <p-floatlabel variant="on">
-            <textarea pTextarea id="offer_description" [(ngModel)]="offerDescription" rows="10" cols="100"
-                style="resize: none" class="w-full p-2 pr-20 pb-5 resize-none overflow-y-auto bg-transparent
-            focus:outline-none"></textarea>
-            <label for="offer_description">Offer description</label>
-        </p-floatlabel>
-
-        <div class="flex justify-end gap-2 p-2 rounded-2xl">
-            <button pButton loadingIcon="pi pi-paper-plane" [loading]="isGeneratingResume"
-                [disabled]="!offerDescription" class="p-2 rounded-2xl bg-emerald-900" (click)="generateResume()">
-                <i class="pi pi-download" pButtonIcon></i>
-                <span pButtonLabel> Resume</span>
-            </button>
-        </div>
+      <h1 class="text-xl font-medium text-white">Resume Generator</h1>
     </div>
+  </div>
 
+  <!-- Content -->
+  <div class="flex-1 overflow-y-auto px-6 py-8">
+    <div class="max-w-3xl mx-auto space-y-6">
+      
+      <!-- Textarea -->
+      <div>
+        <label class="block text-sm text-neutral-400 mb-2">Paste the job description</label>
+        <textarea
+          pTextarea
+          [(ngModel)]="offerDescription"
+          rows="14"
+          placeholder="Copy and paste the job posting here..."
+          class="w-full p-4 bg-neutral-800 border border-neutral-700 rounded-lg text-neutral-200 placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none resize-none"
+        ></textarea>
+        <div class="flex justify-between mt-2 text-xs text-neutral-500">
+          <span>Minimum 50 characters</span>
+          <span>{{ offerDescription.length }} chars</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center justify-between pt-2">
+        <button
+          pButton
+          [text]="true"
+          size="small"
+          [disabled]="offerDescription.length === 0"
+          (click)="offerDescription = ''"
+          class="text-neutral-500 hover:text-neutral-300 disabled:opacity-30"
+        >
+          Clear
+        </button>
+
+        <button
+          pButton
+          [loading]="isGeneratingResume"
+          [disabled]="offerDescription.length < 50"
+          (click)="generateResume()"
+          class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 border-0 rounded-lg text-sm font-medium transition-colors disabled:opacity-40 disabled:hover:bg-emerald-600"
+        >
+          @if (isGeneratingResume) {
+            Generating...
+          } @else {
+            Generate PDF
+          }
+        </button>
+      </div>
+
+      <!-- Minimal hint -->
+      <p class="text-xs text-neutral-600 pt-4">
+        Your profile data will be matched against the job requirements to create a tailored resume.
+      </p>
+    </div>
+  </div>
 </div>

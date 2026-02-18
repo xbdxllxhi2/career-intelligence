@@ -15,9 +15,9 @@ export interface UserApplicationInfo {
   company?:string,
   company_logo_url?:string,
   job_offer_url?:string,
-  applied_at?: Date;
-  applied_through?: string;
-  application_experience?: number;
+  date?: Date;  // Applied date from API
+  portal?: string;  // Applied through from API
+  rating?: number;  // Application experience from API
   notes?: string;
   status: string;
 }

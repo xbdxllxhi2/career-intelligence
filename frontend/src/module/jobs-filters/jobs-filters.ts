@@ -60,10 +60,10 @@ export class JobsFilters implements OnInit {
   filteredCities = signal<SelectOption[]>([]);
   filteredRegions = signal<SelectOption[]>([]);
 
-  // Selected values
+  // Selected values (can be SelectOption object or string from autocomplete input)
   selectedCountry: SelectOption | null = null;
-  selectedRegion: SelectOption | null = null;
-  selectedCity: SelectOption | null = null;
+  selectedRegion: SelectOption | string | null = null;
+  selectedCity: SelectOption | string | null = null;
   selectedSeniority: SelectOption | null = null;
   selectedSource: SelectOption | null = null;
   includeExpired = false;
@@ -110,15 +110,27 @@ export class JobsFilters implements OnInit {
   emitSearchEvent(): void {
     this.filters = {
       ...this.filters,
-      country: this.selectedCountry?.value,
-      region: this.selectedRegion?.value,
-      city: this.selectedCity?.value,
-      seniority: this.selectedSeniority?.value,
-      source: this.selectedSource?.value,
+      country: this.getFilterValue(this.selectedCountry),
+      region: this.getFilterValue(this.selectedRegion),
+      city: this.getFilterValue(this.selectedCity),
+      seniority: this.getFilterValue(this.selectedSeniority),
+      source: this.getFilterValue(this.selectedSource),
       include_expired: this.includeExpired,
       has_easy_apply: this.hasEasyApply || undefined,
     };
     this.searchEvent.emit(this.filters);
+  }
+
+  private getFilterValue(selected: SelectOption | string | null | undefined): string | undefined {
+    if (!selected) return undefined;
+    if (typeof selected === 'string') return selected;
+    return selected.value;
+  }
+
+  getFilterLabel(selected: SelectOption | string | null | undefined): string {
+    if (!selected) return '';
+    if (typeof selected === 'string') return selected;
+    return selected.label;
   }
 
   clearFilters(): void {
@@ -137,11 +149,11 @@ export class JobsFilters implements OnInit {
     let count = 0;
     if (this.filters.title_contains) count++;
     if (this.filters.description_contains) count++;
-    if (this.selectedCountry) count++;
-    if (this.selectedRegion) count++;
-    if (this.selectedCity) count++;
-    if (this.selectedSeniority) count++;
-    if (this.selectedSource) count++;
+    if (this.getFilterValue(this.selectedCountry)) count++;
+    if (this.getFilterValue(this.selectedRegion)) count++;
+    if (this.getFilterValue(this.selectedCity)) count++;
+    if (this.getFilterValue(this.selectedSeniority)) count++;
+    if (this.getFilterValue(this.selectedSource)) count++;
     if (this.includeExpired) count++;
     if (this.hasEasyApply) count++;
     return count;
