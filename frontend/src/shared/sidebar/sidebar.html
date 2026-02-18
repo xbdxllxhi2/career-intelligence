@@ -9,14 +9,14 @@
     </button>
     
     <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center">
         <i class="pi pi-briefcase text-white text-sm"></i>
       </div>
       <div class="flex flex-col">
-        <span class="text-base font-bold bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-          JobMatch
+        <span class="text-base font-bold bg-clip-text">
+          Career Intelligence
         </span>
-        <span class="text-[10px] text-neutral-500 uppercase tracking-widest font-medium -mt-0.5">AI Powered</span>
+        <span class="text-[10px] text-neutral-500 uppercase tracking-widest font-medium -mt-0.5">Predict. Position. Succeed.</span>
       </div>
     </div>
   </div>
@@ -25,24 +25,51 @@
   <div class="hidden md:flex items-center gap-1 px-1.5 py-1.5 bg-neutral-900/50 rounded-2xl border border-neutral-800/50">
     <a routerLink="/" routerLinkActive="bg-neutral-800 text-white" [routerLinkActiveOptions]="{exact: true}" 
        class="px-4 py-2 rounded-xl text-sm text-neutral-400 hover:text-white hover:bg-neutral-800/50 transition-all duration-200">
-      Home
+      {{ 'nav.home' | transloco }}
     </a>
     <a routerLink="/jobs" routerLinkActive="bg-neutral-800 text-white"
        class="px-4 py-2 rounded-xl text-sm text-neutral-400 hover:text-white hover:bg-neutral-800/50 transition-all duration-200">
-      Jobs
+      {{ 'nav.jobs' | transloco }}
     </a>
     <a routerLink="/applications" routerLinkActive="bg-neutral-800 text-white"
        class="px-4 py-2 rounded-xl text-sm text-neutral-400 hover:text-white hover:bg-neutral-800/50 transition-all duration-200">
-      Applications
+      {{ 'nav.applications' | transloco }}
     </a>
     <a routerLink="/resume" routerLinkActive="bg-neutral-800 text-white"
        class="px-4 py-2 rounded-xl text-sm text-neutral-400 hover:text-white hover:bg-neutral-800/50 transition-all duration-200">
-      Resume
+      {{ 'nav.resume' | transloco }}
+    </a>
+    <a routerLink="/analytics" routerLinkActive="bg-neutral-800 text-white"
+       class="px-4 py-2 rounded-xl text-sm text-neutral-400 hover:text-white hover:bg-neutral-800/50 transition-all duration-200">
+      {{ 'nav.analytics' | transloco }}
     </a>
   </div>
 
   <!-- Right Section -->
   <div class="flex items-center gap-3">
+    <!-- Language Selector -->
+    <p-select
+      [options]="languages"
+      [(ngModel)]="selectedLanguage"
+      (onChange)="onLanguageChange($event.value)"
+      optionLabel="name"
+      appendTo="body"
+      styleClass="!w-32 !bg-neutral-800/50 !border-neutral-700/50 [&_.p-select-label]:!py-2"
+    >
+      <ng-template #selectedItem let-selected>
+        <div class="flex items-center gap-2" *ngIf="selected">
+          <span>{{ selected.flag }}</span>
+          <span class="text-sm">{{ selected.code.toUpperCase() }}</span>
+        </div>
+      </ng-template>
+      <ng-template #item let-lang>
+        <div class="flex items-center gap-2">
+          <span>{{ lang.flag }}</span>
+          <span>{{ lang.name }}</span>
+        </div>
+      </ng-template>
+    </p-select>
+
     <!-- Notification Bell -->
     <button class="relative p-2.5 rounded-xl bg-neutral-800/50 hover:bg-neutral-800 border border-neutral-700/50 transition-all duration-200 group">
       <i class="pi pi-bell text-neutral-400 group-hover:text-white transition-colors"></i>
@@ -56,11 +83,11 @@
 
     <!-- User Profile -->
     <button class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-neutral-800/50 transition-all duration-200 group">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 flex items-center justify-center text-sm font-bold text-white shadow-lg shadow-purple-500/20">
-        JD
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-500 flex items-center justify-center text-sm font-bold text-white">
+        AA
       </div>
       <div class="hidden sm:flex flex-col items-start">
-        <span class="text-sm font-medium text-white">John Doe</span>
+        <span class="text-sm font-medium text-white">Abdellahi</span>
         <span class="text-[11px] text-neutral-500">Pro Plan</span>
       </div>
       <i class="pi pi-chevron-down text-xs text-neutral-500 group-hover:text-neutral-400 transition-colors"></i>
@@ -81,16 +108,16 @@
   <div class="flex flex-col h-full px-2">
     <!-- Main Menu -->
     <div class="space-y-1 mt-4">
-      <p class="text-[11px] text-neutral-500 uppercase tracking-wider font-medium px-3 mb-3">Main Menu</p>
-      <p-menu [model]="items" styleClass="w-full !border-none !bg-transparent [&_.p-menu-item-link]:!rounded-xl [&_.p-menu-item-link]:!px-4 [&_.p-menu-item-link]:!py-3 [&_.p-menu-item-link]:hover:!bg-neutral-800/50 [&_.p-menu-item-icon]:!text-emerald-400 [&_.p-menuitem]:!mb-1" />
+      <p class="text-[11px] text-neutral-500 uppercase tracking-wider font-medium px-3 mb-3">{{ 'nav.mainMenu' | transloco }}</p>
+      <p-menu [model]="items()" styleClass="w-full !border-none !bg-transparent [&_.p-menu-item-link]:!rounded-xl [&_.p-menu-item-link]:!px-4 [&_.p-menu-item-link]:!py-3 [&_.p-menu-item-link]:hover:!bg-neutral-800/50 [&_.p-menu-item-icon]:!text-emerald-400 [&_.p-menuitem]:!mb-1" />
     </div>
     
     <div class="flex-1"></div>
     
     <!-- Bottom Menu -->
     <div class="space-y-1 mb-4">
-      <p class="text-[11px] text-neutral-500 uppercase tracking-wider font-medium px-3 mb-3">Account</p>
-      <p-menu [model]="items2" styleClass="w-full !border-none !bg-transparent [&_.p-menu-item-link]:!rounded-xl [&_.p-menu-item-link]:!px-4 [&_.p-menu-item-link]:!py-3 [&_.p-menu-item-link]:hover:!bg-neutral-800/50 [&_.p-menu-item-icon]:!text-neutral-400 [&_.p-menuitem]:!mb-1" />
+      <p class="text-[11px] text-neutral-500 uppercase tracking-wider font-medium px-3 mb-3">{{ 'nav.account' | transloco }}</p>
+      <p-menu [model]="items2()" styleClass="w-full !border-none !bg-transparent [&_.p-menu-item-link]:!rounded-xl [&_.p-menu-item-link]:!px-4 [&_.p-menu-item-link]:!py-3 [&_.p-menu-item-link]:hover:!bg-neutral-800/50 [&_.p-menu-item-icon]:!text-neutral-400 [&_.p-menuitem]:!mb-1" />
     </div>
   </div>
 </p-drawer>

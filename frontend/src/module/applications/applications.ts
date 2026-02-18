@@ -1,4 +1,4 @@
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { Component, computed, OnInit, signal, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ApplicationStatus, UserApplicationInfo } from '../../models/interface/application-info';
 import { UserApplicationService } from '../../service/user-application-service';
@@ -8,6 +8,8 @@ import { ToastModule } from 'primeng/toast';
 import { DatePipe } from '@angular/common';
 import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 interface SortOption {
   label: string;
@@ -17,12 +19,15 @@ interface SortOption {
 
 @Component({
   selector: 'app-applications',
-  imports: [ButtonModule, ToastModule, DatePipe, SelectModule, FormsModule],
+  imports: [ButtonModule, ToastModule, DatePipe, SelectModule, FormsModule, TranslocoModule],
   templateUrl: './applications.html',
   styleUrl: './applications.scss',
   providers: [MessageService],
 })
 export class Applications implements OnInit {
+  private translocoService = inject(TranslocoService);
+  private activeLang = toSignal(this.translocoService.langChanges$, { initialValue: this.translocoService.getActiveLang() });
+
   pageRequest: PageRequest = { size: 10, page: 0 };
   private rawApplications = signal<UserApplicationInfo[]>([]);
   

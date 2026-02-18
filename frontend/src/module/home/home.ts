@@ -1,4 +1,4 @@
-import { Component, afterNextRender, signal } from '@angular/core';
+import { Component, afterNextRender, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -15,19 +15,21 @@ import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { AnimateOnScrollModule } from 'primeng/animateonscroll';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 interface TimelineStep {
   number?: string;
   icon?: string;
   stepIcon: string;
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
 }
 
 interface Feature {
   icon: string;
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
 }
 
 @Component({
@@ -47,70 +49,51 @@ interface Feature {
     IconFieldModule,
     InputIconModule,
     AnimateOnScrollModule,
+    TranslocoModule,
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
 export class Home {
-  timelineSteps: TimelineStep[] = [
-    {
-      number: '1',
-      stepIcon: 'pi pi-user-plus',
-      title: 'Create Your Profile',
-      description: 'Upload your CV or import from LinkedIn. Our AI extracts your skills, experience, and career aspirations automatically.',
-    },
-    {
-      number: '2',
-      stepIcon: 'pi pi-microchip-ai',
-      title: 'AI Deep Analysis',
-      description: 'Our algorithm analyzes 50+ data points to understand not just what you\'ve done, but what you\'re capable of achieving.',
-    },
-    {
-      number: '3',
-      stepIcon: 'pi pi-bolt',
-      title: 'Instant Matching',
-      description: 'Get a curated list of opportunities ranked by compatibility. No more endless scrolling through irrelevant listings.',
-    },
-    {
-      icon: 'pi pi-check',
-      stepIcon: 'pi pi-send',
-      title: 'Apply with Confidence',
-      description: 'One-click applications with AI-tailored cover letters. Track your progress and get insights to improve.',
-    },
-  ];
+  private translocoService = inject(TranslocoService);
+  private activeLang = toSignal(this.translocoService.langChanges$, { initialValue: this.translocoService.getActiveLang() });
 
-  features: Feature[] = [
-    {
-      icon: 'pi pi-microchip-ai',
-      title: 'AI-Powered Matching',
-      description: 'Our neural network analyzes your profile against thousands of listings to find the perfect fit.',
-    },
-    {
-      icon: 'pi pi-bell',
-      title: 'Smart Alerts',
-      description: 'Get notified instantly when a high-match opportunity appears. Never miss the perfect job.',
-    },
-    {
-      icon: 'pi pi-shield',
-      title: 'Privacy First',
-      description: 'Your data stays yours. We never sell or share your personal information with anyone.',
-    },
-    {
-      icon: 'pi pi-chart-line',
-      title: 'Application Tracker',
-      description: 'Monitor all your applications in one place. Get insights on response rates and optimize.',
-    },
-    {
-      icon: 'pi pi-file-edit',
-      title: 'Resume Builder',
-      description: 'AI-powered suggestions to tailor your CV for each application automatically.',
-    },
-    {
-      icon: 'pi pi-comments',
-      title: 'Interview Prep',
-      description: 'AI-generated practice questions based on the job description to help you prepare.',
-    },
-  ];
+  // Computed features that update when language changes
+  features = computed(() => {
+    const lang = this.activeLang();
+    return [
+      {
+        icon: 'pi pi-microchip-ai',
+        title: this.translocoService.translate('home.features.aiPoweredMatching'),
+        description: this.translocoService.translate('home.features.aiPoweredMatchingDesc'),
+      },
+      {
+        icon: 'pi pi-bell',
+        title: this.translocoService.translate('home.features.smartAlerts'),
+        description: this.translocoService.translate('home.features.smartAlertsDesc'),
+      },
+      {
+        icon: 'pi pi-shield',
+        title: this.translocoService.translate('home.features.privacyFirst'),
+        description: this.translocoService.translate('home.features.privacyFirstDesc'),
+      },
+      {
+        icon: 'pi pi-chart-line',
+        title: this.translocoService.translate('home.features.applicationTracker'),
+        description: this.translocoService.translate('home.features.applicationTrackerDesc'),
+      },
+      {
+        icon: 'pi pi-file-edit',
+        title: this.translocoService.translate('home.features.resumeBuilder'),
+        description: this.translocoService.translate('home.features.resumeBuilderDesc'),
+      },
+      {
+        icon: 'pi pi-comments',
+        title: this.translocoService.translate('home.features.interviewPrep'),
+        description: this.translocoService.translate('home.features.interviewPrepDesc'),
+      },
+    ];
+  });
 
   companies: string[] = ['Google', 'Meta', 'Amazon', 'Microsoft', 'Apple'];
 }

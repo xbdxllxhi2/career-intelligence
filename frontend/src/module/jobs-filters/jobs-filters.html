@@ -5,14 +5,14 @@
   <div class="flex justify-between items-center pb-3 border-b border-neutral-700">
     <div class="flex items-center gap-2">
       <span class="text-xl font-semibold">
-        <span class="text-emerald-400">{{ totalSearchResults | number }}</span> Jobs matched
+        <span class="text-emerald-400">{{ totalSearchResults | number }}</span> {{ 'jobs.matched' | transloco }}
       </span>
       @if (getActiveFilterCount() > 0) {
-        <p-chip [label]="getActiveFilterCount() + ' filters'" styleClass="bg-emerald-600 text-white text-xs" />
+        <p-chip [label]="getActiveFilterCount() + ' ' + ('jobs.filters' | transloco)" styleClass="bg-emerald-600 text-white text-xs" />
       }
     </div>
     <p-button
-      label="Clear all"
+      [label]="'jobs.clearAll' | transloco"
       icon="pi pi-times"
       [text]="true"
       severity="secondary"
@@ -31,7 +31,7 @@
         [(ngModel)]="filters.title_contains"
         autocomplete="off"
       />
-      <label for="title_search">Job title or keywords</label>
+      <label for="title_search">{{ 'jobs.jobTitle' | transloco }}</label>
     </p-floatlabel>
 
     <p-floatlabel variant="on">
@@ -42,7 +42,7 @@
         [(ngModel)]="filters.description_contains"
         autocomplete="off"
       />
-      <label for="description_search">Description contains</label>
+      <label for="description_search">{{ 'jobs.descriptionContains' | transloco }}</label>
     </p-floatlabel>
   </div>
 
@@ -52,7 +52,7 @@
       <p-accordion-header>
         <div class="flex items-center gap-2">
           <i class="pi pi-map-marker text-emerald-400"></i>
-          <span>Location</span>
+          <span>{{ 'jobs.location' | transloco }}</span>
         </div>
       </p-accordion-header>
       <p-accordion-content>
@@ -69,7 +69,7 @@
               styleClass="w-full"
               appendTo="body"
             />
-            <label for="country_select">Country</label>
+            <label for="country_select">{{ 'jobs.country' | transloco }}</label>
           </p-floatlabel>
 
           <p-floatlabel variant="on">
@@ -84,7 +84,7 @@
               styleClass="w-full"
               appendTo="body"
             />
-            <label for="region_autocomplete">Region / State</label>
+            <label for="region_autocomplete">{{ 'jobs.region' | transloco }}</label>
           </p-floatlabel>
 
           <p-floatlabel variant="on">
@@ -99,7 +99,7 @@
               styleClass="w-full"
               appendTo="body"
             />
-            <label for="city_autocomplete">City</label>
+            <label for="city_autocomplete">{{ 'jobs.city' | transloco }}</label>
           </p-floatlabel>
         </div>
       </p-accordion-content>
@@ -109,7 +109,7 @@
       <p-accordion-header>
         <div class="flex items-center gap-2">
           <i class="pi pi-briefcase text-emerald-400"></i>
-          <span>Job Type</span>
+          <span>{{ 'jobs.jobType' | transloco }}</span>
         </div>
       </p-accordion-header>
       <p-accordion-content>
@@ -124,13 +124,13 @@
               styleClass="w-full"
               appendTo="body"
             />
-            <label for="seniority_select">Experience Level</label>
+            <label for="seniority_select">{{ 'jobs.experience' | transloco }}</label>
           </p-floatlabel>
 
           <div class="flex items-center justify-between p-3 bg-neutral-800/50 rounded-lg">
             <div class="flex items-center gap-2">
               <i class="pi pi-bolt text-yellow-400"></i>
-              <span class="text-sm">Easy Apply Only</span>
+              <span class="text-sm">{{ 'jobs.easyApplyOnly' | transloco }}</span>
             </div>
             <p-toggleSwitch [(ngModel)]="hasEasyApply" />
           </div>
@@ -138,7 +138,7 @@
           <div class="flex items-center justify-between p-3 bg-neutral-800/50 rounded-lg">
             <div class="flex items-center gap-2">
               <i class="pi pi-history text-neutral-400"></i>
-              <span class="text-sm">Include Expired Jobs</span>
+              <span class="text-sm">{{ 'jobs.includeExpired' | transloco }}</span>
             </div>
             <p-toggleSwitch [(ngModel)]="includeExpired" />
           </div>
@@ -150,7 +150,7 @@
       <p-accordion-header>
         <div class="flex items-center gap-2">
           <i class="pi pi-globe text-emerald-400"></i>
-          <span>Source</span>
+          <span>{{ 'jobs.source' | transloco }}</span>
         </div>
       </p-accordion-header>
       <p-accordion-content>
@@ -165,7 +165,7 @@
               styleClass="w-full"
               appendTo="body"
             />
-            <label for="source_select">Job Board</label>
+            <label for="source_select">{{ 'jobs.jobBoard' | transloco }}</label>
           </p-floatlabel>
         </div>
       </p-accordion-content>
@@ -175,18 +175,18 @@
   <!-- Search Buttons -->
   <div class="flex flex-col gap-2">
     <p-button
-      label="Search Jobs"
+      [label]="'jobs.searchJobs' | transloco"
       icon="pi pi-search"
       styleClass="w-full"
       (onClick)="emitSearchEvent()"
     />
     <p-button
-      label="Smart Search"
+      [label]="'jobs.smartSearch' | transloco"
       icon="pi pi-sparkles"
       severity="secondary"
       styleClass="w-full"
       (onClick)="emitSmartSearchEvent()"
-      pTooltip="Find jobs matching your profile using AI"
+      [pTooltip]="'jobs.smartSearchTooltip' | transloco"
       tooltipPosition="top"
     />
   </div>
@@ -202,7 +202,7 @@
     <!-- Results Count -->
     <span class="text-sm font-medium whitespace-nowrap">
       <span class="text-emerald-400">{{ totalSearchResults | number }}</span>
-      <span class="text-neutral-400">Jobs</span>
+      <span class="text-neutral-400">{{ 'jobs.jobs' | transloco }}</span>
     </span>
 
     <!-- Divider -->
@@ -214,7 +214,7 @@
       <input
         pInputText
         class="w-full pl-9 pr-3 py-2 bg-neutral-800/80 border-neutral-700 rounded-lg text-sm placeholder:text-neutral-500 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition-all"
-        placeholder="Search jobs, titles, keywords..."
+        [placeholder]="'jobs.searchPlaceholder' | transloco"
         [(ngModel)]="filters.title_contains"
         (keydown.enter)="emitSearchEvent()"
       />
@@ -231,7 +231,7 @@
         optionLabel="label"
         [filter]="true"
         [showClear]="true"
-        placeholder="Country"
+        [placeholder]="'jobs.country' | transloco"
         styleClass="w-36 text-sm"
         appendTo="body"
       >
@@ -250,7 +250,7 @@
         field="label"
         [dropdown]="true"
         [showClear]="true"
-        placeholder="City"
+        [placeholder]="'jobs.city' | transloco"
         styleClass="w-32 text-sm"
         appendTo="body"
       >
@@ -272,7 +272,7 @@
       [(ngModel)]="selectedSeniority"
       optionLabel="label"
       [showClear]="true"
-      placeholder="Experience"
+      [placeholder]="'jobs.experience' | transloco"
       styleClass="w-36 text-sm"
       appendTo="body"
     >
@@ -290,7 +290,7 @@
       [(ngModel)]="selectedSource"
       optionLabel="label"
       [showClear]="true"
-      placeholder="Source"
+      [placeholder]="'jobs.source' | transloco"
       styleClass="w-32 text-sm"
       appendTo="body"
     >
@@ -312,7 +312,7 @@
       (click)="hasEasyApply = !hasEasyApply; emitSearchEvent()"
     >
       <i class="pi pi-bolt text-sm" [ngClass]="hasEasyApply ? 'text-yellow-400' : 'text-neutral-500'"></i>
-      <span class="text-xs font-medium whitespace-nowrap">Easy Apply</span>
+      <span class="text-xs font-medium whitespace-nowrap">{{ 'jobs.easyApply' | transloco }}</span>
     </div>
 
     <!-- Include Expired Toggle Chip -->
@@ -322,14 +322,14 @@
       (click)="includeExpired = !includeExpired; emitSearchEvent()"
     >
       <i class="pi pi-history text-sm" [ngClass]="includeExpired ? 'text-neutral-300' : 'text-neutral-500'"></i>
-      <span class="text-xs font-medium whitespace-nowrap">Expired</span>
+      <span class="text-xs font-medium whitespace-nowrap">{{ 'jobs.expired' | transloco }}</span>
     </div>
 
     <!-- Actions -->
     <div class="flex items-center gap-1.5 ml-auto">
       <p-button
         icon="pi pi-search"
-        label="Search"
+        [label]="'jobs.search' | transloco"
         size="small"
         styleClass="bg-emerald-600 hover:bg-emerald-500 border-emerald-600 text-sm"
         (onClick)="emitSearchEvent()"
@@ -344,7 +344,7 @@
           [badge]="getActiveFilterCount().toString()"
           badgeSeverity="danger"
           (onClick)="clearFilters()"
-          pTooltip="Clear all filters"
+          [pTooltip]="'jobs.clearAll' | transloco"
           tooltipPosition="bottom"
         />
       }
@@ -354,7 +354,7 @@
   <!-- Active Filters Pills (show only when filters are active) -->
   @if (getActiveFilterCount() > 0) {
     <div class="flex items-center gap-2 px-4 pb-2.5 pt-0 overflow-x-auto">
-      <span class="text-xs text-neutral-500">Active:</span>
+      <span class="text-xs text-neutral-500">{{ 'jobs.active' | transloco }}:</span>
       @if (filters.title_contains) {
         <p-chip
           [label]="filters.title_contains"

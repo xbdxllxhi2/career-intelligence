@@ -25,7 +25,7 @@
           <div class="flex gap-2">
             @if (job.has_direct_apply) {
             <div class="mt-1 p-1 flex items-center gap-1 text-center w-fit text-xs text-emerald-200 bg-neutral-900/50">
-              <i class="pi pi-linkedin"></i>Easy apply
+              <i class="pi pi-linkedin"></i>{{ 'jobs.easyApply' | transloco }}
             </div>
             }
             <div class="mt-1 p-1 flex items-center gap-1 text-center w-fit text-xs text-emerald-200 bg-neutral-900/50">
@@ -34,15 +34,15 @@
 
             @if (job.applied) {
             <div class="mt-1 p-1 flex items-center gap-1 text-center w-fit text-xs text-emerald-200 bg-neutral-900/50">
-              <i class="pi pi-check"></i>Already applied
+              <i class="pi pi-check"></i>{{ 'jobs.alreadyApplied' | transloco }}
             </div>
             }
           </div>
         </ng-template>
 
         <div class="mt-2 flex items-center justify-end gap-2">
-          <p-button icon="pi pi-share-alt" label="Share" severity="secondary" outlined="true" />
-          <p-button icon="pi pi-bookmark" label="Save" outlined="true" class="p-button-plain"></p-button>
+          <p-button icon="pi pi-share-alt" [label]="'jobs.share' | transloco" severity="secondary" outlined="true" />
+          <p-button icon="pi pi-bookmark" [label]="'jobs.save' | transloco" outlined="true" class="p-button-plain"></p-button>
         </div>
       </p-card>
       }
@@ -64,7 +64,7 @@
         <button pButton severity="secondary" (click)="visible = false; isjobDetailsOpen.emit(false)"
           class="mb-4 flex items-center gap-2 px-3 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-400 hover:text-white transition-colors">
           <i class="pi pi-times"></i>
-          <span class="text-sm">Close</span>
+          <span class="text-sm">{{ 'jobs.close' | transloco }}</span>
         </button>
       </div>
 
@@ -100,7 +100,7 @@
             </div>
           </div>
           <div class="flex gap-2">
-            <p-button label="Save" icon="pi pi-bookmark" variant="outlined" severity="secondary" [rounded]="true" />
+            <p-button [label]="'jobs.save' | transloco" icon="pi pi-bookmark" variant="outlined" severity="secondary" [rounded]="true" />
             @if(selectedJob.source_apply_url){
             <p-button variant="outlined" [rounded]="true">
               <i class="pi pi-linkedin"></i>
@@ -113,7 +113,7 @@
               <a [href]="selectedJob.job_url" (click)="showApplicationModal()" target="_blank">Apply</a>
             </p-button>
             }
-            <p-button label="Generate CV" (onClick)="generateResume(selectedJob)" variant="outlined" rounded="true">
+            <p-button [label]="'jobs.generateCV' | transloco" (onClick)="generateResume(selectedJob)" variant="outlined" rounded="true">
               <span>
                 @if (generatingCv) {
                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration="1s"
@@ -160,7 +160,7 @@
               <ng-template #header>
                 <div class="flex items-center gap-2">
                   <i class="pi pi-objects-column"></i>
-                  <span class="font-bold">Skills Match</span>
+                  <span class="font-bold">{{ 'jobs.skillsMatch' | transloco }}</span>
                 </div>
               </ng-template>
               <div>
@@ -193,7 +193,7 @@
                     </ng-template>
                     <ng-template #start let-totalPercent="totalPercent">
                       <div class="flex justify-between mt-4 mb-2 relative">
-                        <span>Overall</span>
+                        <span>{{ 'jobs.overall' | transloco }}</span>
                         <span [style]="{ width: totalPercent + '%' }" class="absolute text-right">{{ totalPercent
                           }}%</span>
                         <span class="font-medium">100%</span>
@@ -202,7 +202,7 @@
                     <ng-template #end>
                       <div class="flex justify-between mt-4">
                         <p-button label="Option 1" [outlined]="true" size="small" />
-                        <p-button label="Update profile" size="small" />
+                        <p-button [label]="'jobs.updateProfile' | transloco" size="small" />
                       </div>
                     </ng-template>
                   </p-metergroup>
@@ -221,16 +221,16 @@
       </div>
 
       <div class="text-gray-200 whitespace-pre-line border-t border-gray-700 p-2">
-        <div class="text-2xl my-3">About the Job</div>
+        <div class="text-2xl my-3">{{ 'jobs.aboutJob' | transloco }}</div>
         <p>{{ selectedJob.description }}</p>
       </div>
 
       <div class="mt-4 flex gap-2">
-        <p-button icon="pi pi-share-alt" label="Share" severity="secondary" outlined="true"></p-button>
-        <p-button icon="pi pi-bookmark" label="Save" severity="secondary" outlined="true"
+        <p-button icon="pi pi-share-alt" [label]="'jobs.share' | transloco" severity="secondary" outlined="true"></p-button>
+        <p-button icon="pi pi-bookmark" [label]="'jobs.save' | transloco" severity="secondary" outlined="true"
           class="p-button-plain"></p-button>
         <a [href]="selectedJob.job_url" target="_blank">
-          <p-button icon="pi pi-external-link" outlined="true" label="Apply"></p-button>
+          <p-button icon="pi pi-external-link" outlined="true" [label]="'jobs.apply' | transloco"></p-button>
         </a>
       </div>
       }

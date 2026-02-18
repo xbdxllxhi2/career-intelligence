@@ -3,7 +3,7 @@
   <!-- Simple Header -->
   <div class="flex-shrink-0 px-6 py-6 border-b border-neutral-800">
     <div class="max-w-3xl mx-auto">
-      <h1 class="text-xl font-medium text-white">Resume Generator</h1>
+      <h1 class="text-xl font-medium text-white">{{ 'resume.title' | transloco }}</h1>
     </div>
   </div>
 
@@ -13,17 +13,17 @@
       
       <!-- Textarea -->
       <div>
-        <label class="block text-sm text-neutral-400 mb-2">Paste the job description</label>
+        <label class="block text-sm text-neutral-400 mb-2">{{ 'resume.pasteJobDescription' | transloco }}</label>
         <textarea
           pTextarea
           [(ngModel)]="offerDescription"
           rows="14"
-          placeholder="Copy and paste the job posting here..."
+          [placeholder]="'resume.placeholder' | transloco"
           class="w-full p-4 bg-neutral-800 border border-neutral-700 rounded-lg text-neutral-200 placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none resize-none"
         ></textarea>
         <div class="flex justify-between mt-2 text-xs text-neutral-500">
-          <span>Minimum 50 characters</span>
-          <span>{{ offerDescription.length }} chars</span>
+          <span>{{ 'resume.minCharacters' | transloco }}</span>
+          <span>{{ offerDescription.length }} {{ 'resume.chars' | transloco }}</span>
         </div>
       </div>
 
@@ -37,7 +37,7 @@
           (click)="offerDescription = ''"
           class="text-neutral-500 hover:text-neutral-300 disabled:opacity-30"
         >
-          Clear
+          {{ 'resume.clear' | transloco }}
         </button>
 
         <button
@@ -48,16 +48,16 @@
           class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 border-0 rounded-lg text-sm font-medium transition-colors disabled:opacity-40 disabled:hover:bg-emerald-600"
         >
           @if (isGeneratingResume) {
-            Generating...
+            {{ 'resume.generating' | transloco }}
           } @else {
-            Generate PDF
+            {{ 'resume.generate' | transloco }}
           }
         </button>
       </div>
 
       <!-- Minimal hint -->
       <p class="text-xs text-neutral-600 pt-4">
-        Your profile data will be matched against the job requirements to create a tailored resume.
+        {{ 'resume.hint' | transloco }}
       </p>
     </div>
   </div>

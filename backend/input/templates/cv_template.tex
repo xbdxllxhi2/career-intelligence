@@ -46,8 +46,8 @@
 
 \begin{rSection}{Éducation}
 {% for edu in education %}
-{\bf {{ edu.degree }}}, {{ edu.institution }} \hfill {{ edu.year }}\\
-Principaux cours: {{ edu.coursework }}.
+{\bf {{ edu.degree }}}, {{ edu.institution }}, {{edu.location}} \hfill {{ edu.year }}
+% Principaux cours: {{ edu.coursework }}.
 {% endfor %}
 \end{rSection}
 

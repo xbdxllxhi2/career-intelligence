@@ -11,6 +11,7 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ChipModule } from 'primeng/chip';
 import { TooltipModule } from 'primeng/tooltip';
+import { TranslocoModule } from '@jsverse/transloco';
 import { JobFilters } from '../../models/filters/job-filters';
 import { FilterOptions } from '../../models/filters/filter-options';
 import { JobService } from '../../service/job-service';
@@ -35,6 +36,7 @@ interface SelectOption {
     AutoCompleteModule,
     ChipModule,
     TooltipModule,
+    TranslocoModule,
   ],
   templateUrl: './jobs-filters.html',
   styleUrl: './jobs-filters.scss',

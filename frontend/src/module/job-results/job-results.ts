@@ -19,12 +19,13 @@ import { PaginatorState } from 'primeng/types/paginator';
 import { PaginatorModule } from 'primeng/paginator';
 import { Page } from '../../models/interface/page';
 import { ApplicationInfoModal } from '../application-info-modal/application-info-modal';
+import { TranslocoModule } from '@jsverse/transloco';
 
 
 @Component({
   selector: 'app-job-results',
   imports: [CardModule, ButtonModule, DrawerModule, JobAddressPipe, TagModule, PanelModule, MeterGroupModule, DatePipe,
-    ChartModule, CommonModule ,ProgressSpinnerModule, ToastModule, ChipModule,PaginatorModule, ApplicationInfoModal],
+    ChartModule, CommonModule ,ProgressSpinnerModule, ToastModule, ChipModule,PaginatorModule, ApplicationInfoModal, TranslocoModule],
   providers: [MessageService],
   templateUrl: './job-results.html',
   styleUrl: './job-results.scss',
