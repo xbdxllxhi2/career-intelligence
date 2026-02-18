@@ -33,6 +33,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 export class JobResults implements OnChanges {
   @Input({required:true}) resultsData!: Page<JobOffer>;
   @Input() selectedJobRef: string | null = null;
+  @Input() sideFilterActive: boolean = false;
   @Output() closeResults = new EventEmitter<void>();
   @Output() isjobDetailsOpen = new EventEmitter<boolean>();
   @Output() onPageChangeEvent = new EventEmitter<PaginatorState>();
@@ -40,6 +41,7 @@ export class JobResults implements OnChanges {
 
   generatingCv: boolean = false;
   selectedJob: JobOffer | null = null;
+  gridView: boolean = false;
 
   visible: boolean = false;
 
