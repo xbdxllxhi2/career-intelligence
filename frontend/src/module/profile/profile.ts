@@ -25,6 +25,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { ProfileService } from '../../service/profile-service';
 import { ToastModule } from 'primeng/toast';
+import { SelectModule } from 'primeng/select';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -46,6 +47,7 @@ import { MessageService } from 'primeng/api';
     FormsModule,
     FloatLabelModule,
     ToastModule,
+    SelectModule,
   ],
   providers: [MessageService],
   templateUrl: './profile.html',
@@ -57,6 +59,15 @@ export class Profile {
   profileData!: UserProfile;
 
   profileForm!: FormGroup;
+
+  studyYearOptions = [
+    { label: '1st Year', value: 1 },
+    { label: '2nd Year', value: 2 },
+    { label: '3rd Year', value: 3 },
+    { label: '4th Year', value: 4 },
+    { label: '5th Year', value: 5 },
+    { label: 'Graduate', value: 6 },
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -79,6 +90,10 @@ export class Profile {
           this.patchExperience(profile.experience);
         }
 
+        if (profile.education?.length) {
+          this.patchEducation(profile.education);
+        }
+
         if (profile.projects?.length) {
           this.patchProjects(profile.projects);
         }
@@ -98,8 +113,12 @@ export class Profile {
       country: [''],
       linkedin: [''],
       github: [''],
+      portfolio: [''],
       experience: this.fb.nonNullable.array<FormGroup>([]),
+      education: this.fb.nonNullable.array<FormGroup>([]),
       projects: this.fb.nonNullable.array<FormGroup>([]),
+      certifications: this.fb.nonNullable.array<FormGroup>([]),
+      spokenLanguages: this.fb.nonNullable.array<FormGroup>([]),
       languages: this.fb.nonNullable.group<Record<string, string>>({}),
     });
   }
@@ -121,6 +140,24 @@ export class Profile {
           bullets: this.fb.nonNullable.array(
             (exp.bullets ?? []).map((b: string) => this.fb.nonNullable.control(b)),
           ),
+        }),
+      );
+    });
+  }
+
+  private patchEducation(educations: any[]): void {
+    const educationArray = this.education;
+    educationArray.clear();
+
+    educations.forEach((edu) => {
+      educationArray.push(
+        this.fb.nonNullable.group({
+          degree: [edu.degree ?? ''],
+          institution: [edu.institution ?? ''],
+          period: [edu.period ?? ''],
+          field: [edu.field ?? ''],
+          grade: [edu.grade ?? ''],
+          studyYear: [edu.studyYear ?? null],
         }),
       );
     });
@@ -174,6 +211,27 @@ export class Profile {
     this.languages.removeAt(index);
   }
 
+  get education(): FormArray {
+    return this.profileForm.get('education') as FormArray;
+  }
+
+  addEducation() {
+    this.education.push(
+      this.fb.nonNullable.group({
+        degree: [''],
+        institution: [''],
+        period: [''],
+        field: [''],
+        grade: [''],
+        studyYear: [null as number | null],
+      }),
+    );
+  }
+
+  removeEducation(index: number) {
+    this.education.removeAt(index);
+  }
+
   get projects(): FormArray {
     return this.profileForm.get('projects') as FormArray;
   }
@@ -196,6 +254,53 @@ export class Profile {
 
   removeProject(index: number) {
     this.projects.removeAt(index);
+  }
+
+  // Certifications
+  get certifications(): FormArray {
+    return this.profileForm.get('certifications') as FormArray;
+  }
+
+  addCertification() {
+    this.certifications.push(
+      this.fb.nonNullable.group({
+        name: [''],
+        issuer: [''],
+        date: [''],
+        credentialId: [''],
+        url: [''],
+      }),
+    );
+  }
+
+  removeCertification(index: number) {
+    this.certifications.removeAt(index);
+  }
+
+  // Spoken Languages
+  get spokenLanguages(): FormArray {
+    return this.profileForm.get('spokenLanguages') as FormArray;
+  }
+
+  languageLevelOptions = [
+    { label: 'Native', value: 'native' },
+    { label: 'Fluent', value: 'fluent' },
+    { label: 'Advanced', value: 'advanced' },
+    { label: 'Intermediate', value: 'intermediate' },
+    { label: 'Basic', value: 'basic' },
+  ];
+
+  addSpokenLanguage() {
+    this.spokenLanguages.push(
+      this.fb.nonNullable.group({
+        name: [''],
+        level: [''],
+      }),
+    );
+  }
+
+  removeSpokenLanguage(index: number) {
+    this.spokenLanguages.removeAt(index);
   }
 
   addProjectBullet(projectIndex: number, bullet: string = '') {

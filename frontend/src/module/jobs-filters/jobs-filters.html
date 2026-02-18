@@ -172,13 +172,24 @@
     </p-accordion-panel>
   </p-accordion>
 
-  <!-- Search Button -->
-  <p-button
-    label="Search Jobs"
-    icon="pi pi-search"
-    styleClass="w-full"
-    (onClick)="emitSearchEvent()"
-  />
+  <!-- Search Buttons -->
+  <div class="flex flex-col gap-2">
+    <p-button
+      label="Search Jobs"
+      icon="pi pi-search"
+      styleClass="w-full"
+      (onClick)="emitSearchEvent()"
+    />
+    <p-button
+      label="Smart Search"
+      icon="pi pi-sparkles"
+      severity="secondary"
+      styleClass="w-full"
+      (onClick)="emitSmartSearchEvent()"
+      pTooltip="Find jobs matching your profile using AI"
+      tooltipPosition="top"
+    />
+  </div>
 </div>
 
 <!-- Compact Filter Bar (Collapsed View) -->

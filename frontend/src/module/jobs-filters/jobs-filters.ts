@@ -46,6 +46,7 @@ export class JobsFilters implements OnInit {
   @Input({ required: true }) totalSearchResults = 0;
 
   @Output() searchEvent = new EventEmitter<JobFilters>();
+  @Output() smartSearchEvent = new EventEmitter<void>();
 
   filters: JobFilters = {};
 
@@ -143,6 +144,10 @@ export class JobsFilters implements OnInit {
     this.includeExpired = false;
     this.hasEasyApply = false;
     this.searchEvent.emit(this.filters);
+  }
+
+  emitSmartSearchEvent(): void {
+    this.smartSearchEvent.emit();
   }
 
   getActiveFilterCount(): number {

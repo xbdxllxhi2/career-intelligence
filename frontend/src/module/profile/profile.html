@@ -118,7 +118,135 @@
                 />
               </div>
             </div>
+            <div>
+              <label class="block text-xs text-neutral-500 mb-1.5">Portfolio</label>
+              <div class="relative">
+                <i class="pi pi-globe absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500"></i>
+                <input 
+                  pInputText 
+                  formControlName="portfolio" 
+                  class="w-full pl-10 pr-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                  placeholder="yourportfolio.com"
+                />
+              </div>
+            </div>
           </div>
+        </section>
+
+        <!-- Education -->
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Education</h2>
+            <button 
+              pButton 
+              type="button" 
+              severity="secondary"
+              size="small"
+              (click)="addEducation()"
+              class="text-sm"
+            >
+              <i class="pi pi-plus mr-1.5"></i>
+              Add
+            </button>
+          </div>
+          
+          @if (education.length === 0) {
+            <div class="p-8 border border-dashed border-neutral-700 rounded-lg text-center">
+              <p class="text-neutral-500 text-sm">No education added yet</p>
+            </div>
+          } @else {
+            <p-accordion [multiple]="true" formArrayName="education">
+              @for (edu of education.controls; track $index) {
+                <p-accordion-panel [value]="'edu-' + $index" [formGroupName]="$index">
+                  <p-accordion-header>
+                    <div class="flex items-center justify-between w-full pr-4">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                          <i class="pi pi-graduation-cap text-purple-400"></i>
+                        </div>
+                        <div>
+                          <p class="font-medium text-white">{{ edu.get('degree')?.value || 'New Degree' }}</p>
+                          <p class="text-xs text-neutral-500">{{ edu.get('institution')?.value || 'Institution' }} · Year {{ edu.get('studyYear')?.value || '?' }}</p>
+                        </div>
+                      </div>
+                      <button 
+                        pButton 
+                        type="button" 
+                        [text]="true"
+                        size="small"
+                        (click)="removeEducation($index); $event.stopPropagation()"
+                        class="text-neutral-500 hover:text-red-400"
+                      >
+                        <i class="pi pi-trash"></i>
+                      </button>
+                    </div>
+                  </p-accordion-header>
+                  <p-accordion-content>
+                    <div class="pt-4">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Degree / Certification</label>
+                          <input 
+                            pInputText 
+                            formControlName="degree"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="Bachelor of Science in Computer Science"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Institution</label>
+                          <input 
+                            pInputText 
+                            formControlName="institution"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="University Name"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Current Study Year</label>
+                          <p-select
+                            formControlName="studyYear"
+                            [options]="studyYearOptions"
+                            optionLabel="label"
+                            optionValue="value"
+                            placeholder="Select year"
+                            styleClass="w-full"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Field of Study</label>
+                          <input 
+                            pInputText 
+                            formControlName="field"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="Computer Science, Software Engineering, etc."
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Period</label>
+                          <input 
+                            pInputText 
+                            formControlName="period"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="2018 - 2022"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">GPA / Grade (Optional)</label>
+                          <input 
+                            pInputText 
+                            formControlName="grade"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="3.8 / 4.0"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </p-accordion-content>
+                </p-accordion-panel>
+              }
+            </p-accordion>
+          }
         </section>
 
         <!-- Experience -->
@@ -350,6 +478,180 @@
                 </p-accordion-panel>
               }
             </p-accordion>
+          }
+        </section>
+
+        <!-- Certifications -->
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Certifications</h2>
+            <button 
+              pButton 
+              type="button" 
+              severity="secondary"
+              size="small"
+              (click)="addCertification()"
+              class="text-sm"
+            >
+              <i class="pi pi-plus mr-1.5"></i>
+              Add
+            </button>
+          </div>
+          
+          @if (certifications.length === 0) {
+            <div class="p-8 border border-dashed border-neutral-700 rounded-lg text-center">
+              <p class="text-neutral-500 text-sm">No certifications added yet</p>
+            </div>
+          } @else {
+            <p-accordion [multiple]="true" formArrayName="certifications">
+              @for (cert of certifications.controls; track $index) {
+                <p-accordion-panel [value]="'cert-' + $index" [formGroupName]="$index">
+                  <p-accordion-header>
+                    <div class="flex items-center justify-between w-full pr-4">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                          <i class="pi pi-verified text-amber-400"></i>
+                        </div>
+                        <div>
+                          <p class="font-medium text-white">{{ cert.get('name')?.value || 'New Certification' }}</p>
+                          <p class="text-xs text-neutral-500">{{ cert.get('issuer')?.value || 'Issuer' }}</p>
+                        </div>
+                      </div>
+                      <button 
+                        pButton 
+                        type="button" 
+                        [text]="true"
+                        size="small"
+                        (click)="removeCertification($index); $event.stopPropagation()"
+                        class="text-neutral-500 hover:text-red-400"
+                      >
+                        <i class="pi pi-trash"></i>
+                      </button>
+                    </div>
+                  </p-accordion-header>
+                  <p-accordion-content>
+                    <div class="pt-4">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Certification Name</label>
+                          <input 
+                            pInputText 
+                            formControlName="name"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="AWS Solutions Architect"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Issuing Organization</label>
+                          <input 
+                            pInputText 
+                            formControlName="issuer"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="Amazon Web Services"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Date Obtained</label>
+                          <input 
+                            pInputText 
+                            formControlName="date"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="January 2024"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Credential ID (Optional)</label>
+                          <input 
+                            pInputText 
+                            formControlName="credentialId"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="ABC123XYZ"
+                          />
+                        </div>
+                        <div class="md:col-span-2">
+                          <label class="block text-xs text-neutral-500 mb-1.5">Credential URL (Optional)</label>
+                          <input 
+                            pInputText 
+                            formControlName="url"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="https://www.credly.com/badges/..."
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </p-accordion-content>
+                </p-accordion-panel>
+              }
+            </p-accordion>
+          }
+        </section>
+
+        <!-- Languages -->
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Languages</h2>
+            <button 
+              pButton 
+              type="button" 
+              severity="secondary"
+              size="small"
+              (click)="addSpokenLanguage()"
+              class="text-sm"
+            >
+              <i class="pi pi-plus mr-1.5"></i>
+              Add
+            </button>
+          </div>
+          
+          @if (spokenLanguages.length === 0) {
+            <div class="p-8 border border-dashed border-neutral-700 rounded-lg text-center">
+              <p class="text-neutral-500 text-sm">No languages added yet</p>
+            </div>
+          } @else {
+            <div formArrayName="spokenLanguages" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              @for (lang of spokenLanguages.controls; track $index) {
+                <div [formGroupName]="$index" class="p-4 bg-neutral-800/50 border border-neutral-700 rounded-lg">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                      <i class="pi pi-language text-cyan-400"></i>
+                      <span class="text-sm font-medium text-white">{{ lang.get('name')?.value || 'Language' }}</span>
+                    </div>
+                    <button 
+                      pButton 
+                      type="button" 
+                      [text]="true"
+                      size="small"
+                      (click)="removeSpokenLanguage($index)"
+                      class="text-neutral-500 hover:text-red-400"
+                    >
+                      <i class="pi pi-times"></i>
+                    </button>
+                  </div>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label class="block text-xs text-neutral-500 mb-1">Language</label>
+                      <input 
+                        pInputText 
+                        formControlName="name"
+                        class="w-full px-2.5 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-sm placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                        placeholder="English"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-xs text-neutral-500 mb-1">Level</label>
+                      <p-select
+                        formControlName="level"
+                        [options]="languageLevelOptions"
+                        optionLabel="label"
+                        optionValue="value"
+                        placeholder="Select"
+                        styleClass="w-full"
+                      />
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
           }
         </section>
 
