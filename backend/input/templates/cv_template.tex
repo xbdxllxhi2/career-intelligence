@@ -40,14 +40,14 @@
 
 \begin{document}
 
-\begin{rSection}{OBJECTIVE}
+\begin{rSection}{Profil}
 {{ objective }}
 \end{rSection}
 
-\begin{rSection}{ÉDUCATION}
+\begin{rSection}{Éducation}
 {% for edu in education %}
-{\bf {{ edu.degree }}}, {{ edu.institution }} \hfill {{ edu.year }}\\
-Relevant Coursework: {{ edu.coursework }}.
+{\bf {{ edu.degree }}}, {{ edu.institution }}, {{edu.location}} \hfill {{ edu.year }}
+% Principaux cours: {{ edu.coursework }}.
 {% endfor %}
 \end{rSection}
 
@@ -60,19 +60,10 @@ Tools & {{ skills.tools | join(', ') }} \\
 \end{rSection}
 
 
-\begin{rSection}{PROJETS}
-{% for proj in projects %}
-\item \textbf{ {{ proj.title }} } {% if proj.url %} \href{ {{ proj.url }} }{(GitHub)}{% endif %}\\
-{{ proj.description }}
-\vspace{0.5em}  % optional: adds spacing between items
-{% endfor %}
-\end{rSection}
-
-
-\begin{rSection}{EXPÉRIENCE}
+\begin{rSection}{Expérience Professionnelle}
 {% for exp in experience %}
-\textbf{ {{ exp.title }} } \hfill {{ exp.start_date }} - {{ exp.end_date }}\\
-{{ exp.company }}, {{ exp.location }} 
+\textbf{ {{ exp.title }} } \hfill {{ exp.start_date }} | {{ exp.end_date }}\\
+{{ exp.company }}, {{ exp.location }}
 \begin{itemize}
 {% for bullet in exp.bullets %}
 \item {{ bullet }}
@@ -83,10 +74,22 @@ Tools & {{ skills.tools | join(', ') }} \\
 \end{rSection}
 
 
-\begin{rSection}{LANGUES \& CERTIFICATIONS}
+\begin{rSection}{Projets Pertinents}
+{% for proj in projects %}
+\item \textbf{ {{ proj.title }} }{% if proj.url %} \href{ {{ proj.url }} }{(GitHub)}{% endif %}\\
+{{ proj.description }}
+{% if not loop.last %}
+\vspace{0.5em}
+{% endif %}
+{% endfor %}
+\end{rSection}
+
+
+
+\begin{rSection}{Langues \& Certifications}
 \begin{tabular}{ @{} p{0.45\textwidth}  p{6\textwidth} }
 \textbf{Langues} & \textbf{Certifications} \\
-Français: DELF B2 & Banking and Financial Institutions - University of Illinois \\
+Français: Niveau C1 & Banking and Financial Institutions - University of Illinois \\
 English: TOEFL Advanced B2 & AWS Cloud Practitioner \\
 \end{tabular}
 \end{rSection}

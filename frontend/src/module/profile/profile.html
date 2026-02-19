@@ -1,212 +1,671 @@
-<!-- <div class="h-screen w-screen bg-neutral-900 flex overflow-hidden">
-    <div class="flex-1 overflow-auto p-3 pb-36 justify-center">
+﻿<p-toast></p-toast>
+<div class="h-full w-full bg-neutral-900 flex flex-col overflow-hidden">
+  <!-- Header -->
+  <div class="flex-shrink-0 px-6 py-5 border-b border-neutral-800">
+    <div class="max-w-5xl mx-auto flex items-center justify-between">
+      <h1 class="text-xl font-medium text-white">Profile</h1>
+      <div class="flex gap-2">
+        <button pButton severity="secondary" class="px-4 py-2 text-sm">
+          <i class="pi pi-download mr-2"></i>
+          Export
+        </button>
+        <button pButton severity="secondary" class="px-4 py-2 text-sm">
+          <i class="pi pi-share-alt mr-2"></i>
+          Share
+        </button>
+      </div>
+    </div>
+  </div>
 
-        @if (isConversationEmpty()) {
-        <div class="text-center text-4xl mt-12 bg-emerald-700">
-            Let's build your profile!
+  <!-- Content -->
+  <div class="flex-1 overflow-y-auto">
+    <div class="max-w-5xl mx-auto px-6 py-8">
+      <form [formGroup]="profileForm" (ngSubmit)="submitProfileFrom()">
+        
+        <!-- CV Upload Section -->
+        <div class="mb-8 p-5 bg-neutral-800/50 border border-neutral-700 border-dashed rounded-lg">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-lg bg-neutral-700 flex items-center justify-center">
+                <i class="pi pi-file-pdf text-xl text-neutral-400"></i>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-white">Import from CV</p>
+                <p class="text-xs text-neutral-500">Upload your existing resume to auto-fill your profile</p>
+              </div>
+            </div>
+            <p-fileupload 
+              #fu 
+              mode="basic" 
+              chooseLabel="Choose file" 
+              chooseIcon="pi pi-upload" 
+              name="cv"
+              accept=".pdf,.doc,.docx"
+              (onUpload)="handleUpload($event)"
+              styleClass="p-button-secondary"
+            />
+          </div>
         </div>
 
-        <div class="mt-12 max-w-3xl mx-auto">
-            <p class="mb-4">
-                Welcome to the Job Finder module! Here, you can input your skills,
-                experience, and preferences to find job opportunities that align
-                with your profile.
-            </p>
-            <p>
-                Simply type or paste your information into the textarea below, and
-                our AI-powered system will analyze your profile to suggest the best
-                job matches for you.
-            </p>
-        </div>
-        } @else {
-        <div class="max-w-3xl mx-auto mt-6">
-            @for (qa of getConversation(); track $index) {
-            <div class="mb-12">
+        <!-- Personal Info -->
+        <section class="mb-8">
+          <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide mb-4">Personal Information</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs text-neutral-500 mb-1.5">First Name</label>
+              <input 
+                pInputText 
+                formControlName="firstName" 
+                class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                placeholder="John"
+              />
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-500 mb-1.5">Last Name</label>
+              <input 
+                pInputText 
+                formControlName="lastName" 
+                class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                placeholder="Doe"
+              />
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-500 mb-1.5">Phone</label>
+              <input 
+                pInputText 
+                formControlName="phone" 
+                class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                placeholder="+1 234 567 890"
+              />
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-500 mb-1.5">Location</label>
+              <input 
+                pInputText 
+                formControlName="city" 
+                class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                placeholder="New York, USA"
+              />
+            </div>
+          </div>
+        </section>
 
-                <div class="flex justify-end mb-4">
-                    <div class="px-4 py-2 rounded-2xl border border-gray-300/40 bg-neutral-200/10">
-                        {{ qa.question }}
+        <!-- Links -->
+        <section class="mb-8">
+          <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide mb-4">Links</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs text-neutral-500 mb-1.5">LinkedIn</label>
+              <div class="relative">
+                <i class="pi pi-linkedin absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500"></i>
+                <input 
+                  pInputText 
+                  formControlName="linkedin" 
+                  class="w-full pl-10 pr-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                  placeholder="linkedin.com/in/username"
+                />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-500 mb-1.5">GitHub</label>
+              <div class="relative">
+                <i class="pi pi-github absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500"></i>
+                <input 
+                  pInputText 
+                  formControlName="github" 
+                  class="w-full pl-10 pr-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                  placeholder="github.com/username"
+                />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-500 mb-1.5">Portfolio</label>
+              <div class="relative">
+                <i class="pi pi-globe absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500"></i>
+                <input 
+                  pInputText 
+                  formControlName="portfolio" 
+                  class="w-full pl-10 pr-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                  placeholder="yourportfolio.com"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Education -->
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Education</h2>
+            <button 
+              pButton 
+              type="button" 
+              severity="secondary"
+              size="small"
+              (click)="addEducation()"
+              class="text-sm"
+            >
+              <i class="pi pi-plus mr-1.5"></i>
+              Add
+            </button>
+          </div>
+          
+          @if (education.length === 0) {
+            <div class="p-8 border border-dashed border-neutral-700 rounded-lg text-center">
+              <p class="text-neutral-500 text-sm">No education added yet</p>
+            </div>
+          } @else {
+            <p-accordion [multiple]="true" formArrayName="education">
+              @for (edu of education.controls; track $index) {
+                <p-accordion-panel [value]="'edu-' + $index" [formGroupName]="$index">
+                  <p-accordion-header>
+                    <div class="flex items-center justify-between w-full pr-4">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                          <i class="pi pi-graduation-cap text-purple-400"></i>
+                        </div>
+                        <div>
+                          <p class="font-medium text-white">{{ edu.get('degree')?.value || 'New Degree' }}</p>
+                          <p class="text-xs text-neutral-500">{{ edu.get('institution')?.value || 'Institution' }} · Year {{ edu.get('studyYear')?.value || '?' }}</p>
+                        </div>
+                      </div>
+                      <button 
+                        pButton 
+                        type="button" 
+                        [text]="true"
+                        size="small"
+                        (click)="removeEducation($index); $event.stopPropagation()"
+                        class="text-neutral-500 hover:text-red-400"
+                      >
+                        <i class="pi pi-trash"></i>
+                      </button>
                     </div>
-                </div>
+                  </p-accordion-header>
+                  <p-accordion-content>
+                    <div class="pt-4">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Degree / Certification</label>
+                          <input 
+                            pInputText 
+                            formControlName="degree"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="Bachelor of Science in Computer Science"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Institution</label>
+                          <input 
+                            pInputText 
+                            formControlName="institution"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="University Name"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Current Study Year</label>
+                          <p-select
+                            formControlName="studyYear"
+                            [options]="studyYearOptions"
+                            optionLabel="label"
+                            optionValue="value"
+                            placeholder="Select year"
+                            styleClass="w-full"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Field of Study</label>
+                          <input 
+                            pInputText 
+                            formControlName="field"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="Computer Science, Software Engineering, etc."
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Period</label>
+                          <input 
+                            pInputText 
+                            formControlName="period"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="2018 - 2022"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">GPA / Grade (Optional)</label>
+                          <input 
+                            pInputText 
+                            formControlName="grade"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="3.8 / 4.0"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </p-accordion-content>
+                </p-accordion-panel>
+              }
+            </p-accordion>
+          }
+        </section>
 
-                <div class="mb-2 p-2 rounded-xl bg-emerald-700/10 border-b border-gray-600">
-                    <h4 class="text-md font-semibold">Summary</h4>
-                    <p>{{ qa.summary }}</p>
-                </div>
-
-                <div class="mb-2">
-                    <p-accordion>
-                        <p-accordion-panel value="1">
-                            <p-accordion-header>Reasoning</p-accordion-header>
-                            <p-accordion-content>
-                                <p>{{ qa.reasoning }}</p>
-                            </p-accordion-content>
-                        </p-accordion-panel>
-                    </p-accordion>
-                </div>
-
-                <div class="mt-6">
-                    <p>{{ qa.answer }}</p>
-                </div>
-
-            </div>
-            }
-        </div>
-        }
-
-    </div>
-
-    <div class="
-        fixed md:absolute
-        bottom-20 left-0 md:left-auto
-        w-full md:w-full
-        p-3
-        bg-neutral-900
-      ">
-
-        <div class="mb-4 max-w-3xl mx-auto">
-            <p-fileupload #fu mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" name="demo[]"
-                url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" maxFileSize="1000000"
-                (onUpload)="handleUpload($event)" />
-                <p-button label="Upload" (onClick)="fu.upload()" severity="secondary" />
-        </div>
-        <div class="rounded-2xl bg-neutral-800 max-w-3xl mx-auto">
-            <textarea rows="1" [(ngModel)]="textareaValue" class="
-            w-full p-2 pr-20 pb-5
-            resize-none
-            max-h-40
-            overflow-y-auto
-            bg-transparent
-            focus:outline-none
-          " placeholder="Type here..."></textarea>
-
-            <div class="flex justify-end gap-2 p-2 rounded-2xl">
-                <button pButton>
-                    <i class="pi pi-send" pButtonIcon></i>
-                    <span pButtonLabel>Submit</span>
-                </button>
-<p-button class="p-1 rounded-full hover:bg-gray-200"/>
-            <p-button pButtonIcon="pi pi-paper-plane"/> 
-            </div>
-        </div>
-    </div>
-</div> -->
-
-<div class="h-screen w-screen flex-col overflow-hidden justify-center items-center">
-    <div class="w-full p-3 flex justify-between items-center">
-        <div>
-            <p-inplace>
-                <ng-template #display>
-                    <span class="inline-flex items-center gap-2">
-                        <span class="pi pi-pen-to-square" style="vertical-align: middle"></span>
-                        <span class="ml-1">Title</span>
-                    </span>
-                </ng-template>
-                <ng-template #content>
-                    <p-inputgroup>
-                        <input pInputText placeholder="Vote" value="some text" />
-                        <p-inputgroup-addon>
-                            <p-button icon="pi pi-check" severity="secondary" />
-                        </p-inputgroup-addon>
-                    </p-inputgroup>
-                </ng-template>
-            </p-inplace>
-        </div>
-
-        <div class="flex gap-2">
-            <button pButton>
-                <i class="pi pi-download" pButtonIcon></i>
-                <span pButtonLabel>Export</span>
+        <!-- Experience -->
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Experience</h2>
+            <button 
+              pButton 
+              type="button" 
+              severity="secondary"
+              size="small"
+              (click)="addExperience()"
+              class="text-sm"
+            >
+              <i class="pi pi-plus mr-1.5"></i>
+              Add
             </button>
+          </div>
+          
+          @if (experience.length === 0) {
+            <div class="p-8 border border-dashed border-neutral-700 rounded-lg text-center">
+              <p class="text-neutral-500 text-sm">No experience added yet</p>
+            </div>
+          } @else {
+            <p-accordion [multiple]="true" formArrayName="experience">
+              <p-accordion-panel 
+                *ngFor="let exp of experience.controls; let i = index"
+                [value]="'exp-' + i"
+                [formGroupName]="i"
+              >
+                <p-accordion-header>
+                  <div class="flex items-center justify-between w-full pr-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                        <i class="pi pi-briefcase text-emerald-400"></i>
+                      </div>
+                      <div>
+                        <p class="font-medium text-white">{{ exp.get('title')?.value || 'New Position' }}</p>
+                        <p class="text-xs text-neutral-500">{{ exp.get('company')?.value || 'Company' }}</p>
+                      </div>
+                    </div>
+                    <button 
+                      pButton 
+                      type="button" 
+                      [text]="true"
+                      size="small"
+                      (click)="removeExperience(i); $event.stopPropagation()"
+                      class="text-neutral-500 hover:text-red-400"
+                    >
+                      <i class="pi pi-trash"></i>
+                    </button>
+                  </div>
+                </p-accordion-header>
+                <p-accordion-content>
+                  <div class="pt-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      <div>
+                        <label class="block text-xs text-neutral-500 mb-1.5">Job Title</label>
+                        <input 
+                          pInputText 
+                          formControlName="title"
+                          class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                          placeholder="Software Engineer"
+                        />
+                      </div>
+                      <div>
+                        <label class="block text-xs text-neutral-500 mb-1.5">Company</label>
+                        <input 
+                          pInputText 
+                          formControlName="company"
+                          class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                          placeholder="Company Name"
+                        />
+                      </div>
+                      <div>
+                        <label class="block text-xs text-neutral-500 mb-1.5">Period</label>
+                        <input 
+                          pInputText 
+                          formControlName="period"
+                          class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                          placeholder="Jan 2022 - Present"
+                        />
+                      </div>
+                      <div>
+                        <label class="block text-xs text-neutral-500 mb-1.5">Location</label>
+                        <input 
+                          pInputText 
+                          formControlName="location"
+                          class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                          placeholder="City, Country"
+                        />
+                      </div>
+                    </div>
 
-            <button pButton>
-                <i class="pi pi-share-alt" pButtonIcon></i>
-                <span pButtonLabel>Share</span>
+                    <!-- Key Achievements -->
+                    <div class="border-t border-neutral-700 pt-4">
+                      <div class="flex items-center justify-between mb-3">
+                        <label class="text-xs text-neutral-400 font-medium uppercase tracking-wide">Key Achievements</label>
+                        <button 
+                          pButton 
+                          type="button" 
+                          [text]="true" 
+                          size="small"
+                          (click)="addBullet(i)"
+                          class="text-emerald-400 hover:text-emerald-300 text-xs"
+                        >
+                          <i class="pi pi-plus mr-1"></i>
+                          Add
+                        </button>
+                      </div>
+                      <div formArrayName="bullets" class="space-y-2">
+                        <div 
+                          *ngFor="let bullet of getBullets(exp).controls; let b = index"
+                          class="flex items-start gap-2 group"
+                        >
+                          <span class="text-emerald-400 mt-2.5 text-sm">•</span>
+                          <input 
+                            pInputText 
+                            [formControlName]="b"
+                            class="flex-1 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white text-sm placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="Describe an achievement or responsibility..."
+                          />
+                          <button 
+                            pButton 
+                            type="button" 
+                            [text]="true"
+                            (click)="removeBullet(i, b)"
+                            class="text-neutral-600 hover:text-red-400 px-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <i class="pi pi-times text-sm"></i>
+                          </button>
+                        </div>
+                        @if (getBullets(exp).length === 0) {
+                          <p class="text-neutral-600 text-sm italic py-2">No achievements added yet</p>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </p-accordion-content>
+              </p-accordion-panel>
+            </p-accordion>
+          }
+        </section>
+
+        <!-- Projects -->
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Projects</h2>
+            <button 
+              pButton 
+              type="button" 
+              severity="secondary"
+              size="small"
+              (click)="addProject()"
+              class="text-sm"
+            >
+              <i class="pi pi-plus mr-1.5"></i>
+              Add
             </button>
+          </div>
+
+          @if (projects.length === 0) {
+            <div class="p-8 border border-dashed border-neutral-700 rounded-lg text-center">
+              <p class="text-neutral-500 text-sm">No projects added yet</p>
+            </div>
+          } @else {
+            <p-accordion [multiple]="true" formArrayName="projects">
+              @for (proj of projects.controls; track $index) {
+                <p-accordion-panel [value]="'proj-' + $index" [formGroupName]="$index">
+                  <p-accordion-header>
+                    <div class="flex items-center justify-between w-full pr-4">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                          <i class="pi pi-code text-blue-400"></i>
+                        </div>
+                        <div>
+                          <p class="font-medium text-white">{{ proj.get('name')?.value || 'New Project' }}</p>
+                          <p class="text-xs text-neutral-500 truncate max-w-xs">
+                            {{ proj.get('description')?.value ? (proj.get('description')?.value | slice:0:50) + '...' : 'No description' }}
+                          </p>
+                        </div>
+                      </div>
+                      <button 
+                        pButton 
+                        type="button" 
+                        [text]="true"
+                        size="small"
+                        (click)="removeProject($index); $event.stopPropagation()"
+                        class="text-neutral-500 hover:text-red-400"
+                      >
+                        <i class="pi pi-trash"></i>
+                      </button>
+                    </div>
+                  </p-accordion-header>
+                  <p-accordion-content>
+                    <div class="pt-4 space-y-4">
+                      <div>
+                        <label class="block text-xs text-neutral-500 mb-1.5">Project Name</label>
+                        <input 
+                          pInputText 
+                          formControlName="name"
+                          class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                          placeholder="My Awesome Project"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label class="block text-xs text-neutral-500 mb-1.5">Description</label>
+                        <textarea 
+                          pTextarea 
+                          formControlName="description"
+                          rows="4"
+                          class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none resize-none"
+                          placeholder="Describe what the project does, technologies used, and your role..."
+                        ></textarea>
+                      </div>
+
+                      <div>
+                        <label class="block text-xs text-neutral-500 mb-1.5">Period</label>
+                        <input 
+                          pInputText 
+                          formControlName="period"
+                          class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                          placeholder="2023 - Present"
+                        />
+                      </div>
+                    </div>
+                  </p-accordion-content>
+                </p-accordion-panel>
+              }
+            </p-accordion>
+          }
+        </section>
+
+        <!-- Certifications -->
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Certifications</h2>
+            <button 
+              pButton 
+              type="button" 
+              severity="secondary"
+              size="small"
+              (click)="addCertification()"
+              class="text-sm"
+            >
+              <i class="pi pi-plus mr-1.5"></i>
+              Add
+            </button>
+          </div>
+          
+          @if (certifications.length === 0) {
+            <div class="p-8 border border-dashed border-neutral-700 rounded-lg text-center">
+              <p class="text-neutral-500 text-sm">No certifications added yet</p>
+            </div>
+          } @else {
+            <p-accordion [multiple]="true" formArrayName="certifications">
+              @for (cert of certifications.controls; track $index) {
+                <p-accordion-panel [value]="'cert-' + $index" [formGroupName]="$index">
+                  <p-accordion-header>
+                    <div class="flex items-center justify-between w-full pr-4">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                          <i class="pi pi-verified text-amber-400"></i>
+                        </div>
+                        <div>
+                          <p class="font-medium text-white">{{ cert.get('name')?.value || 'New Certification' }}</p>
+                          <p class="text-xs text-neutral-500">{{ cert.get('issuer')?.value || 'Issuer' }}</p>
+                        </div>
+                      </div>
+                      <button 
+                        pButton 
+                        type="button" 
+                        [text]="true"
+                        size="small"
+                        (click)="removeCertification($index); $event.stopPropagation()"
+                        class="text-neutral-500 hover:text-red-400"
+                      >
+                        <i class="pi pi-trash"></i>
+                      </button>
+                    </div>
+                  </p-accordion-header>
+                  <p-accordion-content>
+                    <div class="pt-4">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Certification Name</label>
+                          <input 
+                            pInputText 
+                            formControlName="name"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="AWS Solutions Architect"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Issuing Organization</label>
+                          <input 
+                            pInputText 
+                            formControlName="issuer"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="Amazon Web Services"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Date Obtained</label>
+                          <input 
+                            pInputText 
+                            formControlName="date"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="January 2024"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs text-neutral-500 mb-1.5">Credential ID (Optional)</label>
+                          <input 
+                            pInputText 
+                            formControlName="credentialId"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="ABC123XYZ"
+                          />
+                        </div>
+                        <div class="md:col-span-2">
+                          <label class="block text-xs text-neutral-500 mb-1.5">Credential URL (Optional)</label>
+                          <input 
+                            pInputText 
+                            formControlName="url"
+                            class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                            placeholder="https://www.credly.com/badges/..."
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </p-accordion-content>
+                </p-accordion-panel>
+              }
+            </p-accordion>
+          }
+        </section>
+
+        <!-- Languages -->
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Languages</h2>
+            <button 
+              pButton 
+              type="button" 
+              severity="secondary"
+              size="small"
+              (click)="addSpokenLanguage()"
+              class="text-sm"
+            >
+              <i class="pi pi-plus mr-1.5"></i>
+              Add
+            </button>
+          </div>
+          
+          @if (spokenLanguages.length === 0) {
+            <div class="p-8 border border-dashed border-neutral-700 rounded-lg text-center">
+              <p class="text-neutral-500 text-sm">No languages added yet</p>
+            </div>
+          } @else {
+            <div formArrayName="spokenLanguages" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              @for (lang of spokenLanguages.controls; track $index) {
+                <div [formGroupName]="$index" class="p-4 bg-neutral-800/50 border border-neutral-700 rounded-lg">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                      <i class="pi pi-language text-cyan-400"></i>
+                      <span class="text-sm font-medium text-white">{{ lang.get('name')?.value || 'Language' }}</span>
+                    </div>
+                    <button 
+                      pButton 
+                      type="button" 
+                      [text]="true"
+                      size="small"
+                      (click)="removeSpokenLanguage($index)"
+                      class="text-neutral-500 hover:text-red-400"
+                    >
+                      <i class="pi pi-times"></i>
+                    </button>
+                  </div>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label class="block text-xs text-neutral-500 mb-1">Language</label>
+                      <input 
+                        pInputText 
+                        formControlName="name"
+                        class="w-full px-2.5 py-2 bg-neutral-900 border border-neutral-700 rounded-lg text-white text-sm placeholder:text-neutral-500 focus:border-emerald-500 focus:outline-none"
+                        placeholder="English"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-xs text-neutral-500 mb-1">Level</label>
+                      <p-select
+                        formControlName="level"
+                        [options]="languageLevelOptions"
+                        optionLabel="label"
+                        optionValue="value"
+                        placeholder="Select"
+                        styleClass="w-full"
+                      />
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </section>
+
+        <!-- Save Button -->
+        <div class="flex justify-end pt-4 border-t border-neutral-800">
+          <button 
+            pButton 
+            type="submit"
+            class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 border-0 rounded-lg text-sm font-medium"
+          >
+            Save Changes
+          </button>
         </div>
+      </form>
     </div>
-    <div class="flex w-full h-full justify-center p-2 border border-gray-100/10">
-        <div class="w-1/2">
-            <div class="p-5 bg-emerald-700 rounded-xl">
-            </div>
-            <div class="p-1 justify-center items-center">
-                <p-skeleton class="mb-2" height="8rem" />
-                <p-skeleton width="25rem" height="10rem" class="mb-2" />
-                <p-skeleton width="5rem" class="mb-2" />
-                <p-skeleton height="2rem" class="mb-2" />
-                <p-skeleton width="10rem" height="4rem" />
-            </div>
-        </div>
-
-        <div class="w-1/2 gap-4 p-3">
-            <div class="mb-8 w-2/3 flex justify-between ">
-                <p-fileupload #fu mode="basic" chooseLabel="Upload your CV" chooseIcon="pi pi-upload" name="demo[]"
-                    url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" maxFileSize="1000000"
-                    (onUpload)="handleUpload($event)" />
-                <p-button label="Upload" (onClick)="fu.upload()" severity="secondary" />
-            </div>
-            <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-2 border border border-gray-100/10">
-                <p-inputgroup>
-                    <p-inputgroup-addon>
-                        <i class="pi pi-user"></i>
-                    </p-inputgroup-addon>
-                    <input pInputText class="w-full bg-neutral-200/10" [(ngModel)]="profileData.firstName"
-                        value="firstName" placeholder="First Name" />
-                </p-inputgroup>
-
-                <p-inputgroup>
-                    <p-inputgroup-addon>
-                        <i class="pi pi-user"></i>
-                    </p-inputgroup-addon>
-                    <input pInputText class="w-full bg-neutral-200/10" [(ngModel)]="profileData.lastName"
-                        value="lastName" placeholder="Last Name" />
-                </p-inputgroup>
-
-                <p-inputgroup>
-                    <p-inputgroup-addon>
-                        <i class="pi pi-phone"></i>
-                    </p-inputgroup-addon>
-                    <input pInputText class="w-full bg-neutral-200/10" [(ngModel)]="profileData.contact.phone"
-                        value="phone" placeholder="Phone" />
-                </p-inputgroup>
-
-                <p-inputgroup>
-                    <p-inputgroup-addon>
-                        <i class="pi pi-map"></i>
-                    </p-inputgroup-addon>
-                    <input pInputText class="w-full bg-neutral-200/10" [(ngModel)]="profileData.contact.phone"
-                        value="phone" placeholder="Phone" />
-                </p-inputgroup>
-            </div>
-            <div class="mt-5">
-                <p-accordion value="0" bg-emeralad>
-                    <p-accordion-panel value="0">
-                        <p-accordion-header>Links</p-accordion-header>
-                        <p-accordion-content>
-                            <div class="flex flex-col gap-2">
-                                <label for="username">LinkedIn</label>
-                                <input pInputText class="w-full bg-neutral-200/10 h-10" id="username"
-                                    aria-describedby="username-help" [(ngModel)]="profileData.firstName" />
-                                <small id="username-help">Enter your username to reset your password.</small>
-                            </div>
-                            <div class="flex flex-col gap-2 mt-6">
-                                <label for="username">Github</label>
-                                <input pInputText class="w-full bg-neutral-200/10 h-10" id="username"
-                                    aria-describedby="username-help" [(ngModel)]="profileData.firstName" />
-                                <small id="username-help">Enter your username to reset your password.</small>
-                            </div>
-                        </p-accordion-content>
-                    </p-accordion-panel>
-
-                    <p-accordion-panel value="1">
-                        <p-accordion-header>Experience</p-accordion-header>
-                        <p-accordion-content>
-                        </p-accordion-content>
-                    </p-accordion-panel>
-                </p-accordion>
-            </div>
-        </div>
-
-
-    </div>
+  </div>
 </div>

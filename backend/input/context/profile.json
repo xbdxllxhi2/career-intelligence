@@ -3,12 +3,12 @@
     "first_name": "Abdellahi",
     "last_name": "Abdellahi",
     "location": "Nice, France",
-    "summary": "Étudiant en Data Engineering et Software Engineering, spécialisé dans les pipelines de données, l'analyse quantitative, les architectures backend distribuées et les solutions IA/NLP. Expérience dans les systèmes bancaires, l'orchestration Airflow, l'IAM Keycloak (OAuth2, OIDC, JWT, SSO), la blockchain Ethereum et la conception d’algorithmes financiers. Passionné par la recherche d’information, l'automatisation à grande échelle et le développement de solutions analytiques orientées décisionnel."
+    "summary": "Étudiant en Data Engineering et Software Engineering, spécialisé dans les pipelines de données, l'analyse quantitative, les architectures backend distribuées et les solutions IA/NLP. Expérience dans les systèmes bancaires, l'orchestration Airflow, l'IAM Keycloak (OAuth2, OIDC, JWT, SSO), la blockchain Ethereum et la conception d’algorithmes financiers. Passionné par la recherche d’information, l'automatisation à grande échelle et le développement de solutions analytiques orientées décisionnel. A la recherche d'un stage de 6 mois a partir de  mars 2026 ou alternance de 12 mois."
   },
 
   "education": [
     {
-      "degree": "Master en Data Engineering (M1)",
+      "degree": "Applied MSc Data Engineering for AI",
       "school": "DSTI School of Engineering",
       "year": "2025 (en cours)"
     },
@@ -154,10 +154,10 @@
 
   "experience": [
     {
-      "title": "Développeur Full Stack Java/Python/React",
+      "title": "Backend Software Engineer – Java / Python",
       "company": "Proxym Group",
       "period": "Octobre 2023 – Septembre 2025",
-      "location": "Technopole de Sousse, Tunisie",
+      "location": "Sousse, Tunisie",
       "tags": [
         "java",
         "spring",
@@ -177,7 +177,6 @@
         "Collaboration avec équipes produit et architecture en environnement Agile Scrum.",
         "Rédaction de documentation technique et formation des nouveaux développeurs.",
         "Deploiment de la solution bancaire dans +200 banques et filiales en Europoe, Afrique et Moyen-Orient.",
-        "Implementation de ecrans frontend React pour la gestion des cartes bancaires et des transactions.",
         "Integration de messages ISO20022 pour les virements et transactions interbancaires."
       ]
     },
@@ -185,7 +184,7 @@
       "title": "Stagiaire Machine Learning – Détection de Fraude Bancaire",
       "company": "Proxym Group",
       "period": "Juillet 2023 – Octobre 2023",
-      "location": "Technopole de Sousse, Tunisie",
+      "location": "Sousse, Tunisie",
       "tags": [
         "ml",
         "python",
@@ -208,7 +207,7 @@
       "title": "Stagiaire Développeur Unity 3D (Jeux Vidéo)",
       "company": "CGI Studio",
       "period": "Jan 2023 – Mai 2023",
-      "location": "Tunisie",
+      "location": "Tunis, Tunisie",
       "tags": ["unity", "csharp", "3d", "game-dev"],
       "bullets": [
         "Implémentation de mécaniques de gameplay, intégration 3D et optimisation des performances visuelles.",
@@ -235,11 +234,12 @@
         "deployment"
       ],
       "bullets": [
-        "Dirigé une équipe pluridisciplinaire (Data Analytics, Data Science, Data Engineering) pour concevoir un pipeline machine learning de bout en bout destiné à la classification des types d’attaques cyber.",
-        "Réalisé l’analyse exploratoire, le nettoyage et l’ingénierie des caractéristiques sur un dataset brut de 40 000 lignes et 25 métriques issues de logs et trafics réseau.",
-        "Entraîné, comparé et évalué plusieurs modèles de classification multi-classes afin de sélectionner la solution la plus performante pour la détection des attaques.",
-        "Conçu et déployé une application web (Flask / Streamlit) permettant la prédiction en temps réel du type d’attaque à partir d’entrées manuelles ou de fichiers CSV.",
-        "Assuré la reproductibilité et la qualité du projet via un dépôt GitHub structuré (README, requirements.txt), un rapport technique détaillé et une démonstration vidéo de l’application."
+        "Dirigé une équipe pluridisciplinaire (Data Analytics, Data Science, Data Engineering) pour concevoir un pipeline machine learning full-stack de classification d’attaques cyber, intégrant ingestion, prétraitement et scoring en temps réel.",
+        "Réalisation d’une analyse exploratoire approfondie, nettoyage et ingénierie de 25 features issues de 40 000 logs réseau, incluant normalisation, encodage, extraction de patterns temporels et agrégation statistique avec pandas et NumPy.",
+        "Entraînement, benchmark et optimisation de multiples modèles de classification multi-classes (Random Forest, XGBoost, LightGBM, SVM), avec évaluation fine via cross-validation, matrice de confusion et métriques F1/macro pour sélectionner la solution la plus performante.",
+        "Conception et déploiement d’une interface web interactive (Flask + Streamlit) pour prédiction en temps réel à partir de fichiers CSV ou saisie manuelle, avec visualisation des résultats et dashboards analytiques dynamiques.",
+        "Assurance de la reproductibilité et de la qualité via un dépôt GitHub structuré (README détaillé, requirements.txt, scripts de prétraitement et d’entraînement), accompagnée d’une documentation technique complète et d’une démonstration vidéo de l’application.",
+        "Optimisation et automatisation du workflow ETL et ML avec gestion des dépendances Python, pipelines modulaires et bonnes pratiques Git, garantissant scalabilité, maintenance simplifiée et intégration continue."
       ]
     },
     {
@@ -261,20 +261,12 @@
         "OpenAi"
       ],
       "bullets": [
-        "Création d’un moteur de matching profiles–offres combinant scoring pondéré, distance géographique et similarité textuelle pour les etudiants recherchant des stages.",
-        "Développement du frontend Angular pour visualiser les résultats, dashboards analytiques et suivi des KPIs.",
-        "Pipeline Airflow complet : ingestion, mapping vers schéma SQL, transformation et harmonisation des données.",
-        "Utilisation de NLP et LLM pour extraction de compétences, scoring sémantique et génération automatique de rapports PDF.",
-        "Optimisation du workflow pour fiabilité et scalabilité sur PostgreSQL et intégration continue.",
-        "Utilisation de fastapi comme backend pour servir les données au frontend Angular.",
-        "Integration de l'api OpenAI pour améliorer les capacités de traitement du langage naturel.",
-        "Benchmarking et optimisation des performances du pipeline ETL et du moteur de matching.",
-        "Optimization et évaluation des modèles NLP pour une extraction de compétences plus précise.",
-        "Evaluation et optimisation continue des prompts utilisés avec les LLM pour améliorer la qualité et la pertinence des reponses",
-        "Implementation des bonnes pratique et recommendation d'openAI pour assurer la sécurité et maximiser l'efficacité des appels API et réduire les coûts associés.",
-        "Travail de recherche pour identifier et intégrer des sources de données supplémentaires pertinentes pour enrichir le moteur d'intelligence du marché de l'emploi.",
-        "Travail de recherche et developpement pour intégrer des techniques avancées de matching basées sur l'apprentissage automatique afin d'améliorer la précision et la pertinence des correspondances entre CV et offres d'emploi.",
-        "Utilisation de pandas et numpy pour le traitement et l'analyse des données et enrichissement des fonctionnalités analytiques du tableau de bord."
+        "Conception et création d’une plateforme d’intelligence du marché de l’emploi intégrant ingestion, analyse et valorisation de données multi-sources (logs, CVs, offres d’emploi) afin de mettre en valeur les compétences des utilisateurs et guider les recommandations personnalisées.",
+        "Création d’un moteur avancé de matching profils–offres combinant scoring pondéré, distance géographique, similarité textuelle, NLP et machine learning (scikit-learn, XGBoost) pour optimiser la pertinence des correspondances entre profils et opportunités.",
+        "Développement d’un pipeline data complet orchestré par Airflow, incluant ingestion, mapping vers schéma SQL, transformation et harmonisation des données à l’aide de pandas et NumPy, avec optimisation de la fiabilité, scalabilité et monitoring sur PostgreSQL.",
+        "Développement d’une architecture full-stack avec FastAPI pour le backend et Angular pour le frontend, offrant visualisation des résultats, dashboards analytiques interactifs et suivi dynamique des KPIs.",
+        "Exploitation de NLP et LLM (OpenAI API) pour l’extraction automatique de compétences, scoring sémantique, génération de rapports PDF automatisés et optimisation continue des prompts, tout en appliquant les meilleures pratiques OpenAI pour la sécurité, la performance et la réduction des coûts API.",
+        "Benchmarking, analyse et optimisation continues du moteur de matching, des pipelines ETL et des modèles NLP, incluant l’évaluation des performances, ajustement des hyperparamètres et amélioration progressive de la précision des extractions et recommandations."
       ]
     },
     {

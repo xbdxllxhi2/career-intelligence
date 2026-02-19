@@ -24,10 +24,18 @@ class JobBasic(BaseModel):
     applied: bool = False
 
 
-
-
 class JobDetail(JobBasic):
     job_url: Optional[str] = None
+    description: Optional[str] = None
+    source_apply_url: Optional[str] = None
+
+
+class FilterOptions(BaseModel):
+    countries: list[str]
+    regions: list[str]
+    cities: list[str]
+    seniority_levels: list[str]
+    sources: list[str]
     source_apply_url:Optional[str]=None
     company_employees_count:Optional[int]=None
     company_followers_count:Optional[int]=None

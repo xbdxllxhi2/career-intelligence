@@ -1,15 +1,67 @@
-:host ::ng-deep .p-menuitem-active > .p-menuitem-content {
-  background: linear-gradient(135deg, #6366f1, #9333ea);
-  color: white;
-  border-radius: 8px;
+:host {
+  display: block;
 }
 
-:host ::ng-deep .p-menuitem-active .pi {
-  color: white;
+// Menu item styling
+:host ::ng-deep .p-menu {
+  background: transparent;
+  border: none;
+
+  .p-menuitem {
+    margin-bottom: 0.25rem;
+  }
+
+  .p-menuitem-content {
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  .p-menuitem-link {
+    padding: 0.75rem 1rem;
+  }
+
+  .p-menuitem-icon {
+    color: #10b981;
+    margin-right: 0.75rem;
+  }
+
+  .p-menuitem-text {
+    color: #e5e5e5;
+  }
 }
 
-.active{
-    background: linear-gradient(135deg, #6366f1, #9333ea);
-    color: white;
-    border-radius: 8px;
+// Active menu item
+:host ::ng-deep .p-menuitem-active > .p-menuitem-content,
+.active {
+  background: linear-gradient(135deg, #10b981, #06b6d4) !important;
+
+  .p-menuitem-icon,
+  .p-menuitem-text,
+  .pi {
+    color: white !important;
+  }
+}
+
+// Drawer styling
+:host ::ng-deep .p-drawer {
+  background: #171717;
+  border-right: 1px solid #262626;
+
+  .p-drawer-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #262626;
+
+    .p-drawer-title {
+      font-weight: 600;
+      color: white;
+    }
+  }
+
+  .p-drawer-content {
+    padding: 1rem;
+  }
 }

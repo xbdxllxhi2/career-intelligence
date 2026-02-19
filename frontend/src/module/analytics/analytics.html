@@ -1,0 +1,606 @@
+<div class="h-full overflow-y-auto bg-neutral-950 p-6">
+  <!-- Header -->
+  <div class="max-w-7xl mx-auto mb-6">
+    <div class="flex items-center justify-between flex-wrap gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
+          <i class="pi pi-chart-line text-white text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold text-white">{{ 'analytics.title' | transloco }}</h1>
+          <p class="text-neutral-400 text-sm">{{ 'analytics.subtitle' | transloco }}</p>
+        </div>
+      </div>
+      
+      <!-- Quick Actions -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-neutral-800/50 border border-neutral-700/50">
+          <i class="pi pi-clock text-neutral-400 text-xs"></i>
+          <span class="text-neutral-400 text-xs">{{ 'analytics.updated' | transloco }}: {{ lastUpdated() | date:'HH:mm:ss' }}</span>
+        </div>
+        <p-button 
+          icon="pi pi-refresh" 
+          [rounded]="true" 
+          [text]="true"
+          severity="secondary"
+          (onClick)="refreshData()"
+          [pTooltip]="'analytics.refresh' | transloco"
+          tooltipPosition="bottom"
+          styleClass="!w-10 !h-10 !text-neutral-400 hover:!text-white hover:!bg-neutral-800"
+        ></p-button>
+        <p-button 
+          [icon]="autoRefresh() ? 'pi pi-pause' : 'pi pi-sync'"
+          [rounded]="true" 
+          [text]="true"
+          [severity]="autoRefresh() ? 'success' : 'secondary'"
+          (onClick)="autoRefresh.set(!autoRefresh())"
+          [pTooltip]="autoRefresh() ? ('analytics.autoRefresh' | transloco) : ('analytics.enableAutoRefresh' | transloco)"
+          tooltipPosition="bottom"
+          styleClass="!w-10 !h-10"
+          [ngClass]="{'!text-emerald-400 !bg-emerald-500/10': autoRefresh(), '!text-neutral-400 hover:!text-white hover:!bg-neutral-800': !autoRefresh()}"
+        ></p-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Panel -->
+  <div class="max-w-7xl mx-auto mb-6">
+    <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-4">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-filter text-emerald-400"></i>
+          <span class="text-white font-medium">{{ 'analytics.filters' | transloco }}</span>
+          <p-tag [value]="activeFilterSummary()" styleClass="!text-xs !bg-neutral-700/50 !text-neutral-300 ml-2"></p-tag>
+        </div>
+        <p-button 
+          [label]="'analytics.reset' | transloco" 
+          icon="pi pi-times" 
+          [text]="true" 
+          severity="secondary"
+          size="small"
+          (onClick)="clearFilters()"
+          styleClass="!text-neutral-400 hover:!text-white"
+        ></p-button>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <!-- Country -->
+        <div class="flex flex-col gap-1">
+          <label class="text-neutral-400 text-xs font-medium">{{ 'analytics.country' | transloco }}</label>
+          <p-select 
+            [options]="countries()" 
+            [(ngModel)]="selectedCountry"
+            optionLabel="name"
+            [placeholder]="'analytics.allCountries' | transloco"
+            [showClear]="true"
+            appendTo="body"
+            (onChange)="onCountryChange($event.value)"
+            styleClass="w-full !bg-neutral-800/50 !border-neutral-700/50"
+          >
+            <ng-template #selectedItem let-selected>
+              <div class="flex items-center gap-2" *ngIf="selected">
+                <span>{{ selected.name }}</span>
+              </div>
+            </ng-template>
+            <ng-template #item let-country>
+              <div class="flex items-center gap-2">
+                <span>{{ country.name }}</span>
+              </div>
+            </ng-template>
+          </p-select>
+        </div>
+
+        <!-- Region -->
+        <div class="flex flex-col gap-1">
+          <label class="text-neutral-400 text-xs font-medium">{{ 'analytics.region' | transloco }}</label>
+          <p-select 
+            [options]="regions()" 
+            [(ngModel)]="selectedRegion"
+            optionLabel="name"
+            [placeholder]="'analytics.allRegions' | transloco"
+            [showClear]="true"
+            [disabled]="!selectedCountry()"
+            appendTo="body"
+            (onChange)="onRegionChange($event.value)"
+            styleClass="w-full !bg-neutral-800/50 !border-neutral-700/50"
+          >
+            <ng-template #selectedItem let-selected>
+              <div class="flex items-center gap-2" *ngIf="selected">
+                <span>{{ selected.name }}</span>
+              </div>
+            </ng-template>
+            <ng-template #item let-region>
+              <div class="flex items-center gap-2">
+                <span>{{ region.name }}</span>
+              </div>
+            </ng-template>
+          </p-select>
+        </div>
+
+        <!-- City -->
+        <div class="flex flex-col gap-1">
+          <label class="text-neutral-400 text-xs font-medium">{{ 'analytics.city' | transloco }}</label>
+          <p-select 
+            [options]="cities()" 
+            [(ngModel)]="selectedCity"
+            optionLabel="name"
+            [placeholder]="'analytics.allCities' | transloco"
+            [showClear]="true"
+            [disabled]="!selectedRegion()"
+            appendTo="body"
+            (onChange)="onCityChange($event.value)"
+            styleClass="w-full !bg-neutral-800/50 !border-neutral-700/50"
+          >
+            <ng-template #selectedItem let-selected>
+              <div class="flex items-center gap-2" *ngIf="selected">
+                <span>{{ selected.name }}</span>
+              </div>
+            </ng-template>
+            <ng-template #item let-city>
+              <div class="flex items-center gap-2">
+                <span>{{ city.name }}</span>
+              </div>
+            </ng-template>
+          </p-select>
+        </div>
+
+        <!-- Time Period -->
+        <div class="flex flex-col gap-1">
+          <label class="text-neutral-400 text-xs font-medium">{{ 'analytics.period' | transloco }}</label>
+          <p-select 
+            [options]="timePeriods" 
+            [(ngModel)]="selectedPeriod"
+            optionLabel="label"
+            optionValue="value"
+            appendTo="body"
+            (onChange)="onPeriodChange($event.value)"
+            styleClass="w-full !bg-neutral-800/50 !border-neutral-700/50"
+          ></p-select>
+        </div>
+
+        <!-- Custom Date Range (only shown when custom is selected) -->
+        <div class="flex flex-col gap-1">
+          <label class="text-neutral-400 text-xs font-medium">{{ 'analytics.customRange' | transloco }}</label>
+          <p-datepicker 
+            [(ngModel)]="customDateRange"
+            selectionMode="range"
+            [readonlyInput]="true"
+            [placeholder]="'analytics.selectDates' | transloco"
+            [disabled]="selectedPeriod() !== 'custom'"
+            appendTo="body"
+            (onSelect)="onDateRangeChange(customDateRange())"
+            dateFormat="dd/mm/yy"
+            styleClass="w-full"
+            inputStyleClass="!bg-neutral-800/50 !border-neutral-700/50 !text-white"
+          ></p-datepicker>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="max-w-7xl mx-auto">
+    <p-tabs [value]="activeTab()" (valueChange)="onTabChange($event)">
+      <p-tablist styleClass="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-1.5">
+        <p-tab [value]="0" styleClass="text-neutral-400 px-6 py-3 rounded-xl transition-all duration-200 hover:text-white hover:bg-neutral-800/50 data-[p-active=true]:text-white data-[p-active=true]:bg-gradient-to-r data-[p-active=true]:from-emerald-500/20 data-[p-active=true]:to-cyan-500/20 data-[p-active=true]:border data-[p-active=true]:border-emerald-500/30">
+          <i class="pi pi-chart-bar mr-2"></i>
+          {{ 'analytics.marketTab' | transloco }}
+        </p-tab>
+        <p-tab [value]="1" styleClass="text-neutral-400 px-6 py-3 rounded-xl transition-all duration-200 hover:text-white hover:bg-neutral-800/50 data-[p-active=true]:text-white data-[p-active=true]:bg-gradient-to-r data-[p-active=true]:from-emerald-500/20 data-[p-active=true]:to-cyan-500/20 data-[p-active=true]:border data-[p-active=true]:border-emerald-500/30">
+          <i class="pi pi-user mr-2"></i>
+          {{ 'analytics.profileTab' | transloco }}
+        </p-tab>
+      </p-tablist>
+
+      <p-tabpanels>
+        <!-- Market Analysis Tab -->
+        <p-tabpanel [value]="0">
+          @if (isLoadingMarket()) {
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+              @for (i of [1,2,3,4]; track i) {
+                <p-skeleton height="120px" styleClass="!bg-neutral-800/50 rounded-2xl"></p-skeleton>
+              }
+            </div>
+          } @else if (marketAnalysis()) {
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-neutral-400 text-sm">{{ 'analytics.activeJobs' | transloco }}</span>
+                  <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                    <i class="pi pi-briefcase text-emerald-400"></i>
+                  </div>
+                </div>
+                <p class="text-3xl font-bold text-white">{{ marketAnalysis()!.totalActiveJobs | number }}</p>
+                <p class="text-sm text-emerald-400 mt-1">
+                  <i class="pi pi-arrow-up text-xs"></i>
+                  +{{ marketAnalysis()!.newJobsThisWeek | number }} {{ 'analytics.newThisWeek' | transloco }}
+                </p>
+              </div>
+
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-neutral-400 text-sm">{{ 'analytics.avgSalary' | transloco }}</span>
+                  <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+                    <i class="pi pi-euro text-cyan-400"></i>
+                  </div>
+                </div>
+                <p class="text-3xl font-bold text-white">{{ formatSalary(marketAnalysis()!.avgSalary) }}</p>
+                <p class="text-sm text-neutral-400 mt-1">{{ 'analytics.perYear' | transloco }}</p>
+              </div>
+
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-neutral-400 text-sm">{{ 'analytics.growingSectors' | transloco }}</span>
+                  <div class="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center">
+                    <i class="pi pi-chart-line text-violet-400"></i>
+                  </div>
+                </div>
+                <p class="text-3xl font-bold text-white">{{ marketAnalysis()!.topGrowingSectors.length }}</p>
+                <p class="text-sm text-violet-400 mt-1">{{ marketAnalysis()!.topGrowingSectors[0] }} {{ 'analytics.leading' | transloco }}</p>
+              </div>
+
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-neutral-400 text-sm">{{ 'analytics.topSkills' | transloco }}</span>
+                  <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                    <i class="pi pi-star text-amber-400"></i>
+                  </div>
+                </div>
+                <p class="text-3xl font-bold text-white">{{ marketAnalysis()!.skillDemands.length }}</p>
+                <p class="text-sm text-amber-400 mt-1">{{ 'analytics.skillsAnalyzed' | transloco }}</p>
+              </div>
+            </div>
+
+            <!-- Charts Row 1: Contract Types & Job Types -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              <!-- Contract Types Pie Chart -->
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <i class="pi pi-file text-emerald-400"></i>
+                  {{ 'analytics.mostDemandedContracts' | transloco }}
+                </h3>
+                @if (contractTypeChartData()) {
+                  <div class="h-64">
+                    <p-chart type="doughnut" [data]="contractTypeChartData()!" [options]="pieChartOptions" styleClass="h-full"></p-chart>
+                  </div>
+                }
+              </div>
+
+              <!-- Job Types Bar Chart -->
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <i class="pi pi-list text-cyan-400"></i>
+                  {{ 'analytics.mostPublishedJobTypes' | transloco }}
+                </h3>
+                @if (jobTypeChartData()) {
+                  <div class="h-72">
+                    <p-chart type="bar" [data]="jobTypeChartData()!" [options]="horizontalBarOptions" styleClass="h-full w-full"></p-chart>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Charts Row 2: Companies & Regions -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              <!-- Companies Bar Chart -->
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <i class="pi pi-building text-violet-400"></i>
+                  {{ 'analytics.companiesWithMostJobs' | transloco }}
+                </h3>
+                @if (companyChartData()) {
+                  <div class="h-64">
+                    <p-chart type="bar" [data]="companyChartData()!" [options]="chartOptions" styleClass="h-full"></p-chart>
+                  </div>
+                }
+              </div>
+
+              <!-- Regions Bar Chart -->
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <i class="pi pi-map-marker text-amber-400"></i>
+                  {{ regionChartTitle() }}
+                </h3>
+                @if (regionChartData()) {
+                  <div class="h-72">
+                    <p-chart type="bar" [data]="regionChartData()!" [options]="horizontalBarOptions" styleClass="h-full w-full"></p-chart>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Charts Row 3: Trends - DISABLED
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <i class="pi pi-calendar text-emerald-400"></i>
+                  {{ seasonalChartTitle() }}
+                </h3>
+                @if (seasonalTrendChartData()) {
+                  <div class="h-64">
+                    <p-chart type="line" [data]="seasonalTrendChartData()!" [options]="chartOptions" styleClass="h-full"></p-chart>
+                  </div>
+                }
+              </div>
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <i class="pi pi-chart-line text-violet-400"></i>
+                  {{ trendChartTitle() }}
+                </h3>
+                @if (monthlyTrendChartData()) {
+                  <div class="h-64">
+                    <p-chart type="line" [data]="monthlyTrendChartData()!" [options]="chartOptions" styleClass="h-full"></p-chart>
+                  </div>
+                }
+              </div>
+            </div>
+            -->
+
+            <!-- Market Trends & Skill Demands - DISABLED
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <i class="pi pi-trending-up text-emerald-400"></i>
+                  Tendances du marché
+                </h3>
+                <div class="space-y-4">
+                  @for (trend of marketAnalysis()!.marketTrends; track trend.skill) {
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-neutral-800/30 hover:bg-neutral-800/50 transition-colors">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 flex items-center justify-center">
+                          <span class="text-emerald-400 font-semibold text-sm">{{ trend.skill.charAt(0) }}</span>
+                        </div>
+                        <div>
+                          <p class="text-white font-medium">{{ trend.skill }}</p>
+                          <p class="text-neutral-500 text-xs">{{ trend.openPositions | number }} postes ouverts</p>
+                        </div>
+                      </div>
+                      <div class="text-right">
+                        <p class="text-emerald-400 font-semibold">+{{ trend.demandGrowth }}%</p>
+                        <p class="text-neutral-500 text-xs">{{ formatSalary(trend.avgSalary) }}/an</p>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <i class="pi pi-bolt text-amber-400"></i>
+                  Demande de compétences
+                </h3>
+                <div class="space-y-3">
+                  @for (skill of marketAnalysis()!.skillDemands; track skill.skill) {
+                    <div class="group">
+                      <div class="flex items-center justify-between mb-1">
+                        <div class="flex items-center gap-2">
+                          <span class="text-white text-sm">{{ skill.skill }}</span>
+                          <p-tag [value]="skill.category" styleClass="!text-[10px] !px-2 !py-0.5 !bg-neutral-700/50"></p-tag>
+                        </div>
+                        <div class="flex items-center gap-2">
+                          <i [class]="getTrendIcon(skill.trend) + ' text-xs ' + getTrendColor(skill.trend)"></i>
+                          <span class="text-neutral-400 text-sm">{{ skill.demand }}%</span>
+                        </div>
+                      </div>
+                      <p-progressBar 
+                        [value]="skill.demand" 
+                        [showValue]="false" 
+                        styleClass="!h-2 !bg-neutral-800 [&_.p-progressbar-value]:!bg-gradient-to-r [&_.p-progressbar-value]:from-emerald-500 [&_.p-progressbar-value]:to-cyan-500">
+                      </p-progressBar>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+            -->
+
+            <!-- Top Hiring Companies -->
+            <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6 mt-6">
+              <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                <i class="pi pi-building text-cyan-400"></i>
+                {{ 'analytics.hiringCompanies' | transloco }}
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                @for (company of marketAnalysis()!.companyStats; track company.companyName) {
+                  <div class="p-4 rounded-xl bg-neutral-800/30 hover:bg-neutral-800/50 transition-colors border border-neutral-700/30">
+                    <div class="flex items-center gap-3 mb-3">
+                      <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">{{ company.companyName.charAt(0) }}</span>
+                      </div>
+                      <div>
+                        <p class="text-white font-medium text-sm">{{ company.companyName }}</p>
+                        <p class="text-neutral-500 text-xs">{{ company.openPositions }} {{ 'analytics.positions' | transloco }}</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="text-neutral-400 text-xs">{{ 'analytics.avgMatch' | transloco }}</span>
+                      <span [class]="'font-semibold text-sm ' + getScoreColor(company.avgMatchScore)">{{ company.avgMatchScore }}%</span>
+                    </div>
+                    <div class="flex flex-wrap gap-1">
+                      @for (skill of company.topSkills; track skill) {
+                        <p-chip [label]="skill" styleClass="!text-[10px] !bg-neutral-700/50 !text-neutral-300 !px-2 !py-0.5"></p-chip>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </p-tabpanel>
+
+        <!-- Profile Analysis Tab -->
+        <p-tabpanel [value]="1">
+          @if (isLoadingProfile()) {
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+              @for (i of [1,2,3]; track i) {
+                <p-skeleton height="200px" styleClass="!bg-neutral-800/50 rounded-2xl"></p-skeleton>
+              }
+            </div>
+          } @else if (profileAnalysis()) {
+            <!-- Profile Score Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+              <!-- Overall Score -->
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6 text-center">
+                <h4 class="text-neutral-400 text-sm mb-4">{{ 'analytics.overallProfileScore' | transloco }}</h4>
+                <div class="relative w-32 h-32 mx-auto mb-4">
+                  <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" stroke="currentColor" class="text-neutral-800" stroke-width="8" fill="none"/>
+                    <circle cx="50" cy="50" r="45" stroke="url(#overallGradient)" stroke-width="8" fill="none"
+                      [attr.stroke-dasharray]="283"
+                      [attr.stroke-dashoffset]="283 - (283 * profileAnalysis()!.overallScore / 100)"
+                      stroke-linecap="round"/>
+                    <defs>
+                      <linearGradient id="overallGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#10b981"/>
+                        <stop offset="100%" stop-color="#06b6d4"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-3xl font-bold text-white">{{ profileAnalysis()!.overallScore }}%</span>
+                  </div>
+                </div>
+                <p-tag [value]="profileAnalysis()!.overallScore >= 70 ? ('analytics.goodProfile' | transloco) : ('analytics.needsImprovement' | transloco)" [severity]="getScoreSeverity(profileAnalysis()!.overallScore)"></p-tag>
+              </div>
+
+              <!-- Market Fit -->
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6 text-center">
+                <h4 class="text-neutral-400 text-sm mb-4">{{ 'analytics.marketFit' | transloco }}</h4>
+                <div class="relative w-32 h-32 mx-auto mb-4">
+                  <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" stroke="currentColor" class="text-neutral-800" stroke-width="8" fill="none"/>
+                    <circle cx="50" cy="50" r="45" stroke="url(#marketGradient)" stroke-width="8" fill="none"
+                      [attr.stroke-dasharray]="283"
+                      [attr.stroke-dashoffset]="283 - (283 * profileAnalysis()!.marketFitScore / 100)"
+                      stroke-linecap="round"/>
+                    <defs>
+                      <linearGradient id="marketGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#8b5cf6"/>
+                        <stop offset="100%" stop-color="#d946ef"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-3xl font-bold text-white">{{ profileAnalysis()!.marketFitScore }}%</span>
+                  </div>
+                </div>
+                <p class="text-neutral-400 text-sm">{{ profileAnalysis()!.topMatchingJobs }} {{ 'analytics.jobsMatch' | transloco }}</p>
+              </div>
+
+              <!-- Matching Jobs -->
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6">
+                <h4 class="text-neutral-400 text-sm mb-4 text-center">{{ 'analytics.careerRecommendations' | transloco }}</h4>
+                <div class="space-y-3">
+                  @for (rec of profileAnalysis()!.careerRecommendations; track rec.title) {
+                    <div class="p-3 rounded-xl bg-neutral-800/30 hover:bg-neutral-800/50 transition-colors">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="text-white font-medium text-sm">{{ rec.title }}</span>
+                        <p-tag [value]="rec.matchScore + '%'" severity="success" styleClass="!text-xs"></p-tag>
+                      </div>
+                      <p class="text-neutral-500 text-xs">{{ rec.estimatedSalaryRange }}</p>
+                      <div class="flex items-center gap-1 mt-2">
+                        <span class="text-neutral-500 text-[10px]">{{ 'analytics.growth' | transloco }}:</span>
+                        <p-tag [value]="rec.growthPotential" [severity]="getGrowthPotentialColor(rec.growthPotential)" styleClass="!text-[10px] !px-1.5 !py-0"></p-tag>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile Strengths & Skill Gaps -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              <!-- Profile Strengths -->
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <i class="pi pi-star-fill text-amber-400"></i>
+                  Forces du profil
+                </h3>
+                <div class="space-y-4">
+                  @for (strength of profileAnalysis()!.profileStrengths; track strength.category) {
+                    <div>
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="text-white text-sm">{{ strength.category }}</span>
+                        <span [class]="'font-semibold text-sm ' + getScoreColor(strength.score)">{{ strength.score }}%</span>
+                      </div>
+                      <p-progressBar 
+                        [value]="strength.score" 
+                        [showValue]="false" 
+                        styleClass="!h-2 !bg-neutral-800 [&_.p-progressbar-value]:!bg-gradient-to-r [&_.p-progressbar-value]:from-amber-500 [&_.p-progressbar-value]:to-orange-500">
+                      </p-progressBar>
+                      <div class="mt-2">
+                        @for (tip of strength.tips; track tip) {
+                          <p class="text-neutral-500 text-xs flex items-start gap-1">
+                            <i class="pi pi-info-circle text-[10px] mt-0.5 text-neutral-600"></i>
+                            {{ tip }}
+                          </p>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Skill Gaps -->
+              <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <i class="pi pi-exclamation-triangle text-rose-400"></i>
+                  Écarts de compétences
+                </h3>
+                <div class="space-y-4">
+                  @for (gap of profileAnalysis()!.skillGaps; track gap.skill) {
+                    <div class="p-4 rounded-xl bg-neutral-800/30 border border-neutral-700/30">
+                      <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                          <span class="text-white font-medium">{{ gap.skill }}</span>
+                          <p-tag [value]="gap.priority" [severity]="getPriorityColor(gap.priority)" styleClass="!text-[10px] !px-1.5 !py-0"></p-tag>
+                        </div>
+                        <span class="text-neutral-400 text-xs">{{ 'analytics.gap' | transloco }}: {{ calculateGapPercentage(gap) }}%</span>
+                      </div>
+                      <div class="flex items-center gap-2 mb-2">
+                        <span class="text-neutral-500 text-xs w-16">{{ 'analytics.you' | transloco }}</span>
+                        <div class="flex-1 h-2 bg-neutral-800 rounded-full overflow-hidden">
+                          <div class="h-full bg-rose-500 rounded-full" [style.width.%]="gap.userLevel"></div>
+                        </div>
+                        <span class="text-neutral-400 text-xs w-8">{{ gap.userLevel }}%</span>
+                      </div>
+                      <div class="flex items-center gap-2 mb-3">
+                        <span class="text-neutral-500 text-xs w-16">{{ 'analytics.market' | transloco }}</span>
+                        <div class="flex-1 h-2 bg-neutral-800 rounded-full overflow-hidden">
+                          <div class="h-full bg-emerald-500 rounded-full" [style.width.%]="gap.marketDemand"></div>
+                        </div>
+                        <span class="text-neutral-400 text-xs w-8">{{ gap.marketDemand }}%</span>
+                      </div>
+                      <p class="text-cyan-400 text-xs flex items-start gap-1">
+                        <i class="pi pi-lightbulb text-[10px] mt-0.5"></i>
+                        {{ gap.recommendation }}
+                      </p>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Improvement Areas -->
+            <div class="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800/50 rounded-2xl p-6 mt-6">
+              <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                <i class="pi pi-lightbulb text-cyan-400"></i>
+                {{ 'analytics.improvementAreas' | transloco }}
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                @for (area of profileAnalysis()!.improvementAreas; track area; let i = $index) {
+                  <div class="flex items-start gap-3 p-3 rounded-xl bg-neutral-800/30 hover:bg-neutral-800/50 transition-colors">
+                    <div class="w-6 h-6 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center flex-shrink-0">
+                      <span class="text-white text-xs font-bold">{{ i + 1 }}</span>
+                    </div>
+                    <p class="text-neutral-300 text-sm">{{ area }}</p>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+</div>

@@ -3,13 +3,38 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
 from pydantic import HttpUrl
 
-from .Job import JobBasic, JobDetail
+from .Job import JobBasic, JobDetail, FilterOptions
 from models.page import Page
 from .filters import JobFilters
 from database.engine import engine
 DATABASE_URL = "postgresql://ai_readonly:strong_password@localhost:5433/jobsdb"
 
 engine: Engine = engine
+
+
+def getFilterOptions() -> FilterOptions:
+    """Get distinct values for filter dropdowns."""
+
+    countries_sql = text("SELECT DISTINCT country FROM public.locations WHERE country IS NOT NULL ORDER BY country")
+    regions_sql = text("SELECT DISTINCT region FROM public.locations WHERE region IS NOT NULL ORDER BY region")
+    cities_sql = text("SELECT DISTINCT city FROM public.locations WHERE city IS NOT NULL ORDER BY city")
+    seniority_sql = text("SELECT DISTINCT seniority FROM public.jobs WHERE seniority IS NOT NULL ORDER BY seniority")
+    sources_sql = text("SELECT DISTINCT name FROM public.sources WHERE name IS NOT NULL ORDER BY name")
+
+    with engine.connect() as conn:
+        countries = [row[0] for row in conn.execute(countries_sql).fetchall()]
+        regions = [row[0] for row in conn.execute(regions_sql).fetchall()]
+        cities = [row[0] for row in conn.execute(cities_sql).fetchall()]
+        seniority_levels = [row[0] for row in conn.execute(seniority_sql).fetchall()]
+        sources = [row[0] for row in conn.execute(sources_sql).fetchall()]
+
+    return FilterOptions(
+        countries=countries,
+        regions=regions,
+        cities=cities,
+        seniority_levels=seniority_levels,
+        sources=sources
+    )
 
 
 def getJobByReference(reference: str) -> JobDetail | None:
@@ -98,6 +123,14 @@ def getJobs(filters: JobFilters, page: int, size: int) -> Page[JobBasic]:
         where_clauses.append("l.city = :city")
         params["city"] = filters.city
 
+    if filters.seniority:
+        where_clauses.append("j.seniority = :seniority")
+        params["seniority"] = filters.seniority
+
+    if filters.source:
+        where_clauses.append("s.name = :source")
+        params["source"] = filters.source
+
     where_sql = ""
     if where_clauses:
         where_sql = "WHERE " + " AND ".join(where_clauses)
@@ -145,6 +178,7 @@ def getJobs(filters: JobFilters, page: int, size: int) -> Page[JobBasic]:
         SELECT COUNT(*)
         FROM public.jobs j
         LEFT JOIN public.locations l ON j.location_id = l.location_id
+        LEFT JOIN public.sources s ON j.source_id = s.source_id
         {where_sql}
     """
     )

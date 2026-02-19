@@ -8,7 +8,7 @@
 
   "education": [
     {
-      "degree": "Applied MsC Data Engineering for AI",
+      "degree": "Applied MSc Data Engineering for AI",
       "institution": "DSTI School of Engineering",
       "year": "en cours",
       "coursework": "Machine Learning, Powershell, Azure, R, Python, Data Wrangling"
@@ -20,7 +20,7 @@
       "coursework": "Spring Boot, Microservices, Keycloak, Kafka, DevOps"
     },
     {
-      "degree": "License Génie Logiciel et Système d’Information",
+      "degree": "Licence Génie Logiciel et Système d’Information",
       "institution": "École supérieure des sciences et technologies",
       "year": "2023",
       "coursework": "Python, Java, C++, Architecture, Réseaux et Sécurité"
