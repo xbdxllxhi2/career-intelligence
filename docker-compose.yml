@@ -1,0 +1,153 @@
+version: '3.8'
+
+services:
+  # ===================
+  # DATABASE
+  # ===================
+  postgres:
+    image: postgres:16-alpine
+    container_name: internships-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-internships}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-internships_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-internships_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    networks:
+      - internships-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-internships}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===================
+  # REDIS (for Celery/Airflow)
+  # ===================
+  redis:
+    image: redis:7-alpine
+    container_name: internships-redis
+    restart: unless-stopped
+    networks:
+      - internships-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===================
+  # BACKEND - FastAPI (exposed)
+  # ===================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: internships-backend
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-internships}:${POSTGRES_PASSWORD:-internships_secret}@postgres:5432/${POSTGRES_DB:-internships_db}
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-your-super-secret-key-change-in-production}
+      - ENVIRONMENT=production
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-*}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - internships-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ===================
+  # FRONTEND - Angular (exposed)
+  # ===================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - API_URL=${API_URL:-/api}
+    container_name: internships-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    depends_on:
+      - backend
+    networks:
+      - internships-network
+
+  # ===================
+  # AIRFLOW - Data Aggregator (internal only)
+  # ===================
+  airflow-webserver:
+    build:
+      context: ./data-aggregator
+      dockerfile: Dockerfile
+    container_name: internships-airflow-webserver
+    restart: unless-stopped
+    command: webserver
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${POSTGRES_USER:-internships}:${POSTGRES_PASSWORD:-internships_secret}@postgres:5432/airflow_db
+      - AIRFLOW__CORE__FERNET_KEY=${AIRFLOW_FERNET_KEY:-}
+      - AIRFLOW__WEBSERVER__SECRET_KEY=${AIRFLOW_SECRET_KEY:-your-airflow-secret}
+      - AIRFLOW__CORE__LOAD_EXAMPLES=false
+      - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=false
+      - _AIRFLOW_DB_MIGRATE=true
+      - _AIRFLOW_WWW_USER_CREATE=true
+      - _AIRFLOW_WWW_USER_USERNAME=${AIRFLOW_USER:-admin}
+      - _AIRFLOW_WWW_USER_PASSWORD=${AIRFLOW_PASSWORD:-admin}
+    volumes:
+      - ./data-aggregator/dags:/opt/airflow/dags
+      - ./data-aggregator/logs:/opt/airflow/logs
+      - ./data-aggregator/plugins:/opt/airflow/plugins
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - internships-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  airflow-scheduler:
+    build:
+      context: ./data-aggregator
+      dockerfile: Dockerfile
+    container_name: internships-airflow-scheduler
+    restart: unless-stopped
+    command: scheduler
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${POSTGRES_USER:-internships}:${POSTGRES_PASSWORD:-internships_secret}@postgres:5432/airflow_db
+      - AIRFLOW__CORE__FERNET_KEY=${AIRFLOW_FERNET_KEY:-}
+      - AIRFLOW__CORE__LOAD_EXAMPLES=false
+    volumes:
+      - ./data-aggregator/dags:/opt/airflow/dags
+      - ./data-aggregator/logs:/opt/airflow/logs
+      - ./data-aggregator/plugins:/opt/airflow/plugins
+    depends_on:
+      - airflow-webserver
+    networks:
+      - internships-network
+
+networks:
+  internships-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

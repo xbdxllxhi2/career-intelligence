@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+import os
 
 from jobs.api import router as jobs_router
 from resume.resume_api import router as resume_router
@@ -38,9 +39,11 @@ async def lifespan(app: FastAPI):
     
     
     
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan, title="Internships Helper API", version="1.0.0")
 
-origins = ["http://localhost:4200"]
+# Configure CORS from environment
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "*")
+origins = [origin.strip() for origin in allowed_origins.split(",")]
 
 app.add_middleware(
     CORSMiddleware,
@@ -49,6 +52,15 @@ app.add_middleware(
     allow_methods=["*"], 
     allow_headers=["*"],
 )
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Docker and load balancers"""
+    return {"status": "healthy", "version": "1.0.0"}
+
+@app.get("/")
+async def root():
+    return {"message": "Internships Helper API", "version": "1.0.0"}
 
 app.include_router(jobs_router)
 app.include_router(resume_router)

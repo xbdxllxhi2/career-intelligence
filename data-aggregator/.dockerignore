@@ -1,0 +1,16 @@
+__pycache__
+*.pyc
+*.pyo
+.git
+.gitignore
+.idea
+.vscode
+*.log
+logs/
+data/
+output/
+input/
+tests/
+.env
+.coverage
+.pytest_cache/
