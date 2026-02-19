@@ -39,7 +39,15 @@ async def lifespan(app: FastAPI):
     
     
     
-app = FastAPI(lifespan=lifespan, title="Internships Helper API", version="1.0.0")
+ENV = os.getenv("ENV", "dev").lower()
+IS_PROD = ENV in ("prod", "production")
+
+app = FastAPI(
+    docs_url=None if IS_PROD else "/docs",
+    redoc_url=None if IS_PROD else "/redoc",
+    openapi_url=None if IS_PROD else "/openapi.json",
+    lifespan=lifespan, title="Internships Helper API", version="1.0.0"
+)    
 
 # Configure CORS from environment
 allowed_origins = os.getenv("ALLOWED_ORIGINS", "*")
