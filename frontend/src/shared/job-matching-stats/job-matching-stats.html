@@ -1,0 +1,408 @@
+<p-panel [collapsed]="collapsed" [toggleable]="true" class="w-full">
+  <ng-template #header>
+    <div class="flex items-center gap-2 w-full">
+      <i class="pi pi-objects-column"></i>
+      <span class="font-bold">{{ panelHeader | transloco }}</span>
+      @if (!loading && matchingResponse) {
+        <span class="ml-2 px-2 py-1 rounded text-xs font-semibold" [ngClass]="getScoreClass(overallScore)">
+          {{ overallScore }}%
+        </span>
+      }
+      <!-- View Mode Toggle -->
+      @if (showRadarOption && !loading && matchingResponse) {
+        <div class="ml-auto">
+          <p-selectButton 
+            [options]="viewModeOptions" 
+            [(ngModel)]="viewMode" 
+            optionLabel="label" 
+            optionValue="value"
+            [allowEmpty]="false"
+            size="small">
+            <ng-template #item let-item>
+              <i [class]="item.icon" class="mr-1"></i>
+              <span class="text-xs">{{ item.label }}</span>
+            </ng-template>
+          </p-selectButton>
+        </div>
+      }
+    </div>
+  </ng-template>
+  
+  <div class="matching-stats-content">
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="flex items-center justify-center py-8">
+        <p-progress-spinner strokeWidth="4" fill="transparent" animationDuration="1s" [style]="{ width: '40px', height: '40px' }" />
+        <span class="ml-3 text-gray-400">{{ 'matching.analyzing' | transloco }}</span>
+      </div>
+    }
+
+    <!-- No Data State -->
+    @if (!loading && !matchingResponse) {
+      <div class="flex flex-col items-center justify-center py-8 text-gray-400">
+        <i class="pi pi-chart-bar text-3xl mb-2"></i>
+        <span>{{ 'matching.noData' | transloco }}</span>
+      </div>
+    }
+
+    <!-- Matching Data -->
+    @if (!loading && matchingResponse && stats.length > 0) {
+      
+      <!-- Meter View -->
+      @if (viewMode === 'meter') {
+        <p-metergroup [value]="stats" labelPosition="start">
+          <ng-template #label>
+            <div class="flex flex-wrap gap-4">
+              @for (meterItem of stats; track meterItem.category) {
+                <p-card class="flex-1 min-w-[180px] border border-surface shadow-none cursor-pointer hover:border-emerald-500/50 transition-colors" 
+                        (click)="openCategoryDetails(meterItem.category)"
+                        [pTooltip]="'matching.clickToViewDetails' | transloco"
+                        tooltipPosition="top">
+                  <div class="flex justify-between gap-4">
+                    <div class="flex flex-col gap-1">
+                      <span class="text-surface-500 dark:text-surface-400 text-sm">
+                        {{ meterItem.translationKey | transloco }}
+                      </span>
+                      <span class="font-bold text-lg" [ngClass]="getScoreClass(meterItem.value)">
+                        {{ meterItem.value }}%
+                      </span>
+                      @if (meterItem.matchedCount !== undefined && meterItem.totalCount !== undefined) {
+                        <span class="text-xs text-gray-500">
+                          {{ meterItem.matchedCount }}/{{ meterItem.totalCount }} {{ 'matching.matched' | transloco }}
+                        </span>
+                      }
+                    </div>
+                    <span class="w-10 h-10 rounded-full inline-flex justify-center items-center text-center"
+                      [style]="{ 'background-color': meterItem.color1, color: '#ffffff' }">
+                      <i [class]="meterItem.icon"></i>
+                    </span>
+                  </div>
+                </p-card>
+              }
+            </div>
+          </ng-template>
+          
+          <ng-template #meter let-value let-class="class" let-width="size">
+            <span [class]="class"
+              [style]="{ background: 'linear-gradient(to right, ' + value.color1 + ', ' + value.color2 + ')', width: width }"></span>
+          </ng-template>
+          
+          <ng-template #start let-totalPercent="totalPercent">
+            <div class="flex justify-between mt-4 mb-2 relative">
+              <span>{{ 'jobs.overall' | transloco }}</span>
+              <span [style]="{ width: totalPercent + '%' }" class="absolute text-right" [ngClass]="getScoreClass(totalPercent)">
+                {{ totalPercent }}%
+              </span>
+              <span class="font-medium">100%</span>
+            </div>
+          </ng-template>
+          
+          <ng-template #end>
+            <!-- Recommendations Section -->
+            @if (showRecommendations && recommendations.length > 0) {
+              <div class="mt-6 border-t border-gray-700 pt-4">
+                <h4 class="text-sm font-semibold text-gray-300 mb-3">
+                  <i class="pi pi-lightbulb mr-2 text-yellow-400"></i>
+                  {{ 'matching.recommendations' | transloco }}
+                </h4>
+                <div class="space-y-2">
+                  @for (rec of recommendations; track rec.title) {
+                    <div class="flex items-start gap-3 p-2 rounded bg-neutral-800/50 hover:bg-neutral-700/50 cursor-pointer transition-colors"
+                         (click)="onRecommendationClick(rec)">
+                      <p-tag [severity]="getImpactSeverity(rec.impact)" [value]="rec.impact" class="text-xs uppercase" />
+                      <div class="flex-1">
+                        <div class="text-sm font-medium text-white">{{ rec.title }}</div>
+                        <div class="text-xs text-gray-400 mt-1">{{ rec.description }}</div>
+                      </div>
+                      <i class="pi pi-chevron-right text-gray-500"></i>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+            
+            <!-- Action Buttons -->
+            <div class="flex justify-between mt-4">
+              <p-button [label]="'matching.viewFullReport' | transloco" [outlined]="true" size="small" icon="pi pi-file" />
+              @if (showUpdateProfileButton) {
+                <p-button [label]="'jobs.updateProfile' | transloco" size="small" (onClick)="onUpdateProfileClick()" icon="pi pi-user-edit" />
+              }
+            </div>
+          </ng-template>
+        </p-metergroup>
+      }
+
+      <!-- Radar View -->
+      @if (viewMode === 'radar') {
+        <div class="radar-container">
+          <div class="h-[300px] w-full">
+            <p-chart type="radar" [data]="radarData" [options]="radarOptions" class="w-full h-full" />
+          </div>
+          
+          <!-- Category Legend with Click to Details -->
+          <div class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-2">
+            @for (meterItem of stats; track meterItem.category) {
+              <div class="flex items-center gap-2 p-2 rounded bg-neutral-800/50 hover:bg-neutral-700/50 cursor-pointer transition-colors"
+                   (click)="openCategoryDetails(meterItem.category)">
+                <span class="w-3 h-3 rounded-full" [style]="{ 'background-color': meterItem.color1 }"></span>
+                <span class="text-sm text-gray-300">{{ meterItem.translationKey | transloco }}</span>
+                <span class="ml-auto text-sm font-semibold" [ngClass]="getScoreClass(meterItem.value)">{{ meterItem.value }}%</span>
+              </div>
+            }
+          </div>
+          
+          <!-- Overall Score -->
+          <div class="mt-4 p-4 rounded-lg bg-neutral-800/50 text-center">
+            <div class="text-sm text-gray-400 mb-1">{{ 'matching.overallScore' | transloco }}</div>
+            <div class="text-3xl font-bold" [ngClass]="getScoreClass(overallScore)">{{ overallScore }}%</div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="flex justify-between mt-4">
+            <p-button [label]="'matching.viewFullReport' | transloco" [outlined]="true" size="small" icon="pi pi-file" />
+            @if (showUpdateProfileButton) {
+              <p-button [label]="'jobs.updateProfile' | transloco" size="small" (onClick)="onUpdateProfileClick()" icon="pi pi-user-edit" />
+            }
+          </div>
+        </div>
+      }
+    }
+  </div>
+</p-panel>
+
+<!-- Category Details Dialog -->
+<p-dialog 
+  [(visible)]="showDetailsDialog" 
+  [header]="selectedCategoryConfig ? (selectedCategoryConfig.translationKey | transloco) : ''"
+  [modal]="true" 
+  [style]="{ width: '750px', maxWidth: '95vw' }"
+  [dismissableMask]="true"
+  [draggable]="false"
+  styleClass="category-details-dialog">
+  
+  @if (selectedCategory) {
+    <!-- Category Score Header -->
+    <div class="flex items-center justify-between p-4 rounded-lg mb-4" [ngClass]="getScoreBgClass(selectedCategory.score)">
+      <div class="flex items-center gap-3">
+        <span class="w-12 h-12 rounded-full inline-flex justify-center items-center text-center"
+          [style]="{ 'background-color': selectedCategoryConfig?.color1, color: '#ffffff' }">
+          <i [class]="selectedCategoryConfig?.icon" class="text-xl"></i>
+        </span>
+        <div>
+          <div class="text-lg font-semibold text-white">{{ selectedCategoryConfig?.translationKey | transloco }}</div>
+          <div class="text-sm text-gray-400">{{ 'matching.categoryScore' | transloco }}</div>
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="text-3xl font-bold" [ngClass]="getScoreClass(selectedCategory.score)">{{ selectedCategory.score }}%</div>
+        <div class="text-xs text-gray-500">{{ 'matching.weight' | transloco }}: {{ (selectedCategory.weight * 100) | number:'1.0-0' }}%</div>
+      </div>
+    </div>
+
+    @if (selectedCategory.details) {
+      <div class="mb-4 p-3 rounded bg-neutral-800/50 text-sm text-gray-300">
+        <i class="pi pi-info-circle mr-2 text-blue-400"></i>
+        {{ selectedCategory.details }}
+      </div>
+    }
+
+    <!-- Side-by-Side Comparison Header -->
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div class="p-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-center">
+        <i class="pi pi-briefcase text-blue-400 text-xl mb-1"></i>
+        <div class="text-sm font-semibold text-blue-300">{{ 'matching.jobRequirements' | transloco }}</div>
+        <div class="text-xs text-gray-400">{{ 'matching.whatJobNeeds' | transloco }}</div>
+      </div>
+      <div class="p-3 rounded-lg bg-purple-500/10 border border-purple-500/30 text-center">
+        <i class="pi pi-user text-purple-400 text-xl mb-1"></i>
+        <div class="text-sm font-semibold text-purple-300">{{ 'matching.yourProfile' | transloco }}</div>
+        <div class="text-xs text-gray-400">{{ 'matching.whatYouHave' | transloco }}</div>
+      </div>
+    </div>
+
+    <!-- 1. Full Matches Section (exact + strong) -->
+    @if (getFullMatches().length > 0) {
+      <div class="mb-4">
+        <h4 class="text-sm font-semibold text-green-400 mb-3 flex items-center gap-2">
+          <i class="pi pi-check-circle"></i>
+          {{ 'matching.fullMatches' | transloco }} ({{ getFullMatches().length }})
+        </h4>
+        <div class="space-y-3">
+          @for (item of getFullMatches(); track item.userValue) {
+            <div class="rounded-lg bg-green-500/10 border border-green-500/30 overflow-hidden">
+              <!-- Match strength badge -->
+              <div class="flex items-center justify-between px-3 py-2 bg-green-500/20 border-b border-green-500/30">
+                <span class="flex items-center gap-2">
+                  <i class="pi pi-check-circle text-green-400"></i>
+                  <span class="text-xs text-green-300 font-medium">{{ 'matching.fullMatch' | transloco }}</span>
+                </span>
+                <span class="px-2 py-0.5 rounded text-xs" [ngClass]="getMatchStrengthClass(item.matchStrength)">
+                  {{ 'matching.' + item.matchStrength | transloco }}
+                </span>
+              </div>
+              <!-- Side by side comparison -->
+              <div class="grid grid-cols-2 divide-x divide-green-500/30">
+                <div class="p-3">
+                  <div class="text-xs text-blue-400 mb-1 flex items-center gap-1">
+                    <i class="pi pi-briefcase text-xs"></i>
+                    {{ 'matching.jobRequires' | transloco }}
+                  </div>
+                  <div class="text-sm text-white">{{ item.jobRequirement }}</div>
+                </div>
+                <div class="p-3">
+                  <div class="text-xs text-purple-400 mb-1 flex items-center gap-1">
+                    <i class="pi pi-user text-xs"></i>
+                    {{ 'matching.youHave' | transloco }}
+                  </div>
+                  <div class="text-sm text-white">{{ item.userValue }}</div>
+                </div>
+              </div>
+              @if (item.details) {
+                <div class="px-3 py-2 bg-neutral-800/50 text-xs text-gray-400 border-t border-green-500/30">
+                  <i class="pi pi-info-circle mr-1"></i>
+                  {{ item.details }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- 2. Partial Matches Section (partial + weak) -->
+    @if (getPartialMatches().length > 0) {
+      <div class="mb-4">
+        <h4 class="text-sm font-semibold text-yellow-400 mb-3 flex items-center gap-2">
+          <i class="pi pi-exclamation-circle"></i>
+          {{ 'matching.partialMatches' | transloco }} ({{ getPartialMatches().length }})
+        </h4>
+        <div class="space-y-3">
+          @for (item of getPartialMatches(); track item.userValue) {
+            <div class="rounded-lg bg-yellow-500/10 border border-yellow-500/30 overflow-hidden">
+              <!-- Match strength badge -->
+              <div class="flex items-center justify-between px-3 py-2 bg-yellow-500/20 border-b border-yellow-500/30">
+                <span class="flex items-center gap-2">
+                  <i class="pi pi-exclamation-circle text-yellow-400"></i>
+                  <span class="text-xs text-yellow-300 font-medium">{{ 'matching.partialMatch' | transloco }}</span>
+                </span>
+                <span class="px-2 py-0.5 rounded text-xs" [ngClass]="getMatchStrengthClass(item.matchStrength)">
+                  {{ 'matching.' + item.matchStrength | transloco }}
+                </span>
+              </div>
+              <!-- Side by side comparison -->
+              <div class="grid grid-cols-2 divide-x divide-yellow-500/30">
+                <div class="p-3">
+                  <div class="text-xs text-blue-400 mb-1 flex items-center gap-1">
+                    <i class="pi pi-briefcase text-xs"></i>
+                    {{ 'matching.jobRequires' | transloco }}
+                  </div>
+                  <div class="text-sm text-white">{{ item.jobRequirement }}</div>
+                </div>
+                <div class="p-3">
+                  <div class="text-xs text-purple-400 mb-1 flex items-center gap-1">
+                    <i class="pi pi-user text-xs"></i>
+                    {{ 'matching.youHave' | transloco }}
+                  </div>
+                  <div class="text-sm text-white">{{ item.userValue }}</div>
+                </div>
+              </div>
+              @if (item.details) {
+                <div class="px-3 py-2 bg-neutral-800/50 text-xs text-gray-400 border-t border-yellow-500/30">
+                  <i class="pi pi-info-circle mr-1"></i>
+                  {{ item.details }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- 3. No Matches Section - Shows what job needs that user doesn't have -->
+    @if (selectedCategory.missingItems.length > 0) {
+      <div class="mb-4">
+        <h4 class="text-sm font-semibold text-red-400 mb-3 flex items-center gap-2">
+          <i class="pi pi-times-circle"></i>
+          {{ 'matching.noMatches' | transloco }} ({{ selectedCategory.missingItems.length }})
+        </h4>
+        <div class="space-y-3">
+          @for (item of selectedCategory.missingItems; track item.requirement) {
+            <div class="rounded-lg bg-red-500/10 border border-red-500/30 overflow-hidden">
+              <!-- Importance badge -->
+              <div class="flex items-center justify-between px-3 py-2 bg-red-500/20 border-b border-red-500/30">
+                <span class="flex items-center gap-2">
+                  <i class="pi pi-times-circle text-red-400"></i>
+                  <span class="text-xs text-red-300 font-medium">{{ 'matching.noMatch' | transloco }}</span>
+                </span>
+                <span class="px-2 py-0.5 rounded text-xs" [ngClass]="getImportanceClass(item.importance)">
+                  {{ 'matching.' + item.importance | transloco }}
+                </span>
+              </div>
+              <!-- Side by side comparison -->
+              <div class="grid grid-cols-2 divide-x divide-red-500/30">
+                <div class="p-3">
+                  <div class="text-xs text-blue-400 mb-1 flex items-center gap-1">
+                    <i class="pi pi-briefcase text-xs"></i>
+                    {{ 'matching.jobRequires' | transloco }}
+                  </div>
+                  <div class="text-sm text-white">{{ item.requirement }}</div>
+                </div>
+                <div class="p-3">
+                  <div class="text-xs text-gray-500 mb-1 flex items-center gap-1">
+                    <i class="pi pi-user text-xs"></i>
+                    {{ 'matching.youHave' | transloco }}
+                  </div>
+                  <div class="text-sm text-gray-500 italic flex items-center gap-1">
+                    <i class="pi pi-minus-circle text-xs"></i>
+                    {{ 'matching.notInProfile' | transloco }}
+                  </div>
+                </div>
+              </div>
+              @if (item.suggestion) {
+                <div class="px-3 py-2 bg-yellow-500/10 text-xs text-yellow-300 border-t border-red-500/30 flex items-start gap-1">
+                  <i class="pi pi-lightbulb mt-0.5"></i>
+                  <span>{{ item.suggestion }}</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Summary Stats -->
+    <div class="grid grid-cols-3 gap-3 mb-4 p-3 rounded-lg bg-neutral-800/50">
+      <div class="text-center">
+        <div class="text-2xl font-bold text-green-400">{{ selectedCategory.matchedItems.length }}</div>
+        <div class="text-xs text-gray-400">{{ 'matching.matched' | transloco }}</div>
+      </div>
+      <div class="text-center border-x border-gray-700">
+        <div class="text-2xl font-bold text-red-400">{{ selectedCategory.missingItems.length }}</div>
+        <div class="text-xs text-gray-400">{{ 'matching.missing' | transloco }}</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl font-bold" [ngClass]="getScoreClass(selectedCategory.score)">{{ selectedCategory.score }}%</div>
+        <div class="text-xs text-gray-400">{{ 'matching.score' | transloco }}</div>
+      </div>
+    </div>
+
+    <!-- No items message -->
+    @if (selectedCategory.matchedItems.length === 0 && selectedCategory.missingItems.length === 0) {
+      <div class="text-center py-8 text-gray-400">
+        <i class="pi pi-info-circle text-2xl mb-2"></i>
+        <p>{{ 'matching.noRequirementsData' | transloco }}</p>
+      </div>
+    }
+
+    <p-divider />
+
+    <!-- Dialog Footer -->
+    <div class="flex justify-between items-center pt-2">
+      <span class="text-xs text-gray-500">
+        {{ selectedCategory.matchedItems.length }}/{{ selectedCategory.matchedItems.length + selectedCategory.missingItems.length }} {{ 'matching.requirementsMet' | transloco }}
+      </span>
+      <p-button [label]="'jobs.updateProfile' | transloco" size="small" (onClick)="onUpdateProfileClick(); closeDetailsDialog()" icon="pi pi-user-edit" />
+    </div>
+  }
+</p-dialog>
+

@@ -20,12 +20,16 @@ import { PaginatorModule } from 'primeng/paginator';
 import { Page } from '../../models/interface/page';
 import { ApplicationInfoModal } from '../application-info-modal/application-info-modal';
 import { TranslocoModule } from '@jsverse/transloco';
+import { JobMatchingStats } from '../../shared/job-matching-stats/job-matching-stats';
+import { JobMatchingService } from '../../service/job-matching-service';
+import { JobMatchingResponse, MatchCategoryType, MatchRecommendation } from '../../models/interface/job-matching';
+import { Router } from '@angular/router';
 
 
 @Component({
   selector: 'app-job-results',
   imports: [CardModule, ButtonModule, DrawerModule, JobAddressPipe, TagModule, PanelModule, MeterGroupModule, DatePipe,
-    ChartModule, CommonModule ,ProgressSpinnerModule, ToastModule, ChipModule,PaginatorModule, ApplicationInfoModal, TranslocoModule],
+    ChartModule, CommonModule ,ProgressSpinnerModule, ToastModule, ChipModule,PaginatorModule, ApplicationInfoModal, TranslocoModule, JobMatchingStats],
   providers: [MessageService],
   templateUrl: './job-results.html',
   styleUrl: './job-results.scss',
@@ -47,8 +51,17 @@ export class JobResults implements OnChanges {
 
   showApplicationModalFlag!: boolean;
 
-  constructor(private jobService: JobService, private resumeService: ResumeService, private messageService: MessageService) {
-  }
+  // Job matching data
+  matchingResponse: JobMatchingResponse | null = null;
+  matchingLoading: boolean = false;
+
+  constructor(
+    private jobService: JobService, 
+    private resumeService: ResumeService, 
+    private messageService: MessageService,
+    private jobMatchingService: JobMatchingService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.showApplicationModalFlag = false;
@@ -67,9 +80,25 @@ export class JobResults implements OnChanges {
         this.selectedJob = data;
         this.visible = true;
         this.isjobDetailsOpen.emit(true);
+        this.loadJobMatching(jobRef);
       },
       error: (err) => {
         console.log('Failed to load job from URL:', err);
+      }
+    });
+  }
+
+  private loadJobMatching(jobRef: string) {
+    this.matchingLoading = true;
+    this.matchingResponse = null;
+    this.jobMatchingService.getJobMatching(jobRef).subscribe({
+      next: (response) => {
+        this.matchingResponse = response;
+        this.matchingLoading = false;
+      },
+      error: (err) => {
+        console.log('Failed to load job matching:', err);
+        this.matchingLoading = false;
       }
     });
   }
@@ -89,12 +118,27 @@ export class JobResults implements OnChanges {
   }
 
 
-  value = [
-    { label: 'Apps', color1: '#34d399', color2: '#fbbf24', value: 25, icon: 'pi pi-table' },
-    { label: 'Messages', color1: '#fbbf24', color2: '#60a5fa', value: 15, icon: 'pi pi-inbox' },
-    { label: 'Media', color1: '#60a5fa', color2: '#c084fc', value: 20, icon: 'pi pi-image' },
-    { label: 'System', color1: '#c084fc', color2: '#c084fc', value: 10, icon: 'pi pi-cog' }
-  ];
+  onUpdateProfile(): void {
+    this.router.navigate(['/profile']);
+  }
+
+  onViewMatchingDetails(category: MatchCategoryType): void {
+    // Could open a modal with detailed matching info for this category
+    console.log('View details for category:', category);
+    this.messageService.add({ 
+      summary: 'Category Details', 
+      detail: `Viewing ${category} matching details`, 
+      severity: 'info' 
+    });
+  }
+
+  onRecommendationClick(recommendation: MatchRecommendation): void {
+    // Handle recommendation action - could navigate to relevant section or open modal
+    console.log('Recommendation clicked:', recommendation);
+    if (recommendation.actionType === 'add_skill' || recommendation.actionType === 'update_experience') {
+      this.router.navigate(['/profile']);
+    }
+  }
 
 
   getSelectedJob(): JobOffer | null {
@@ -108,6 +152,7 @@ export class JobResults implements OnChanges {
       .subscribe({
         next: (data) => {
           this.selectedJob = data;
+          this.loadJobMatching(reference);
         }, error: (err) => {
           console.log(err)
         }

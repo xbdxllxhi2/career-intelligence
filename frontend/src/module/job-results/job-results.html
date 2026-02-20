@@ -183,67 +183,18 @@
               </p>
             </p-panel>
           </div>
-          <div class="w-full flex gap-1 ">
-            <p-panel collapsed="true" [toggleable]="true" class="w-full">
-              <ng-template #header>
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-objects-column"></i>
-                  <span class="font-bold">{{ 'jobs.skillsMatch' | transloco }}</span>
-                </div>
-              </ng-template>
-              <div>
-                <p class="m-0">
-                  <p-metergroup [value]="value" labelPosition="start">
-                    <ng-template #label>
-                      <div class="flex flex-wrap gap-4">
-                        @for (meterItem of value; track $index) {
-                        <ng-container>
-                          <p-card class="flex-1 border border-surface shadow-none" styleClass="">
-                            <div class="flex justify-between gap-8">
-                              <div class="flex flex-col gap-1">
-                                <span class="text-surface-500 dark:text-surface-400 text-sm">{{ meterItem.label
-                                  }}</span>
-                                <span class="font-bold text-lg">{{ meterItem.value }}%</span>
-                              </div>
-                              <span class="w-8 h-8 rounded-full inline-flex justify-center items-center text-center"
-                                [style]="{ 'background-color': meterItem.color1, color: '#ffffff' }">
-                                <i [class]="meterItem.icon"></i>
-                              </span>
-                            </div>
-                          </p-card>
-                        </ng-container>
-                        }
-                      </div>
-                    </ng-template>
-                    <ng-template #meter let-value let-class="class" let-width="size">
-                      <span [class]="class"
-                        [style]="{ background: 'linear-gradient(to right, ' + value.color1 + ', ' + value.color2 + ')', width: width }"></span>
-                    </ng-template>
-                    <ng-template #start let-totalPercent="totalPercent">
-                      <div class="flex justify-between mt-4 mb-2 relative">
-                        <span>{{ 'jobs.overall' | transloco }}</span>
-                        <span [style]="{ width: totalPercent + '%' }" class="absolute text-right">{{ totalPercent
-                          }}%</span>
-                        <span class="font-medium">100%</span>
-                      </div>
-                    </ng-template>
-                    <ng-template #end>
-                      <div class="flex justify-between mt-4">
-                        <p-button label="Option 1" [outlined]="true" size="small" />
-                        <p-button [label]="'jobs.updateProfile' | transloco" size="small" />
-                      </div>
-                    </ng-template>
-                  </p-metergroup>
-                </p>
-              </div>
-
-            </p-panel>
-            <!-- <p-panel header="Header" [toggleable]="true" class="w-1/2">
-              <p class="m-0 w-full">
-                <p-chart type="radar" [data]="data" [options]="options" class="w-full">
-                </p-chart>
-              </p>
-            </p-panel> -->
+          <div class="w-full">
+            <app-job-matching-stats 
+              [matchingResponse]="matchingResponse" 
+              [loading]="matchingLoading"
+              [collapsed]="true"
+              [showUpdateProfileButton]="true"
+              [showRecommendations]="true"
+              [showRadarOption]="true"
+              (updateProfileClick)="onUpdateProfile()"
+              (viewDetailsClick)="onViewMatchingDetails($event)"
+              (recommendationClick)="onRecommendationClick($event)">
+            </app-job-matching-stats>
           </div>
         </div>
       </div>

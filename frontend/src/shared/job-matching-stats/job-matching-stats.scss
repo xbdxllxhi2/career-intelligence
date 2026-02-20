@@ -1,0 +1,45 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.matching-stats-content {
+  min-height: 100px;
+}
+
+.radar-container {
+  padding: 1rem 0;
+}
+
+// Dialog styling
+:host ::ng-deep .category-details-dialog {
+  .p-dialog-header {
+    background-color: rgb(38, 38, 38);
+    border-bottom: 1px solid rgb(64, 64, 64);
+  }
+  
+  .p-dialog-content {
+    background-color: rgb(38, 38, 38);
+    color: white;
+  }
+  
+  .p-dialog-footer {
+    background-color: rgb(38, 38, 38);
+    border-top: 1px solid rgb(64, 64, 64);
+  }
+}
+
+// SelectButton styling
+:host ::ng-deep .p-selectbutton {
+  .p-button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+// Radar chart responsive
+.h-\[300px\] {
+  @media (max-width: 640px) {
+    height: 250px;
+  }
+}
