@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8000'
+  apiUrl: 'https://career-intelligence.dev.ould-abdellahi.com/stayaway'
 };
