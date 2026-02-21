@@ -251,6 +251,7 @@
     "missing": "Manquantes",
     "score": "Score",
     "analyzing": "Analyse de votre profil...",
+    "analyzingDescription": "Comparaison de vos compétences avec les exigences du poste",
     "noData": "Aucune donnée de correspondance disponible",
     "recommendations": "Recommandations pour améliorer votre correspondance",
     "viewFullReport": "Voir le rapport complet",
@@ -289,6 +290,9 @@
     "noMatches": "Aucune correspondance",
     "fullMatch": "Correspondance complète",
     "partialMatch": "Correspondance partielle",
-    "noMatch": "Pas de correspondance"
+    "noMatch": "Pas de correspondance",
+    "greatFit": "Excellente correspondance !",
+    "greatFitDescription": "Vous êtes un excellent candidat pour ce poste. Votre profil correspond fortement aux exigences du poste.",
+    "matchScore": "Score de correspondance"
   }
 }

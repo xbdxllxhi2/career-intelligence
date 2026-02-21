@@ -23,7 +23,7 @@ logging.basicConfig(
         logging.StreamHandler()
     ]
 )
-logging.getLogger("watchfiles.main").setLevel(logging.WARNING)
+# logging.getLogger("watchfiles.main").setLevel(logging.WARNING)
 logger = logging.getLogger("myapp")
 
 

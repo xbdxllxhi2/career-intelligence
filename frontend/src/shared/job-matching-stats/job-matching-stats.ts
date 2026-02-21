@@ -80,7 +80,7 @@ export class JobMatchingStats implements OnChanges {
   viewModeOptions = [
     { label: 'Meter', value: 'meter', icon: 'pi pi-chart-bar' },
     { label: 'Radar', value: 'radar', icon: 'pi pi-chart-pie' }
-  ];
+];
 
   // Radar chart data
   radarData: any = null;
@@ -101,9 +101,27 @@ export class JobMatchingStats implements OnChanges {
   };
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['matchingResponse'] && this.matchingResponse) {
-      this.processMatchingResponse(this.matchingResponse);
+    // Handle loading state change - clear data when loading starts
+    if (changes['loading'] && this.loading) {
+      this.clearMatchingData();
     }
+    
+    // Handle matchingResponse change
+    if (changes['matchingResponse']) {
+      if (this.matchingResponse) {
+        this.processMatchingResponse(this.matchingResponse);
+      } else {
+        this.clearMatchingData();
+      }
+    }
+  }
+
+  private clearMatchingData(): void {
+    this.stats = [];
+    this.recommendations = [];
+    this.overallScore = 0;
+    this.radarData = null;
+    this.selectedCategory = null;
   }
 
   private processMatchingResponse(response: JobMatchingResponse): void {
@@ -218,6 +236,14 @@ export class JobMatchingStats implements OnChanges {
   closeDetailsDialog(): void {
     this.showDetailsDialog = false;
     this.selectedCategory = null;
+  }
+
+  isGreatFit(): boolean {
+    return this.overallScore >= 90;
+  }
+
+  isGoodFit(): boolean {
+    return this.overallScore >= 60 && this.overallScore < 80;
   }
 
   getScoreClass(score: number): string {

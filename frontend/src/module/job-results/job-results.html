@@ -184,17 +184,44 @@
             </p-panel>
           </div>
           <div class="w-full">
-            <app-job-matching-stats 
-              [matchingResponse]="matchingResponse" 
-              [loading]="matchingLoading"
-              [collapsed]="true"
-              [showUpdateProfileButton]="true"
-              [showRecommendations]="true"
-              [showRadarOption]="true"
-              (updateProfileClick)="onUpdateProfile()"
-              (viewDetailsClick)="onViewMatchingDetails($event)"
-              (recommendationClick)="onRecommendationClick($event)">
-            </app-job-matching-stats>
+            @defer (on viewport) {
+              <app-job-matching-stats 
+                [matchingResponse]="matchingResponse" 
+                [loading]="matchingLoading"
+                [collapsed]="true"
+                [showUpdateProfileButton]="true"
+                [showRecommendations]="true"
+                [showRadarOption]="true"
+                (updateProfileClick)="onUpdateProfile()"
+                (viewDetailsClick)="onViewMatchingDetails($event)"
+                (recommendationClick)="onRecommendationClick($event)">
+              </app-job-matching-stats>
+            } @placeholder {
+              <p-panel [collapsed]="true" [toggleable]="true" class="w-full">
+                <ng-template #header>
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-objects-column"></i>
+                    <span class="font-bold">{{ 'jobs.skillsMatch' | transloco }}</span>
+                  </div>
+                </ng-template>
+                <div class="flex items-center justify-center py-4 text-gray-400">
+                  <span>{{ 'common.loading' | transloco }}</span>
+                </div>
+              </p-panel>
+            } @loading (minimum 200ms) {
+              <p-panel [collapsed]="true" [toggleable]="true" class="w-full">
+                <ng-template #header>
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-objects-column"></i>
+                    <span class="font-bold">{{ 'jobs.skillsMatch' | transloco }}</span>
+                  </div>
+                </ng-template>
+                <div class="flex items-center justify-center py-4">
+                  <p-progress-spinner strokeWidth="4" fill="transparent" animationDuration="1s" [style]="{ width: '30px', height: '30px' }" />
+                  <span class="ml-2 text-gray-400">{{ 'common.loading' | transloco }}</span>
+                </div>
+              </p-panel>
+            }
           </div>
         </div>
       </div>

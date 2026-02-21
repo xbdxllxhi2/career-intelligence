@@ -31,9 +31,45 @@
   <div class="matching-stats-content">
     <!-- Loading State -->
     @if (loading) {
-      <div class="flex items-center justify-center py-8">
-        <p-progress-spinner strokeWidth="4" fill="transparent" animationDuration="1s" [style]="{ width: '40px', height: '40px' }" />
-        <span class="ml-3 text-gray-400">{{ 'matching.analyzing' | transloco }}</span>
+      <div class="space-y-4">
+        <!-- Loading Header -->
+        <div class="flex items-center justify-center gap-3 py-4">
+          <div class="relative">
+            <p-progress-spinner strokeWidth="4" fill="transparent" animationDuration="1s" [style]="{ width: '48px', height: '48px' }" />
+            <i class="pi pi-bolt absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-emerald-400 animate-pulse"></i>
+          </div>
+          <div class="text-left">
+            <div class="text-sm font-medium text-white">{{ 'matching.analyzing' | transloco }}</div>
+            <div class="text-xs text-gray-500">{{ 'matching.analyzingDescription' | transloco }}</div>
+          </div>
+        </div>
+        
+        <!-- Skeleton Cards -->
+        <div class="flex flex-wrap gap-4">
+          @for (i of [1, 2, 3, 4]; track i) {
+            <div class="flex-1 min-w-[180px] p-4 rounded-lg bg-neutral-800/50 border border-neutral-700 animate-pulse">
+              <div class="flex justify-between items-start">
+                <div class="space-y-2 flex-1">
+                  <div class="h-3 bg-neutral-700 rounded w-20"></div>
+                  <div class="h-6 bg-neutral-700 rounded w-12"></div>
+                  <div class="h-2 bg-neutral-700 rounded w-16"></div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-neutral-700"></div>
+              </div>
+            </div>
+          }
+        </div>
+        
+        <!-- Skeleton Progress Bar -->
+        <div class="mt-4">
+          <div class="flex justify-between mb-2">
+            <div class="h-3 bg-neutral-700 rounded w-16 animate-pulse"></div>
+            <div class="h-3 bg-neutral-700 rounded w-8 animate-pulse"></div>
+          </div>
+          <div class="h-2 bg-neutral-700 rounded-full overflow-hidden">
+            <div class="h-full w-1/3 bg-gradient-to-r from-neutral-600 to-neutral-700 animate-pulse"></div>
+          </div>
+        </div>
       </div>
     }
 
@@ -48,6 +84,28 @@
     <!-- Matching Data -->
     @if (!loading && matchingResponse && stats.length > 0) {
       
+      <!-- Great Fit Banner -->
+      @if (isGreatFit()) {
+        <div class="mb-4 p-4 rounded-lg bg-gradient-to-r from-green-500/20 via-emerald-500/20 to-teal-500/20 border border-green-500/40">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-green-500/30 flex items-center justify-center animate-pulse">
+              <i class="pi pi-star-fill text-2xl text-green-400"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2">
+                <span class="text-lg font-bold text-green-400">{{ 'matching.greatFit' | transloco }}</span>
+                <i class="pi pi-verified text-green-400"></i>
+              </div>
+              <p class="text-sm text-gray-300 mt-0.5">{{ 'matching.greatFitDescription' | transloco }}</p>
+            </div>
+            <div class="text-right">
+              <div class="text-3xl font-bold text-green-400">{{ overallScore }}%</div>
+              <div class="text-xs text-gray-400">{{ 'matching.matchScore' | transloco }}</div>
+            </div>
+          </div>
+        </div>
+      }
+
       <!-- Meter View -->
       @if (viewMode === 'meter') {
         <p-metergroup [value]="stats" labelPosition="start">
@@ -114,7 +172,7 @@
                         <div class="text-sm font-medium text-white">{{ rec.title }}</div>
                         <div class="text-xs text-gray-400 mt-1">{{ rec.description }}</div>
                       </div>
-                      <i class="pi pi-chevron-right text-gray-500"></i>
+                      <!-- <i class="pi pi-chevron-right text-gray-500"></i> -->
                     </div>
                   }
                 </div>

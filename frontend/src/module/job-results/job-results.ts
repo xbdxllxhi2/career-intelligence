@@ -133,11 +133,8 @@ export class JobResults implements OnChanges {
   }
 
   onRecommendationClick(recommendation: MatchRecommendation): void {
-    // Handle recommendation action - could navigate to relevant section or open modal
+    // TODO: Handle recommendation action - could navigate to relevant section or open modal
     console.log('Recommendation clicked:', recommendation);
-    if (recommendation.actionType === 'add_skill' || recommendation.actionType === 'update_experience') {
-      this.router.navigate(['/profile']);
-    }
   }
 
 

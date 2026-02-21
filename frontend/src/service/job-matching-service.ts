@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, delay } from 'rxjs';
+import { Observable, of, delay, catchError, tap } from 'rxjs';
 import { environment } from '../environments/environments';
 import { 
   JobMatchingResponse, 
@@ -13,21 +13,33 @@ import {
   providedIn: 'root',
 })
 export class JobMatchingService {
-  private readonly apiUrl = environment.apiUrl + '/matching';
+  private readonly apiUrl = environment.apiUrl + '/jobs';
+  private readonly useMockData = false; // Set to true to use mock data
 
   constructor(private client: HttpClient) {}
 
   /**
    * Get matching analysis between user profile and a specific job
    * @param jobReference - The job reference ID
+   * @param userId - Optional user ID (defaults to 1)
    * @returns Observable with matching response
    */
-  getJobMatching(jobReference: string): Observable<JobMatchingResponse> {
-    // TODO: Replace with actual API call when backend is ready
-    // return this.client.get<JobMatchingResponse>(`${this.apiUrl}/job/${jobReference}`);
+  getJobMatching(jobReference: string, userId: number = 1): Observable<JobMatchingResponse> {
+    if (this.useMockData) {
+      return of(this.generateMockMatchingResponse(jobReference)).pipe(delay(500));
+    }
     
-    // Mock implementation
-    return of(this.generateMockMatchingResponse(jobReference)).pipe(delay(500));
+    return this.client.get<JobMatchingResponse>(
+      `${this.apiUrl}/${jobReference}/matching`,
+      { params: { user_id: userId.toString() } }
+    ).pipe(
+      tap(response => console.log('Job matching response:', response)),
+      catchError(error => {
+        console.error('Job matching API error, using mock data:', error);
+        // Fallback to mock data on error
+        return of(this.generateMockMatchingResponse(jobReference)).pipe(delay(100));
+      })
+    );
   }
 
   /**

@@ -251,6 +251,7 @@
     "missing": "Missing",
     "score": "Score",
     "analyzing": "Analyzing your profile...",
+    "analyzingDescription": "Comparing your skills and experience with job requirements",
     "noData": "No matching data available",
     "recommendations": "Recommendations to improve your match",
     "viewFullReport": "View Full Report",
@@ -289,6 +290,9 @@
     "noMatches": "No Matches",
     "fullMatch": "Full Match",
     "partialMatch": "Partial Match",
-    "noMatch": "No Match"
+    "noMatch": "No Match",
+    "greatFit": "Great Fit!",
+    "greatFitDescription": "You're an excellent match for this position. Your profile strongly aligns with the job requirements.",
+    "matchScore": "Match Score"
   }
 }
