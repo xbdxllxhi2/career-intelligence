@@ -101,7 +101,7 @@
       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center">
         <i class="pi pi-briefcase text-white text-xs"></i>
       </div>
-      <span class="text-lg font-bold text-white">Navigation</span>
+      <span class="text-lg font-bold text-white">{{ 'nav.navigation' | transloco }}</span>
     </div>
   </ng-template>
   
@@ -109,7 +109,43 @@
     <!-- Main Menu -->
     <div class="space-y-1 mt-4">
       <p class="text-[11px] text-neutral-500 uppercase tracking-wider font-medium px-3 mb-3">{{ 'nav.mainMenu' | transloco }}</p>
-      <p-menu [model]="items()" styleClass="w-full !border-none !bg-transparent [&_.p-menu-item-link]:!rounded-xl [&_.p-menu-item-link]:!px-4 [&_.p-menu-item-link]:!py-3 [&_.p-menu-item-link]:hover:!bg-neutral-800/50 [&_.p-menu-item-icon]:!text-emerald-400 [&_.p-menuitem]:!mb-1" />
+      <nav class="space-y-1">
+        <a routerLink="/" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="!bg-emerald-500/10 !text-emerald-400"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-300 hover:bg-neutral-800/50 transition-all">
+          <i class="pi pi-home text-emerald-400"></i>
+          <span>{{ 'nav.home' | transloco }}</span>
+        </a>
+        <a routerLink="/profile" routerLinkActive="!bg-emerald-500/10 !text-emerald-400"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-300 hover:bg-neutral-800/50 transition-all">
+          <i class="pi pi-user text-emerald-400"></i>
+          <span>{{ 'nav.profile' | transloco }}</span>
+        </a>
+        <a routerLink="/jobs" routerLinkActive="!bg-emerald-500/10 !text-emerald-400"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-300 hover:bg-neutral-800/50 transition-all">
+          <i class="pi pi-code text-emerald-400"></i>
+          <span>{{ 'nav.jobs' | transloco }}</span>
+        </a>
+        <a routerLink="/applications" routerLinkActive="!bg-emerald-500/10 !text-emerald-400"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-300 hover:bg-neutral-800/50 transition-all">
+          <i class="pi pi-briefcase text-emerald-400"></i>
+          <span>{{ 'nav.applications' | transloco }}</span>
+        </a>
+        <a routerLink="/analytics" routerLinkActive="!bg-emerald-500/10 !text-emerald-400"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-300 hover:bg-neutral-800/50 transition-all">
+          <i class="pi pi-chart-line text-emerald-400"></i>
+          <span>{{ 'nav.analytics' | transloco }}</span>
+        </a>
+        <a routerLink="/inbox" routerLinkActive="!bg-emerald-500/10 !text-emerald-400"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-300 hover:bg-neutral-800/50 transition-all">
+          <i class="pi pi-inbox text-emerald-400"></i>
+          <span>{{ 'nav.messages' | transloco }}</span>
+        </a>
+        <a routerLink="/resume" routerLinkActive="!bg-emerald-500/10 !text-emerald-400"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-300 hover:bg-neutral-800/50 transition-all">
+          <i class="pi pi-file-edit text-emerald-400"></i>
+          <span>{{ 'nav.resume' | transloco }}</span>
+        </a>
+      </nav>
     </div>
     
     <div class="flex-1"></div>
@@ -117,7 +153,23 @@
     <!-- Bottom Menu -->
     <div class="space-y-1 mb-4">
       <p class="text-[11px] text-neutral-500 uppercase tracking-wider font-medium px-3 mb-3">{{ 'nav.account' | transloco }}</p>
-      <p-menu [model]="items2()" styleClass="w-full !border-none !bg-transparent [&_.p-menu-item-link]:!rounded-xl [&_.p-menu-item-link]:!px-4 [&_.p-menu-item-link]:!py-3 [&_.p-menu-item-link]:hover:!bg-neutral-800/50 [&_.p-menu-item-icon]:!text-neutral-400 [&_.p-menuitem]:!mb-1" />
+      <nav class="space-y-1">
+        <a routerLink="/settings" routerLinkActive="!bg-neutral-800"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-300 hover:bg-neutral-800/50 transition-all">
+          <i class="pi pi-cog text-neutral-400"></i>
+          <span>{{ 'nav.settings' | transloco }}</span>
+        </a>
+        <a routerLink="/contact" routerLinkActive="!bg-neutral-800"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-300 hover:bg-neutral-800/50 transition-all">
+          <i class="pi pi-envelope text-neutral-400"></i>
+          <span>{{ 'nav.contact' | transloco }}</span>
+        </a>
+        <button (click)="logout()"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-300 hover:bg-neutral-800/50 transition-all w-full text-left">
+          <i class="pi pi-sign-out text-neutral-400"></i>
+          <span>{{ 'nav.logout' | transloco }}</span>
+        </button>
+      </nav>
     </div>
   </div>
 </p-drawer>

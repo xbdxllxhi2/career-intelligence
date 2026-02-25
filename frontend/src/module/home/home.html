@@ -112,6 +112,24 @@
           </div>
         </p-card>
 
+        <!-- Trend Chart Card -->
+        <p-card styleClass="absolute top-0 right-8 w-52 bg-neutral-900/85 backdrop-blur-xl border border-neutral-800 z-25">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs text-neutral-400">AI/ML Skills</span>
+            <p-tag value="+42%" styleClass="bg-emerald-500/20 text-emerald-400 text-xs" />
+          </div>
+          <div class="flex items-end gap-1 h-12">
+            <div class="w-3 bg-neutral-700 rounded-t" style="height: 30%"></div>
+            <div class="w-3 bg-neutral-700 rounded-t" style="height: 45%"></div>
+            <div class="w-3 bg-neutral-700 rounded-t" style="height: 35%"></div>
+            <div class="w-3 bg-neutral-700 rounded-t" style="height: 55%"></div>
+            <div class="w-3 bg-neutral-700 rounded-t" style="height: 65%"></div>
+            <div class="w-3 bg-emerald-500 rounded-t" style="height: 80%"></div>
+            <div class="w-3 bg-emerald-400 rounded-t" style="height: 100%"></div>
+          </div>
+          <p class="text-neutral-500 text-xs mt-2">Trending up in your market</p>
+        </p-card>
+
         <!-- Decorative Check -->
         <div class="absolute top-44 right-20 z-40">
           <i class="pi pi-check-circle text-4xl text-emerald-500 animate-pulse"></i>
@@ -122,7 +140,7 @@
     <!-- Stats Bar - Fixed at bottom of hero -->
     <div class="relative z-10 w-full max-w-4xl mx-auto mt-auto pb-4">
       <p-card styleClass="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800">
-        <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12 py-2">
+        <div class="flex flex-nowrap justify-center items-center gap-4 md:gap-12 py-2 overflow-x-auto">
           <div class="flex items-center gap-3">
             <i class="pi pi-briefcase text-2xl text-emerald-400"></i>
             <div>
