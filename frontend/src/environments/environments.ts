@@ -5,5 +5,6 @@ export const environment = {
     url: 'http://localhost:8080',
     realm: 'career-intelligence-fe',
     clientId: 'frontend'
-  }
+  },
+  googleAnalyticsId: 'G-872T4C1ENB'
 };
