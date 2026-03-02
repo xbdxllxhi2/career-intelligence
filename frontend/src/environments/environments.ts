@@ -7,5 +7,5 @@ export const environment = {
     realm: 'dev-career-intelligence',
     clientId: 'career-intelligence-fe'
   },
-  googleAnalyticsId: 'G-872T4C1ENB'
+  // googleAnalyticsId: 'G-872T4C1ENB'
 };

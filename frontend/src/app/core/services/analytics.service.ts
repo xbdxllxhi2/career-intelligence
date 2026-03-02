@@ -12,18 +12,18 @@ export class AnalyticsService {
   private router = inject(Router);
 
   init(): void {
-    this.trackPageViews();
+    // this.trackPageViews();
   }
 
-  private trackPageViews(): void {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: NavigationEnd) => {
-      gtag('config', environment.googleAnalyticsId, {
-        page_path: event.urlAfterRedirects
-      });
-    });
-  }
+  // private trackPageViews(): void {
+  //   this.router.events.pipe(
+  //     filter(event => event instanceof NavigationEnd)
+  //   ).subscribe((event: NavigationEnd) => {
+  //     gtag('config', environment.googleAnalyticsId, {
+  //       page_path: event.urlAfterRedirects
+  //     });
+  //   });
+  // }
 
   trackEvent(eventName: string, eventParams: Record<string, any> = {}): void {
     gtag('event', eventName, eventParams);

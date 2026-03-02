@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { TextareaModule } from 'primeng/textarea';
 import {
   AbstractControl,
@@ -27,6 +27,8 @@ import { ProfileService } from '../../service/profile-service';
 import { ToastModule } from 'primeng/toast';
 import { SelectModule } from 'primeng/select';
 import { MessageService } from 'primeng/api';
+import { KeycloakService } from 'keycloak-angular';
+import { environment } from '../../environments/environments';
 
 @Component({
   selector: 'app-profile',
@@ -56,6 +58,9 @@ import { MessageService } from 'primeng/api';
 export class Profile {
   @Input() conversation: QuestionAnswer[] = [];
 
+  private keycloak = inject(KeycloakService);
+  isAuthenticated = false;
+
   profileData!: UserProfile;
 
   profileForm!: FormGroup;
@@ -76,8 +81,17 @@ export class Profile {
   ) {}
 
   ngOnInit(): void {
+    this.isAuthenticated = environment.keycloak.enabled ? this.keycloak.isLoggedIn() : true;
     this.initForm();
-    this.initProfileData();
+    if (this.isAuthenticated) {
+      this.initProfileData();
+    }
+  }
+
+  login(): void {
+    this.keycloak.login({
+      redirectUri: window.location.origin + '/profile'
+    });
   }
 
   private initProfileData(): void {
