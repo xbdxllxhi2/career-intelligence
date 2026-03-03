@@ -7,5 +7,7 @@ export const routes: Routes = [
     {path:'applications', loadComponent: () => import('../module/applications/applications').then(m => m.Applications)},
     {path:'inbox', loadComponent: () => import('../module/inbox/inbox').then(m => m.Inbox),},
     {path:'resume', loadComponent:()=> import('../module/resume/resume').then(m=> m.Resume)},
-    {path:'analytics', loadComponent:()=> import('../module/analytics/analytics').then(m=> m.Analytics)}
+    {path:'analytics', loadComponent:()=> import('../module/analytics/analytics').then(m=> m.Analytics)},
+    {path:'settings', loadComponent:()=> import('../module/settings/settings').then(m=> m.Settings)},
+    {path:'assistant', loadComponent:()=> import('../module/career-assistant/career-assistant').then(m=> m.CareerAssistant)}
 ];

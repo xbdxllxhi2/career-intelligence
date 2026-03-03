@@ -12,7 +12,8 @@
     "contact": "Contact",
     "mainMenu": "Menu principal",
     "account": "Compte",
-    "navigation": "Navigation"
+    "navigation": "Navigation",
+    "assistant": "Assistant"
   },
   "home": {
     "hero": {
@@ -161,7 +162,9 @@
     "rejected": "Refusé",
     "noApplications": "Aucune candidature",
     "noApplicationsDescription": "Commencez à postuler et suivez votre progression ici.",
-    "via": "via"
+    "via": "via",
+    "signInSubtitle": "Connectez-vous pour suivre et gérer vos candidatures, voir votre progression et rester organisé.",
+    "signInButton": "Se connecter pour continuer"
   },
   "resume": {
     "title": "Générateur de CV",
@@ -172,11 +175,15 @@
     "clear": "Effacer",
     "generate": "Générer PDF",
     "generating": "Génération...",
-    "hint": "Les données de votre profil seront comparées aux exigences du poste pour créer un CV sur mesure."
+    "hint": "Les données de votre profil seront comparées aux exigences du poste pour créer un CV sur mesure.",
+    "signInSubtitle": "Connectez-vous pour générer des CV personnalisés par l'IA basés sur votre profil et les descriptions de poste.",
+    "signInButton": "Se connecter pour continuer"
   },
   "analytics": {
     "title": "Tableau de bord analytique",
     "subtitle": "Analyse du marché de l'emploi et de votre profil",
+    "signInSubtitle": "Connectez-vous pour voir des analyses personnalisées, les tendances du marché et l'analyse des compétences.",
+    "signInButton": "Se connecter pour continuer",
     "updated": "Mis à jour",
     "refresh": "Actualiser",
     "autoRefresh": "Auto-actualisation active (30s)",
@@ -295,5 +302,118 @@
     "greatFit": "Excellente correspondance !",
     "greatFitDescription": "Vous êtes un excellent candidat pour ce poste. Votre profil correspond fortement aux exigences du poste.",
     "matchScore": "Score de correspondance"
+  },
+  "assistant": {
+    "title": "Assistant Carrière",
+    "subtitle": "Votre coach carrière propulsé par l'IA. Posez-moi vos questions sur les CV, entretiens, compétences, négociation salariale ou planification de carrière.",
+    "newChat": "Nouvelle conversation",
+    "noConversations": "Aucune conversation",
+    "freePlan": "Plan Gratuit",
+    "inputPlaceholder": "Posez-moi une question sur votre carrière...",
+    "helpText": "L'Assistant Carrière peut vous aider avec les CV, entretiens, compétences et planification de carrière.",
+    "agentsComingSoon": "Agents bientôt",
+    "comingSoon": "Prochainement",
+    "prompts": {
+      "resume": "Aide-moi à améliorer mon CV",
+      "interview": "Prépare-moi pour un entretien",
+      "skills": "Quelles compétences dois-je apprendre ?",
+      "salary": "Comment négocier mon salaire ?"
+    },
+    "futureFeatures": {
+      "autoApply": "Candidature automatique",
+      "scheduleInterviews": "Planifier les entretiens",
+      "generateCvs": "Générer des CV sur mesure",
+      "researchCompanies": "Rechercher des entreprises"
+    },
+    "signInTitle": "Assistant Carrière",
+    "signInSubtitle": "Connectez-vous pour accéder à votre coach carrière IA. Obtenez des conseils personnalisés sur les CV, entretiens, compétences et planification de carrière.",
+    "signInButton": "Se connecter pour continuer"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "subtitle": "Gérez votre compte, confidentialité et préférences",
+    "privacy": {
+      "title": "Paramètres de confidentialité",
+      "subtitle": "Contrôlez comment vos données sont utilisées et partagées",
+      "analytics": "Analytiques d'utilisation",
+      "analyticsDesc": "Aidez-nous à nous améliorer en partageant des données anonymes",
+      "profileVisibility": "Visibilité du profil",
+      "profileVisibilityDesc": "Permettre aux recruteurs de découvrir votre profil",
+      "dataSharing": "Partage de données avec partenaires",
+      "dataSharingDesc": "Partager vos données avec nos partenaires de confiance",
+      "save": "Enregistrer les paramètres de confidentialité"
+    },
+    "communication": {
+      "title": "Préférences de communication",
+      "subtitle": "Choisissez les emails que vous souhaitez recevoir",
+      "emailNotifications": "Notifications par email",
+      "emailNotificationsDesc": "Recevoir les mises à jour importantes sur votre compte",
+      "jobAlerts": "Alertes emploi",
+      "jobAlertsDesc": "Être notifié quand de nouvelles offres correspondantes sont publiées",
+      "weeklyDigest": "Résumé hebdomadaire",
+      "weeklyDigestDesc": "Recevoir un résumé hebdomadaire des nouvelles opportunités",
+      "marketingEmails": "Emails marketing",
+      "marketingEmailsDesc": "Recevoir des conseils, actualités et contenus promotionnels",
+      "save": "Enregistrer les préférences de communication"
+    },
+    "cookies": {
+      "title": "Préférences des cookies",
+      "subtitle": "Gérez vos paramètres de consentement aux cookies",
+      "necessary": "Cookies nécessaires",
+      "necessaryDesc": "Requis pour le bon fonctionnement du site",
+      "functional": "Cookies fonctionnels",
+      "functionalDesc": "Activer les fonctionnalités personnalisées comme les préférences linguistiques",
+      "analytics": "Cookies analytiques",
+      "analyticsDesc": "Nous aider à comprendre comment vous utilisez notre site",
+      "marketing": "Cookies marketing",
+      "marketingDesc": "Utilisés pour vous montrer des publicités pertinentes",
+      "save": "Enregistrer les préférences de cookies"
+    },
+    "gdpr": {
+      "title": "Vos données (RGPD)",
+      "subtitle": "Exercez vos droits de protection des données",
+      "viewData": "Voir mes données",
+      "viewDataDesc": "Voir toutes les données personnelles que nous avons collectées sur vous",
+      "viewDataButton": "Voir les données",
+      "exportData": "Exporter mes données",
+      "exportDataDesc": "Télécharger une copie de vos données dans un format portable (JSON)",
+      "exportDataButton": "Exporter les données",
+      "deleteAccount": "Supprimer mon compte",
+      "deleteAccountDesc": "Supprimer définitivement votre compte et toutes les données associées",
+      "deleteAccountButton": "Supprimer le compte",
+      "infoText": "Conformément au Règlement Général sur la Protection des Données (RGPD), vous avez le droit d'accéder, rectifier, exporter et supprimer vos données personnelles. Les demandes de suppression sont traitées sous 30 jours. Pour toute question, contactez notre Délégué à la Protection des Données à"
+    },
+    "legal": {
+      "privacyPolicy": "Politique de confidentialité",
+      "termsOfService": "Conditions d'utilisation",
+      "cookiePolicy": "Politique des cookies",
+      "contactDpo": "Contacter le DPO"
+    },
+    "dialogs": {
+      "exportTitle": "Exporter vos données",
+      "exportIntro": "Nous préparerons un export complet de vos données personnelles incluant :",
+      "exportProfile": "Informations de profil",
+      "exportApplications": "Historique des candidatures",
+      "exportResume": "Données du CV",
+      "exportSavedJobs": "Offres sauvegardées et préférences",
+      "exportAnalytics": "Analytiques et journaux d'activité",
+      "exportEmailNotice": "L'export sera envoyé à votre email sous 24 heures.",
+      "exportCancel": "Annuler",
+      "exportConfirm": "Demander l'export",
+      "deleteTitle": "Supprimer votre compte",
+      "deleteWarning": "Attention : Cette action est irréversible",
+      "deleteIntro": "La suppression de votre compte effacera définitivement :",
+      "deleteProfile": "Votre profil et informations personnelles",
+      "deleteApplications": "Toutes les candidatures et l'historique",
+      "deleteResume": "CV et documents téléchargés",
+      "deleteSavedJobs": "Offres sauvegardées et préférences",
+      "deleteConfirmLabel": "Tapez \"supprimer mon compte\" pour confirmer :",
+      "deleteConfirmPlaceholder": "supprimer mon compte",
+      "deleteCancel": "Annuler",
+      "deleteConfirm": "Supprimer mon compte"
+    },
+    "signInTitle": "Paramètres",
+    "signInSubtitle": "Connectez-vous pour gérer vos paramètres de compte, préférences de confidentialité et droits sur vos données.",
+    "signInButton": "Se connecter pour continuer"
   }
 }

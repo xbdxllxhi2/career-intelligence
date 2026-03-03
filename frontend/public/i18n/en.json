@@ -12,7 +12,8 @@
     "contact": "Contact",
     "mainMenu": "Main Menu",
     "account": "Account",
-    "navigation": "Navigation"
+    "navigation": "Navigation",
+    "assistant": "Assistant"
   },
   "home": {
     "hero": {
@@ -161,7 +162,9 @@
     "rejected": "Rejected",
     "noApplications": "No applications yet",
     "noApplicationsDescription": "Start applying to jobs and track your progress here.",
-    "via": "via"
+    "via": "via",
+    "signInSubtitle": "Sign in to track and manage your job applications, see your progress, and stay organized.",
+    "signInButton": "Sign in to continue"
   },
   "resume": {
     "title": "Resume Generator",
@@ -172,11 +175,15 @@
     "clear": "Clear",
     "generate": "Generate PDF",
     "generating": "Generating...",
-    "hint": "Your profile data will be matched against the job requirements to create a tailored resume."
+    "hint": "Your profile data will be matched against the job requirements to create a tailored resume.",
+    "signInSubtitle": "Sign in to generate AI-tailored resumes based on your profile and job descriptions.",
+    "signInButton": "Sign in to continue"
   },
   "analytics": {
     "title": "Analytics Dashboard",
     "subtitle": "Job market and profile analysis",
+    "signInSubtitle": "Sign in to view personalized analytics, market insights, and skill gap analysis.",
+    "signInButton": "Sign in to continue",
     "updated": "Updated",
     "refresh": "Refresh",
     "autoRefresh": "Auto-refresh active (30s)",
@@ -295,5 +302,118 @@
     "greatFit": "Great Fit!",
     "greatFitDescription": "You're an excellent match for this position. Your profile strongly aligns with the job requirements.",
     "matchScore": "Match Score"
+  },
+  "assistant": {
+    "title": "Career Assistant",
+    "subtitle": "Your AI-powered career coach. Ask me anything about resumes, interviews, skills, salary negotiation, or career planning.",
+    "newChat": "New Chat",
+    "noConversations": "No conversations yet",
+    "freePlan": "Free Plan",
+    "inputPlaceholder": "Ask me anything about your career...",
+    "helpText": "Career Assistant can help with resumes, interviews, skills, and career planning.",
+    "agentsComingSoon": "Agents coming soon",
+    "comingSoon": "Coming Soon",
+    "prompts": {
+      "resume": "Help me improve my resume",
+      "interview": "Prepare me for an interview",
+      "skills": "What skills should I learn?",
+      "salary": "How do I negotiate salary?"
+    },
+    "futureFeatures": {
+      "autoApply": "Auto-apply to jobs",
+      "scheduleInterviews": "Schedule interviews",
+      "generateCvs": "Generate tailored CVs",
+      "researchCompanies": "Research companies"
+    },
+    "signInTitle": "Career Assistant",
+    "signInSubtitle": "Sign in to access your AI-powered career coach. Get personalized guidance on resumes, interviews, skills, and career planning.",
+    "signInButton": "Sign in to continue"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account, privacy, and preferences",
+    "privacy": {
+      "title": "Privacy Settings",
+      "subtitle": "Control how your data is used and shared",
+      "analytics": "Usage Analytics",
+      "analyticsDesc": "Help us improve by sharing anonymous usage data",
+      "profileVisibility": "Profile Visibility",
+      "profileVisibilityDesc": "Allow recruiters to discover your profile",
+      "dataSharing": "Data Sharing with Partners",
+      "dataSharingDesc": "Share your data with our trusted hiring partners",
+      "save": "Save Privacy Settings"
+    },
+    "communication": {
+      "title": "Communication Preferences",
+      "subtitle": "Choose what emails you want to receive",
+      "emailNotifications": "Email Notifications",
+      "emailNotificationsDesc": "Receive important updates about your account",
+      "jobAlerts": "Job Alerts",
+      "jobAlertsDesc": "Get notified when new matching jobs are posted",
+      "weeklyDigest": "Weekly Digest",
+      "weeklyDigestDesc": "Receive a weekly summary of new opportunities",
+      "marketingEmails": "Marketing Emails",
+      "marketingEmailsDesc": "Receive tips, news, and promotional content",
+      "save": "Save Communication Preferences"
+    },
+    "cookies": {
+      "title": "Cookie Preferences",
+      "subtitle": "Manage your cookie consent settings",
+      "necessary": "Necessary Cookies",
+      "necessaryDesc": "Required for the website to function properly",
+      "functional": "Functional Cookies",
+      "functionalDesc": "Enable personalized features like language preferences",
+      "analytics": "Analytics Cookies",
+      "analyticsDesc": "Help us understand how you use our website",
+      "marketing": "Marketing Cookies",
+      "marketingDesc": "Used to show you relevant advertisements",
+      "save": "Save Cookie Preferences"
+    },
+    "gdpr": {
+      "title": "Your Data (GDPR)",
+      "subtitle": "Exercise your data protection rights",
+      "viewData": "View My Data",
+      "viewDataDesc": "See all the personal data we have collected about you",
+      "viewDataButton": "View Data",
+      "exportData": "Export My Data",
+      "exportDataDesc": "Download a copy of your data in a portable format (JSON)",
+      "exportDataButton": "Export Data",
+      "deleteAccount": "Delete My Account",
+      "deleteAccountDesc": "Permanently delete your account and all associated data",
+      "deleteAccountButton": "Delete Account",
+      "infoText": "Under the General Data Protection Regulation (GDPR), you have the right to access, rectify, export, and delete your personal data. Data deletion requests are processed within 30 days. For any questions, contact our Data Protection Officer at"
+    },
+    "legal": {
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "cookiePolicy": "Cookie Policy",
+      "contactDpo": "Contact DPO"
+    },
+    "dialogs": {
+      "exportTitle": "Export Your Data",
+      "exportIntro": "We will prepare a complete export of your personal data including:",
+      "exportProfile": "Profile information",
+      "exportApplications": "Application history",
+      "exportResume": "Resume data",
+      "exportSavedJobs": "Saved jobs and preferences",
+      "exportAnalytics": "Analytics and activity logs",
+      "exportEmailNotice": "The export will be sent to your email within 24 hours.",
+      "exportCancel": "Cancel",
+      "exportConfirm": "Request Export",
+      "deleteTitle": "Delete Your Account",
+      "deleteWarning": "Warning: This action cannot be undone",
+      "deleteIntro": "Deleting your account will permanently remove:",
+      "deleteProfile": "Your profile and personal information",
+      "deleteApplications": "All applications and history",
+      "deleteResume": "Resumes and uploaded documents",
+      "deleteSavedJobs": "Saved jobs and preferences",
+      "deleteConfirmLabel": "Type \"delete my account\" to confirm:",
+      "deleteConfirmPlaceholder": "delete my account",
+      "deleteCancel": "Cancel",
+      "deleteConfirm": "Delete My Account"
+    },
+    "signInTitle": "Settings",
+    "signInSubtitle": "Sign in to manage your account settings, privacy preferences, and data rights.",
+    "signInButton": "Sign in to continue"
   }
 }

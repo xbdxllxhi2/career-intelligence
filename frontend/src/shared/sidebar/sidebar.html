@@ -23,10 +23,18 @@
 
   <!-- Center Section - Quick Nav -->
   <div class="hidden md:flex items-center gap-1 px-1.5 py-1.5 bg-neutral-900/50 rounded-2xl border border-neutral-800/50">
+    @if (isAuthenticated) {
+    <a routerLink="/assistant" routerLinkActive="bg-neutral-800 text-white"
+       class="px-4 py-2 rounded-xl text-sm text-neutral-400 hover:text-white hover:bg-neutral-800/50 transition-all duration-200 flex items-center gap-1.5">
+      <i class="pi pi-sparkles text-xs"></i>
+      Assistant
+    </a>
+    } @else {
     <a routerLink="/" routerLinkActive="bg-neutral-800 text-white" [routerLinkActiveOptions]="{exact: true}" 
        class="px-4 py-2 rounded-xl text-sm text-neutral-400 hover:text-white hover:bg-neutral-800/50 transition-all duration-200">
       {{ 'nav.home' | transloco }}
     </a>
+    }
     <a routerLink="/jobs" routerLinkActive="bg-neutral-800 text-white"
        class="px-4 py-2 rounded-xl text-sm text-neutral-400 hover:text-white hover:bg-neutral-800/50 transition-all duration-200">
       {{ 'nav.jobs' | transloco }}
@@ -160,6 +168,11 @@
            class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-300 hover:bg-neutral-800/50 transition-all">
           <i class="pi pi-file-edit text-emerald-400"></i>
           <span>{{ 'nav.resume' | transloco }}</span>
+        </a>
+        <a routerLink="/assistant" routerLinkActive="!bg-emerald-500/10 !text-emerald-400"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-300 hover:bg-neutral-800/50 transition-all">
+          <i class="pi pi-sparkles text-emerald-400"></i>
+          <span>Career Assistant</span>
         </a>
       </nav>
     </div>
