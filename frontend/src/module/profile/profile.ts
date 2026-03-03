@@ -60,6 +60,7 @@ export class Profile {
 
   private keycloak = inject(KeycloakService);
   isAuthenticated = false;
+  isParsingResume = false;
 
   profileData!: UserProfile;
 
@@ -196,6 +197,18 @@ export class Profile {
         }),
       );
     });
+  }
+
+  private convertLanguagesToRecord(languages?: Array<{name: string; proficiency: string}>): Record<string, string> {
+    if (!languages || languages.length === 0) {
+      return {};
+    }
+    return languages.reduce((acc, lang) => {
+      if (lang.name) {
+        acc[lang.name] = lang.proficiency || '';
+      }
+      return acc;
+    }, {} as Record<string, string>);
   }
 
   get contact(): FormGroup {
@@ -367,7 +380,75 @@ export class Profile {
   }
 
   handleUpload(event: any) {
-    console.log('Files uploaded:', event.files);
+    const file = event.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    this.isParsingResume = true;
+    this.profileService.parseResume(file).subscribe({
+      next: (parsedProfile) => {
+        // Patch basic fields
+        this.profileForm.patchValue({
+          firstName: parsedProfile.firstName || '',
+          lastName: parsedProfile.lastName || '',
+          email: parsedProfile.email || '',
+          phone: parsedProfile.phone || '',
+          city: parsedProfile.city || '',
+          country: parsedProfile.country || '',
+          linkedin: parsedProfile.linkedin || '',
+          github: parsedProfile.github || '',
+          summary: parsedProfile.summary || '',
+          languages: this.convertLanguagesToRecord(parsedProfile.languages),
+        });
+
+        // Patch experience
+        if (parsedProfile.experience?.length) {
+          this.patchExperience(parsedProfile.experience);
+        }
+
+        // Patch education
+        if (parsedProfile.education?.length) {
+          const educations = parsedProfile.education.map(edu => ({
+            degree: edu.degree,
+            institution: edu.school || edu.institution,
+            period: edu.year,
+            field: edu.coursework,
+            grade: '',
+            studyYear: null,
+          }));
+          this.patchEducation(educations);
+        }
+
+        // Patch projects
+        if (parsedProfile.projects?.length) {
+          const projects = parsedProfile.projects.map(proj => ({
+            name: proj.name,
+            description: proj.description,
+            period: proj.year,
+            technologies: proj.tags || [],
+            bullets: proj.bullets || [],
+          }));
+          this.patchProjects(projects);
+        }
+
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Resume Parsed',
+          detail: 'Your profile has been populated from your resume. Please review and save.',
+        });
+        this.isParsingResume = false;
+      },
+      error: (err) => {
+        console.error('Error parsing resume:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: err.error?.detail || 'Failed to parse resume. Please try again or fill manually.',
+        });
+        this.isParsingResume = false;
+      },
+    });
   }
 
   submitProfileFrom() {
