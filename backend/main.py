@@ -78,12 +78,7 @@ setup_keycloak_middleware(
     keycloak_config,
     user_mapper=user_mapper,
     exclude_patterns=[
-        "/health",
-        "/docs",
-        "/redoc",
-        "/openapi.json",
-        "/jobs",
-        "/jobs/*"
+        "/health"
     ]
 )
 #####################################################################

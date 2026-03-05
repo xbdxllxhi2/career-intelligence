@@ -2,9 +2,9 @@ from .models import CreateUserApplicationCommand, GetUserApplicationResponse
 from jobs.Job import JobDetail
 from .entities import UserApplicationEntity
 
-def map_to_entity(input : CreateUserApplicationCommand, job_offer:JobDetail) -> UserApplicationEntity:
+def map_to_entity(user_id: str, input: CreateUserApplicationCommand, job_offer: JobDetail) -> UserApplicationEntity:
     return UserApplicationEntity(
-        user_id=1,
+        user_id=user_id,
         job_offer_id=job_offer.reference,
         company=job_offer.company,
         company_logo_url=job_offer.logo_url,

@@ -1,4 +1,4 @@
-from .entity import UserProfile as UserProfileEntity
+from .entity import UserProfile as UserProfileEntity, EducationEntry, SkillCategory, ExperienceEntry, ProjectEntry
 from sqlalchemy.orm import Session
 from typing import Optional, List
 
@@ -29,31 +29,57 @@ class UserProfileRepository:
         if not existing:
             return None
 
-        # Copy all attributes from input entity to existing entity
-        # (excluding id and relationships if you want to manage them separately)
+        # Copy scalar attributes from input entity to existing entity
         for attr in [
             "first_name", "last_name", "phone", "email", "city", "country",
             "linkedin", "github", "summary", "languages", "extra_curricular"
         ]:
-            setattr(existing, attr, getattr(entity, attr))
+            setattr(existing, attr, getattr(entity, attr, None))
 
-        # Optional: handle relationships like experience, skills, etc.
-        existing.education = entity.education
-        existing.skills = entity.skills
-        existing.experience = entity.experience
-        existing.projects = entity.projects
+        # Clear existing relationships
+        existing.education.clear()
+        existing.skills.clear()
+        existing.experience.clear()
+        existing.projects.clear()
 
-        existing = self.session.merge(entity)
+        # Create new relationship entries associated with existing profile
+        for e in (entity.education or []):
+            existing.education.append(EducationEntry(
+                degree=e.degree, school=e.school, institution=e.institution,
+                year=e.year, coursework=e.coursework
+            ))
+        
+        for s in (entity.skills or []):
+            existing.skills.append(SkillCategory(
+                category=s.category, skills=s.skills
+            ))
+        
+        for exp in (entity.experience or []):
+            existing.experience.append(ExperienceEntry(
+                title=exp.title, company=exp.company, period=exp.period,
+                location=exp.location, tags=exp.tags, bullets=exp.bullets
+            ))
+        
+        for p in (entity.projects or []):
+            existing.projects.append(ProjectEntry(
+                name=p.name, description=p.description, url=p.url,
+                year=p.year, tags=p.tags, bullets=p.bullets
+            ))
+
         self.session.commit()
         self.session.refresh(existing)
         return existing
 
 
     def createOrUpdate(self, user_id: str, entity: UserProfileEntity):
+        print(f"DEBUG createOrUpdate: Looking for user_id='{user_id}'")
         existing = self.session.query(UserProfileEntity).filter_by(user_id=user_id).first()
+        print(f"DEBUG createOrUpdate: Found existing={existing}")
         if not existing:
+            print(f"DEBUG createOrUpdate: Creating new profile")
             return self.create(entity=entity)
         else:
+            print(f"DEBUG createOrUpdate: Updating existing profile id={existing.id}")
             return self.update(user_id=user_id, entity=entity)
             
 

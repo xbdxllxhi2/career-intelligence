@@ -14,6 +14,9 @@ import { Page } from '../../models/interface/page';
 import { PaginatorState } from 'primeng/paginator';
 import { JobFilters } from '../../models/filters/job-filters';
 import { ActivatedRoute, Router } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { environment } from '../../environments/environments';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-job-finder',
@@ -25,6 +28,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     JobsFilters,
     JobResults,
     CommonModule,
+    ButtonModule,
   ],
   templateUrl: './job-finder.html',
   styleUrl: './job-finder.scss',
@@ -35,6 +39,7 @@ export class JobFinder implements OnInit {
   showResults: boolean = true;
   filterSideLayout: boolean = true;
   selectedJobRef: string | null = null;
+  isAuthenticated = false;
 
   pageRequest: PageRequest;
   resultsData: Page<JobOffer>;
@@ -42,7 +47,8 @@ export class JobFinder implements OnInit {
   constructor(
     private service: JobService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private keycloak: KeycloakService
   ) {
     this.pageRequest = { page: 0, size: 10 };
     this.resultsData = {
@@ -55,6 +61,12 @@ export class JobFinder implements OnInit {
   }
 
   ngOnInit() {
+    this.isAuthenticated = environment.keycloak.enabled ? this.keycloak.isLoggedIn() : true;
+
+    if (!this.isAuthenticated) {
+      return;
+    }
+
     // Subscribe to query params to handle job reference from URL
     this.route.queryParams.subscribe(params => {
       const jobRef = params['job'];
@@ -65,6 +77,12 @@ export class JobFinder implements OnInit {
     });
 
     this.getJobOffers(this.pageRequest);
+  }
+
+  login(): void {
+    this.keycloak.login({
+      redirectUri: window.location.origin + '/jobs'
+    });
   }
 
   isConversationEmpty(): boolean {

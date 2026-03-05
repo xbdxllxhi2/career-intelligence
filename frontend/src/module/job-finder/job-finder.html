@@ -1,3 +1,4 @@
+@if (isAuthenticated) {
 <div class="h-full w-full bg-neutral-900 flex flex-col overflow-hidden">
   <!-- Compact Filter Bar (when side filter is collapsed) -->
   @if (!filterSideLayout) {
@@ -33,6 +34,26 @@
     />
   </div>
 </div>
+} @else {
+<!-- Unauthenticated View -->
+<div class="h-full w-full bg-neutral-900 flex flex-col items-center justify-center">
+  <div class="max-w-md mx-auto px-6 text-center">
+    <i class="pi pi-briefcase text-5xl text-neutral-500 mb-6"></i>
+    <h1 class="text-2xl font-semibold text-white mb-3">Find Your Dream Internship</h1>
+    <p class="text-neutral-400 mb-8">
+      Sign in to browse thousands of internship opportunities, save your favorites, and track your applications.
+    </p>
+    <button 
+      pButton 
+      (click)="login()"
+      class="px-8 py-3 bg-emerald-600 hover:bg-emerald-500 border-0 rounded-lg text-base font-medium"
+    >
+      <i class="pi pi-sign-in mr-2"></i>
+      Sign in to continue
+    </button>
+  </div>
+</div>
+}
 
 <!-- MOBILE RESULTS OVERLAY -->
 <!-- <div

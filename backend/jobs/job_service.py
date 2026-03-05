@@ -84,7 +84,7 @@ def getJobByReference(reference: str) -> JobDetail | None:
     return None
 
 
-def getJobs(filters: JobFilters, page: int, size: int) -> Page[JobBasic]:
+def getJobs(user_id: str, filters: JobFilters, page: int, size: int) -> Page[JobBasic]:
     limit = size
     offset = page * size
 
@@ -92,7 +92,7 @@ def getJobs(filters: JobFilters, page: int, size: int) -> Page[JobBasic]:
     params: dict = {
         "limit": limit,
         "offset": offset,
-        "user_id":1,
+        "user_id": user_id,
     }
 
     # Filters

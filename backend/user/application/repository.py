@@ -8,14 +8,16 @@ def save_user_application(application: UserApplicationEntity) -> None:
         session.commit()
         
         
-def get_user_applications() -> list[UserApplicationEntity]:
+def get_user_applications(user_id: str) -> list[UserApplicationEntity]:
     with SessionLocal() as session:
-        return session.query(UserApplicationEntity).all()
+        return session.query(UserApplicationEntity).filter_by(user_id=user_id).all()
     
     
-def delete_user_application(application_id: int) -> None:
+def delete_user_application(user_id: str, application_id: int) -> None:
     with SessionLocal() as session:
-        application = session.get(UserApplicationEntity, application_id)
+        application = session.query(UserApplicationEntity).filter_by(
+            id=application_id, user_id=user_id
+        ).first()
         if application:
             session.delete(application)
             session.commit()

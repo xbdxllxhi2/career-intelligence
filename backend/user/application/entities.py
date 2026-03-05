@@ -7,7 +7,7 @@ class UserApplicationEntity(BaseEntity):
     __table_args__ = (UniqueConstraint("user_id", "job_offer_id", name="uq_user_job"), {"schema": "app"})
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, index=True, nullable=False)
+    user_id = Column(String(255), index=True, nullable=False)  # Keycloak user ID (sub claim)
     job_offer_id = Column(String, index=True, nullable=False)
     company = Column(String, nullable=False)
     company_logo_url= Column(String, nullable=True)

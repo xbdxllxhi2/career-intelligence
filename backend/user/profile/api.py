@@ -21,13 +21,13 @@ def update_user_profile(
     db: Session = Depends(engine.get_db)
 ) -> UserProfile:
     """
-    Update a user profile. Expects full profile data.
+    Update a user profile. Creates if not exists.
     """
     user_id = user.user_id  # Keycloak user ID from token
     service = UserProfileService(db)
     try:
-        profile_entity = UserProfileMapper.model_to_entity(profile_model)
-        updated_profile_entity = service.update_profile(
+        profile_entity = UserProfileMapper.model_to_entity(user_id=user_id, model=profile_model)
+        updated_profile_entity = service.createOrUpdate(
             user_id=user_id, entity=profile_entity
         )
         updated_profile_model = UserProfileMapper.entity_to_model(
@@ -56,8 +56,7 @@ def createUserProfile(profile:UserProfile, user: Any = Depends(get_user), db:Ses
     user_id = user.user_id  # Keycloak user ID from token
     service = UserProfileService(db)
     try:
-        entity_from_model = UserProfileMapper.model_to_entity(profile)
-        entity_from_model.user_id = user_id  # Associate with authenticated user
+        entity_from_model = UserProfileMapper.model_to_entity(user_id=user_id, model=profile)
         user_profile_entity = service.create_profile(entity_from_model)
         user_profile_model = UserProfileMapper.entity_to_model(user_profile_entity)
         return user_profile_model
