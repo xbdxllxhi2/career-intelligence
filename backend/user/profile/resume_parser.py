@@ -2,8 +2,10 @@
 Resume Parser Service - Uses LLM to extract profile data from uploaded resumes.
 """
 import logging
+import os
 import io
 from typing import Optional
+from flask.cli import load_dotenv
 from openai import OpenAI
 from pydantic import BaseModel, Field
 from typing import List
@@ -11,12 +13,14 @@ from typing import List
 import fitz  # PyMuPDF for PDF parsing
 import docx  # python-docx for Word documents
 
+load_dotenv()
+
 logger = logging.getLogger(__name__)
 
 # Initialize the Groq client with OpenAI-compatible API
 groq_client = OpenAI(
     base_url="https://api.groq.com/openai/v1",
-    api_key="",  # Add your Groq API key here or use environment variable
+    api_key=os.getenv("GROQ_API_KEY"),
 )
 
 

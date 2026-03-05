@@ -16,13 +16,16 @@ class UserProfileRepository:
     def get_by_id(self, user_id: int) -> Optional[UserProfileEntity]:
         return self.session.query(UserProfileEntity).filter_by(id=user_id).first()
 
+    def get_by_user_id(self, user_id: str) -> Optional[UserProfileEntity]:
+        """Get profile by Keycloak user ID (sub claim)."""
+        return self.session.query(UserProfileEntity).filter_by(user_id=user_id).first()
 
     def list_all(self) -> List[UserProfileEntity]:
         return self.session.query(UserProfileEntity).all()
 
  
-    def update(self, user_id: int, entity: UserProfileEntity) -> Optional[UserProfileEntity]:
-        existing = self.session.query(UserProfileEntity).filter_by(id=user_id).first()
+    def update(self, user_id: str, entity: UserProfileEntity) -> Optional[UserProfileEntity]:
+        existing = self.session.query(UserProfileEntity).filter_by(user_id=user_id).first()
         if not existing:
             return None
 
@@ -46,16 +49,16 @@ class UserProfileRepository:
         return existing
 
 
-    def createOrUpdate(self, user_id: int, entity: UserProfileEntity):
-        existing = self.session.query(UserProfileEntity).filter_by(id=user_id).first()
+    def createOrUpdate(self, user_id: str, entity: UserProfileEntity):
+        existing = self.session.query(UserProfileEntity).filter_by(user_id=user_id).first()
         if not existing:
             return self.create(entity=entity)
         else:
             return self.update(user_id=user_id, entity=entity)
             
 
-    def delete(self, user_id: int) -> bool:
-        entity = self.session.query(UserProfileEntity).filter_by(id=user_id).first()
+    def delete(self, user_id: str) -> bool:
+        entity = self.session.query(UserProfileEntity).filter_by(user_id=user_id).first()
         if not entity:
             return False
         self.session.delete(entity)

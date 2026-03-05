@@ -8,10 +8,10 @@ class UserProfileService:
         self.repo = UserProfileRepository(session)
         
 
-    def update_profile(self, user_id, entity: UserProfile) -> UserProfile:
-        updated_entity = self.repo.update(entity.id, entity)
+    def update_profile(self, user_id: str, entity: UserProfile) -> UserProfile:
+        updated_entity = self.repo.update(user_id, entity)
         if not updated_entity:
-            raise ValueError(f"UserProfile with id {entity.id} not found")
+            raise ValueError(f"UserProfile for user {user_id} not found")
         
         return updated_entity
     
@@ -20,16 +20,17 @@ class UserProfileService:
         saved_entity = self.repo.create(entity)
         return saved_entity
     
-    def createOrUpdate(self, entity:UserProfile) -> UserProfile:
-        entity = self.repo.createOrUpdate(entity=entity)
-    
-
-    def get_profile(self, user_id: int) -> UserProfile:
-        entity = self.repo.get_by_id(user_id)
-        if not entity:
-            raise ValueError(f"Profile with id {user_id} not found")
+    def createOrUpdate(self, user_id: str, entity: UserProfile) -> UserProfile:
+        entity = self.repo.createOrUpdate(user_id=user_id, entity=entity)
         return entity
     
 
-    def delete_profile(self, user_id: int) -> bool:
+    def get_profile(self, user_id: str) -> UserProfile:
+        entity = self.repo.get_by_user_id(user_id)
+        if not entity:
+            raise ValueError(f"Profile for user {user_id} not found")
+        return entity
+    
+
+    def delete_profile(self, user_id: str) -> bool:
         return self.repo.delete(user_id)

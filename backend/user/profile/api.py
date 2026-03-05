@@ -1,6 +1,8 @@
 import stat
+from typing import Any
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi_keycloak_middleware import get_user
 
 from database import engine
 
@@ -14,16 +16,19 @@ router = APIRouter(prefix="/user/profile", tags=["user_profile"])
 
 @router.put("", summary="Update user profile")
 def update_user_profile(
-    profile_model: UserProfile, db: Session = Depends(engine.get_db)
+    profile_model: UserProfile,
+    user: Any = Depends(get_user),
+    db: Session = Depends(engine.get_db)
 ) -> UserProfile:
     """
     Update a user profile. Expects full profile data.
     """
+    user_id = user.user_id  # Keycloak user ID from token
     service = UserProfileService(db)
     try:
         profile_entity = UserProfileMapper.model_to_entity(profile_model)
         updated_profile_entity = service.update_profile(
-            user_id=1, entity=profile_entity
+            user_id=user_id, entity=profile_entity
         )
         updated_profile_model = UserProfileMapper.entity_to_model(
             updated_profile_entity
@@ -34,10 +39,12 @@ def update_user_profile(
     
     
 @router.get("",response_model=UserProfile)
-def getUserProfile(db:Session= Depends(engine.get_db))-> UserProfile :
+def getUserProfile(user: Any = Depends(get_user), db:Session= Depends(engine.get_db))-> UserProfile :
+    user_id = user.user_id  # Keycloak user ID from token
+    print(f"Fetching profile for user: {user_id}")
     service = UserProfileService(db)
     try:
-        user_profile_entity = service.get_profile(1)
+        user_profile_entity = service.get_profile(user_id)
         user_profile_model = UserProfileMapper.entity_to_model(user_profile_entity)
         return user_profile_model
     except ValueError as e:
@@ -45,10 +52,12 @@ def getUserProfile(db:Session= Depends(engine.get_db))-> UserProfile :
     
     
 @router.post("",response_model=UserProfile)
-def createUserProfile(profile:UserProfile,db:Session= Depends(engine.get_db))-> UserProfile :
+def createUserProfile(profile:UserProfile, user: Any = Depends(get_user), db:Session= Depends(engine.get_db))-> UserProfile :
+    user_id = user.user_id  # Keycloak user ID from token
     service = UserProfileService(db)
     try:
         entity_from_model = UserProfileMapper.model_to_entity(profile)
+        entity_from_model.user_id = user_id  # Associate with authenticated user
         user_profile_entity = service.create_profile(entity_from_model)
         user_profile_model = UserProfileMapper.entity_to_model(user_profile_entity)
         return user_profile_model

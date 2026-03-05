@@ -9,7 +9,7 @@ class UserProfile(BaseEntity):
     __tablename__ = "user_profiles"
 
     id = Column(Integer, primary_key=True)
-    user_id= Column(Integer, index=True, nullable=False)
+    user_id = Column(String(255), index=True, nullable=False, unique=True)  # Keycloak user ID (sub claim)
     first_name = Column(String(100))
     last_name = Column(String(100))
     phone = Column(String(50))
