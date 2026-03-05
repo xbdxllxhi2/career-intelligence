@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, delay, catchError, tap } from 'rxjs';
+import { Observable, of, delay, tap } from 'rxjs';
 import { environment } from '../environments/environments';
 import { 
   JobMatchingResponse, 
@@ -33,12 +33,7 @@ export class JobMatchingService {
       `${this.apiUrl}/${jobReference}/matching`,
       { params: { user_id: userId.toString() } }
     ).pipe(
-      tap(response => console.log('Job matching response:', response)),
-      catchError(error => {
-        console.error('Job matching API error, using mock data:', error);
-        // Fallback to mock data on error
-        return of(this.generateMockMatchingResponse(jobReference)).pipe(delay(100));
-      })
+      tap(response => console.log('Job matching response:', response))
     );
   }
 

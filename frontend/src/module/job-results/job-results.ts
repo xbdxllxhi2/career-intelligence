@@ -55,6 +55,7 @@ export class JobResults implements OnChanges {
   // Job matching data
   matchingResponse: JobMatchingResponse | null = null;
   matchingLoading: boolean = false;
+  matchingError: string | null = null;
 
   constructor(
     private jobService: JobService, 
@@ -98,6 +99,7 @@ export class JobResults implements OnChanges {
   private loadJobMatching(jobRef: string) {
     this.matchingLoading = true;
     this.matchingResponse = null;
+    this.matchingError = null;
     this.jobMatchingService.getJobMatching(jobRef).subscribe({
       next: (response) => {
         this.matchingResponse = response;
@@ -106,6 +108,11 @@ export class JobResults implements OnChanges {
       error: (err) => {
         console.log('Failed to load job matching:', err);
         this.matchingLoading = false;
+        if (err.status === 404) {
+          this.matchingError = 'Complete your profile to see how well you match this job.';
+        } else {
+          this.matchingError = 'Unable to load matching analysis. Please try again later.';
+        }
       }
     });
   }

@@ -184,6 +184,24 @@
             </p-panel>
           </div>
           <div class="w-full">
+            @if (matchingError) {
+              <p-panel [collapsed]="false" [toggleable]="true" class="w-full">
+                <ng-template #header>
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-objects-column"></i>
+                    <span class="font-bold">{{ 'jobs.skillsMatch' | transloco }}</span>
+                  </div>
+                </ng-template>
+                <div class="flex flex-col items-center justify-center py-6 text-center">
+                  <i class="pi pi-user text-3xl text-neutral-500 mb-3"></i>
+                  <p class="text-neutral-400 mb-4">{{ matchingError }}</p>
+                  <button pButton severity="secondary" size="small" (click)="onUpdateProfile()">
+                    <i class="pi pi-user-edit mr-2"></i>
+                    Complete Profile
+                  </button>
+                </div>
+              </p-panel>
+            } @else {
             @defer (on viewport) {
               <app-job-matching-stats 
                 [matchingResponse]="matchingResponse" 
@@ -221,6 +239,7 @@
                   <span class="ml-2 text-gray-400">{{ 'common.loading' | transloco }}</span>
                 </div>
               </p-panel>
+            }
             }
           </div>
         </div>

@@ -7,8 +7,6 @@ import unicodedata
 from services.keyword_extractor import extract_keywords
 from services.matcher import match_profile_sections
 from services.llm_writer import generate_cv_section
-from services.jobs_supplier import get_jobs
-from services.profile_supplier import get_profile
 from services.cv_factory import generate_cv, load_data
 import logging
 from jobs.Job import JobDetail
