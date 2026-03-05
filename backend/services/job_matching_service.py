@@ -65,7 +65,7 @@ class JobMatchingService:
                 instructions=system_prompt,
                 input=user_prompt,
                 text_format=JobMatchingResponse,
-                temperature=0.2,
+                temperature=0.1,
                 # max_tokens=8000,
             )
             
