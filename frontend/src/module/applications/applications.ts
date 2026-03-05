@@ -10,6 +10,8 @@ import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { KeycloakService } from 'keycloak-angular';
+import { environment } from '../../environments/environments';
 
 interface SortOption {
   label: string;
@@ -26,7 +28,10 @@ interface SortOption {
 })
 export class Applications implements OnInit {
   private translocoService = inject(TranslocoService);
+  private keycloak = inject(KeycloakService);
   private activeLang = toSignal(this.translocoService.langChanges$, { initialValue: this.translocoService.getActiveLang() });
+
+  isAuthenticated = false;
 
   pageRequest: PageRequest = { size: 10, page: 0 };
   private rawApplications = signal<UserApplicationInfo[]>([]);
@@ -76,7 +81,16 @@ export class Applications implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getUserApplications();
+    this.isAuthenticated = environment.keycloak.enabled ? this.keycloak.isLoggedIn() : true;
+    if (this.isAuthenticated) {
+      this.getUserApplications();
+    }
+  }
+
+  login(): void {
+    this.keycloak.login({
+      redirectUri: window.location.origin + '/applications'
+    });
   }
 
   getUserApplications() {

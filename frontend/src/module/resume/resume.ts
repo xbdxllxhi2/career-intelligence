@@ -6,6 +6,8 @@ import { ResumeService } from '../../service/resume-service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { KeycloakService } from 'keycloak-angular';
+import { environment } from '../../environments/environments';
 
 @Component({
   selector: 'app-resume',
@@ -16,14 +18,24 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 })
 export class Resume implements OnInit {
   private translocoService = inject(TranslocoService);
+  private keycloak = inject(KeycloakService);
+
+  isAuthenticated = false;
   offerDescription!: string;
   isGeneratingResume!: boolean;
 
   constructor(private resumeService: ResumeService, private messageService: MessageService) {}
 
   ngOnInit(): void {
+    this.isAuthenticated = environment.keycloak.enabled ? this.keycloak.isLoggedIn() : true;
     this.offerDescription = '';
     this.isGeneratingResume = false;
+  }
+
+  login(): void {
+    this.keycloak.login({
+      redirectUri: window.location.origin + '/resume'
+    });
   }
 
   generateResume() {

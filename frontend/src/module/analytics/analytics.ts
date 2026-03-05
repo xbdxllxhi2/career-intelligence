@@ -18,6 +18,8 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { KeycloakService } from 'keycloak-angular';
+import { environment } from '../../environments/environments';
 
 import {
   AnalyticsService,
@@ -56,8 +58,10 @@ import {
 })
 export class Analytics implements OnInit, OnDestroy {
   private translocoService = inject(TranslocoService);
+  private keycloak = inject(KeycloakService);
   private activeLang = toSignal(this.translocoService.langChanges$, { initialValue: this.translocoService.getActiveLang() });
 
+  isAuthenticated = false;
   marketAnalysis = signal<MarketAnalysis | null>(null);
   profileAnalysis = signal<ProfileAnalysis | null>(null);
   isLoadingMarket = signal(true);
@@ -302,10 +306,19 @@ export class Analytics implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.timePeriods = this.analyticsService.getTimePeriods();
-    this.loadCountries();
-    this.loadMarketAnalysis();
-    this.loadProfileAnalysis();
+    this.isAuthenticated = environment.keycloak.enabled ? this.keycloak.isLoggedIn() : true;
+    if (this.isAuthenticated) {
+      this.timePeriods = this.analyticsService.getTimePeriods();
+      this.loadCountries();
+      this.loadMarketAnalysis();
+      this.loadProfileAnalysis();
+    }
+  }
+
+  login(): void {
+    this.keycloak.login({
+      redirectUri: window.location.origin + '/analytics'
+    });
   }
 
   ngOnDestroy(): void {

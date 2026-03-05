@@ -1,6 +1,9 @@
 from math import log
+from typing import Any, Optional
 
 from fastapi import Depends, FastAPI, APIRouter, Query, HTTPException
+from fastapi_keycloak_middleware import get_user
+
 from sqlalchemy.orm import Session
 
 from .job_service import getJobs, getJobByReference, getFilterOptions
@@ -14,7 +17,7 @@ from user.profile.service import UserProfileService
 from user.profile.mapper import UserProfileMapper
 from database import engine
 
-from typing import List
+from typing import Any, List
 
 import logging
 
@@ -38,8 +41,10 @@ def root(
     filters: JobFilters = Depends(),
     page: int = Query(0, ge=0),
     size: int = Query(10, ge=1, le=100),
+    user: Optional[Any] = Depends(get_user)
 ):
-    return getJobs(filters, page=page, size=size)
+    user_id = user.user_id if user else None
+    return getJobs(user_id=user_id, filters=filters, page=page, size=size)
 
 
 @router.get("/{reference}", response_model=JobDetail)
@@ -50,13 +55,16 @@ def get_job_by_hash(reference: str):
 @router.get("/{reference}/matching", summary="Get Job Matching Analysis", response_model=JobMatchingResponse)
 def get_job_matching_analysis(
     reference: str,
-    user_id: int = Query(1, description="User ID for profile lookup"),
+    user: Optional[Any] = Depends(get_user),
     db: Session = Depends(engine.get_db)
 ):
     """
     Analyze how well a user's profile matches a job posting.
     Uses LLM to perform intelligent matching across education, experience, skills, etc.
     """
+    if not user:
+        raise HTTPException(status_code=401, detail="Authentication required for job matching analysis")
+    user_id = user.user_id
     # Get the job details
     logger.info(f"Analyzing job matching for job reference: {reference} and user_id: {user_id}")
     job = getJobByReference(reference=reference)

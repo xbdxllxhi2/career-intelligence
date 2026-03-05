@@ -1,3 +1,4 @@
+@if (isAuthenticated) {
 <div class="h-full overflow-y-auto bg-neutral-950 p-6">
   <!-- Header -->
   <div class="max-w-7xl mx-auto mb-6">
@@ -604,3 +605,23 @@
     </p-tabs>
   </div>
 </div>
+} @else {
+<!-- Unauthenticated View -->
+<div class="h-full w-full bg-neutral-950 flex flex-col items-center justify-center">
+  <div class="max-w-md mx-auto px-6 text-center">
+    <i class="pi pi-chart-line text-5xl text-neutral-500 mb-6"></i>
+    <h1 class="text-2xl font-semibold text-white mb-3">{{ 'analytics.title' | transloco }}</h1>
+    <p class="text-neutral-400 mb-8">
+      {{ 'analytics.signInSubtitle' | transloco }}
+    </p>
+    <button 
+      pButton 
+      (click)="login()"
+      class="px-8 py-3 bg-emerald-600 hover:bg-emerald-500 border-0 rounded-lg text-base font-medium"
+    >
+      <i class="pi pi-sign-in mr-2"></i>
+      {{ 'analytics.signInButton' | transloco }}
+    </button>
+  </div>
+</div>
+}

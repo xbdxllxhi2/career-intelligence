@@ -1,0 +1,245 @@
+@if (isAuthenticated) {
+<div class="h-full w-full bg-neutral-900 flex overflow-hidden">
+
+  <!-- Sidebar - Chat History -->
+  <aside 
+    class="flex-shrink-0 bg-neutral-950 border-r border-neutral-800 flex flex-col transition-all duration-300"
+    [class.w-72]="showSidebar"
+    [class.w-0]="!showSidebar"
+    [class.overflow-hidden]="!showSidebar"
+  >
+    <!-- Sidebar Header -->
+    <div class="p-4 border-b border-neutral-800">
+      <button 
+        (click)="newChat()"
+        class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium transition-colors"
+      >
+        <i class="pi pi-plus"></i>
+        <span>{{ 'assistant.newChat' | transloco }}</span>
+      </button>
+    </div>
+
+    <!-- Chat History List -->
+    <div class="flex-1 overflow-y-auto p-3 space-y-1">
+      @for (session of sessions; track session.id) {
+        <button
+          (click)="selectSession(session)"
+          class="w-full group flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-colors"
+          [class.bg-neutral-800]="currentSession?.id === session.id"
+          [class.hover:bg-neutral-800/50]="currentSession?.id !== session.id"
+        >
+          <i class="pi pi-comments text-neutral-500 group-hover:text-neutral-400"></i>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm text-neutral-200 truncate">{{ session.title }}</p>
+            <p class="text-xs text-neutral-500">{{ formatDate(session.updatedAt) }}</p>
+          </div>
+          <button
+            (click)="deleteSession($event, session)"
+            class="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg hover:bg-neutral-700 text-neutral-500 hover:text-red-400 transition-all"
+            pTooltip="Delete"
+            tooltipPosition="top"
+          >
+            <i class="pi pi-trash text-xs"></i>
+          </button>
+        </button>
+      } @empty {
+        <div class="text-center py-8 text-neutral-500 text-sm">
+          <i class="pi pi-comments text-2xl mb-2 block opacity-50"></i>
+          <p>{{ 'assistant.noConversations' | transloco }}</p>
+        </div>
+      }
+    </div>
+
+    <!-- Sidebar Footer -->
+    <div class="p-4 border-t border-neutral-800">
+      <div class="flex items-center gap-3 px-2">
+        <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-xs font-bold text-white">
+          {{ userInitials }}
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm text-neutral-200 truncate">{{ userName }}</p>
+          <p class="text-xs text-neutral-500">{{ 'assistant.freePlan' | transloco }}</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Chat Area -->
+  <main class="flex-1 flex flex-col min-w-0">
+    
+    <!-- Chat Header -->
+    <header class="flex-shrink-0 px-4 py-3 border-b border-neutral-800 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <button
+          (click)="toggleSidebar()"
+          class="p-2 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
+        >
+          <i class="pi pi-bars"></i>
+        </button>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-sparkles text-emerald-400"></i>
+          <h1 class="text-lg font-medium text-white">{{ 'assistant.title' | transloco }}</h1>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="hidden sm:inline-flex items-center gap-1 px-2 py-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-xs text-amber-400">
+          <i class="pi pi-bolt text-[10px]"></i>
+          {{ 'assistant.agentsComingSoon' | transloco }}
+        </span>
+      </div>
+    </header>
+
+    <!-- Messages Area -->
+    <div #messagesContainer class="flex-1 overflow-y-auto">
+      @if (!currentSession || currentSession.messages.length === 0) {
+        <!-- Empty State / Welcome -->
+        <div class="h-full flex flex-col items-center justify-center px-6 py-12">
+          <div class="max-w-2xl text-center">
+            <i class="pi pi-sparkles text-5xl text-emerald-400 mb-6"></i>
+            <h2 class="text-2xl font-semibold text-white mb-3">{{ 'assistant.title' | transloco }}</h2>
+            <p class="text-neutral-400 mb-10 max-w-md mx-auto">
+              {{ 'assistant.subtitle' | transloco }}
+            </p>
+
+            <!-- Suggested Prompts -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto">
+              @for (prompt of suggestedPrompts; track prompt.textKey) {
+                <button
+                  (click)="usePrompt(prompt.textKey)"
+                  class="flex items-center gap-3 p-4 rounded-xl bg-neutral-800/50 border border-neutral-700/50 hover:bg-neutral-800 hover:border-neutral-600 transition-all text-left group"
+                >
+                  <i class="pi {{ prompt.icon }} {{ prompt.color }}"></i>
+                  <span class="text-sm text-neutral-300 group-hover:text-white">{{ prompt.textKey | transloco }}</span>
+                </button>
+              }
+            </div>
+
+            <!-- Coming Soon: Agentic Features -->
+            <div class="mt-12 pt-8 border-t border-neutral-800/50">
+              <p class="text-xs text-neutral-500 uppercase tracking-wider mb-4">{{ 'assistant.comingSoon' | transloco }}</p>
+              <div class="flex flex-wrap justify-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-800/30 border border-neutral-700/30 text-xs text-neutral-500">
+                  <i class="pi pi-bolt text-amber-500/50"></i>
+                  {{ 'assistant.futureFeatures.autoApply' | transloco }}
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-800/30 border border-neutral-700/30 text-xs text-neutral-500">
+                  <i class="pi pi-calendar text-blue-500/50"></i>
+                  {{ 'assistant.futureFeatures.scheduleInterviews' | transloco }}
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-800/30 border border-neutral-700/30 text-xs text-neutral-500">
+                  <i class="pi pi-file-edit text-emerald-500/50"></i>
+                  {{ 'assistant.futureFeatures.generateCvs' | transloco }}
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-800/30 border border-neutral-700/30 text-xs text-neutral-500">
+                  <i class="pi pi-search text-purple-500/50"></i>
+                  {{ 'assistant.futureFeatures.researchCompanies' | transloco }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <!-- Chat Messages -->
+        <div class="max-w-3xl mx-auto px-4 py-6 space-y-6">
+          @for (message of currentSession.messages; track message.id) {
+            <div class="flex gap-4" [class.flex-row-reverse]="message.role === 'user'">
+              <!-- Avatar -->
+              @if (message.role === 'assistant') {
+                <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                  <i class="pi pi-sparkles text-white text-xs"></i>
+                </div>
+              } @else {
+                <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-neutral-700 flex items-center justify-center text-xs font-bold text-white">
+                  {{ userInitials }}
+                </div>
+              }
+
+              <!-- Message Content -->
+              <div 
+                class="flex-1 max-w-[85%]"
+                [class.text-right]="message.role === 'user'"
+              >
+                <div 
+                  class="inline-block px-4 py-3 rounded-2xl text-sm leading-relaxed"
+                  [class.bg-emerald-600]="message.role === 'user'"
+                  [class.text-white]="message.role === 'user'"
+                  [class.bg-neutral-800]="message.role === 'assistant'"
+                  [class.text-neutral-200]="message.role === 'assistant'"
+                  [class.text-left]="message.role === 'assistant'"
+                >
+                  <div [innerHTML]="message.content | formatMarkdown" class="prose prose-invert prose-sm max-w-none"></div>
+                </div>
+                <p class="text-xs text-neutral-500 mt-1.5 px-1">
+                  {{ formatTime(message.timestamp) }}
+                </p>
+              </div>
+            </div>
+          }
+
+          <!-- Loading indicator -->
+          @if (isLoading) {
+            <div class="flex gap-4">
+              <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+                <i class="pi pi-sparkles text-white text-xs"></i>
+              </div>
+              <div class="bg-neutral-800 px-4 py-3 rounded-2xl">
+                <div class="flex gap-1.5">
+                  <span class="w-2 h-2 bg-neutral-500 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+                  <span class="w-2 h-2 bg-neutral-500 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+                  <span class="w-2 h-2 bg-neutral-500 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Input Area -->
+    <div class="flex-shrink-0 p-4 border-t border-neutral-800">
+      <div class="max-w-3xl mx-auto">
+        <div class="flex items-end gap-3 bg-neutral-800 rounded-2xl p-3">
+          <textarea
+            #messageInput
+            [(ngModel)]="messageText"
+            (keydown)="onKeydown($event)"
+            rows="1"
+            [placeholder]="'assistant.inputPlaceholder' | transloco"
+            class="flex-1 bg-transparent text-white placeholder:text-neutral-500 resize-none focus:outline-none text-sm leading-relaxed max-h-32 overflow-y-auto"
+          ></textarea>
+          <button
+            (click)="sendMessage()"
+            [disabled]="!messageText.trim() || isLoading"
+            class="flex-shrink-0 w-10 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-neutral-700 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
+          >
+            <i class="pi pi-send text-white" [class.pi-spin]="isLoading" [class.pi-spinner]="isLoading"></i>
+          </button>
+        </div>
+        <p class="text-xs text-neutral-500 text-center mt-2">
+          {{ 'assistant.helpText' | transloco }}
+        </p>
+      </div>
+    </div>
+
+  </main>
+</div>
+} @else {
+<!-- Unauthenticated View -->
+<div class="h-full w-full bg-neutral-900 flex flex-col items-center justify-center">
+  <div class="max-w-md mx-auto px-6 text-center">
+    <i class="pi pi-sparkles text-5xl text-emerald-400 mb-6"></i>
+    <h1 class="text-2xl font-semibold text-white mb-3">{{ 'assistant.title' | transloco }}</h1>
+    <p class="text-neutral-400 mb-8">
+      {{ 'assistant.signInMessage' | transloco }}
+    </p>
+    <button 
+      pButton 
+      (click)="login()"
+      class="px-8 py-3 bg-emerald-600 hover:bg-emerald-500 border-0 rounded-lg text-base font-medium"
+    >
+      <i class="pi pi-sign-in mr-2"></i>
+      {{ 'assistant.signInButton' | transloco }}
+    </button>
+  </div>
+</div>
+}

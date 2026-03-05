@@ -46,6 +46,7 @@ export class JobResults implements OnChanges {
   generatingCv: boolean = false;
   selectedJob: JobOffer | null = null;
   gridView: boolean = false;
+  private loadingJobRef: string | null = null;  // Track which job is being loaded
 
   visible: boolean = false;
 
@@ -54,6 +55,7 @@ export class JobResults implements OnChanges {
   // Job matching data
   matchingResponse: JobMatchingResponse | null = null;
   matchingLoading: boolean = false;
+  matchingError: string | null = null;
 
   constructor(
     private jobService: JobService, 
@@ -69,12 +71,18 @@ export class JobResults implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     // Load job details if selectedJobRef is provided (e.g., from URL on refresh)
+    // Skip if the job is already loaded or currently being loaded
     if (changes['selectedJobRef'] && this.selectedJobRef) {
-      this.loadJobFromRef(this.selectedJobRef);
+      const alreadyLoaded = this.selectedJob?.reference === this.selectedJobRef;
+      const currentlyLoading = this.loadingJobRef === this.selectedJobRef;
+      if (!alreadyLoaded && !currentlyLoading) {
+        this.loadJobFromRef(this.selectedJobRef);
+      }
     }
   }
 
   private loadJobFromRef(jobRef: string) {
+    this.loadingJobRef = jobRef;
     this.jobService.getJobDetails(jobRef).subscribe({
       next: (data) => {
         this.selectedJob = data;
@@ -91,6 +99,7 @@ export class JobResults implements OnChanges {
   private loadJobMatching(jobRef: string) {
     this.matchingLoading = true;
     this.matchingResponse = null;
+    this.matchingError = null;
     this.jobMatchingService.getJobMatching(jobRef).subscribe({
       next: (response) => {
         this.matchingResponse = response;
@@ -99,6 +108,11 @@ export class JobResults implements OnChanges {
       error: (err) => {
         console.log('Failed to load job matching:', err);
         this.matchingLoading = false;
+        if (err.status === 404) {
+          this.matchingError = 'Complete your profile to see how well you match this job.';
+        } else {
+          this.matchingError = 'Unable to load matching analysis. Please try again later.';
+        }
       }
     });
   }
@@ -143,6 +157,7 @@ export class JobResults implements OnChanges {
   }
 
   showJobDetails(reference: string) {
+    this.loadingJobRef = reference;  // Mark as loading to prevent duplicate from ngOnChanges
     this.emitJobDetailEvent(true);
     this.onJobSelected.emit(reference);
     this.jobService.getJobDetails(reference)

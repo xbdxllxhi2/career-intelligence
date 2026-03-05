@@ -1,4 +1,5 @@
 import os
+from flask.cli import load_dotenv
 from groq import Groq
 import logging
 import json
@@ -9,12 +10,14 @@ from models.llm_resume_generation_response import ResumeGenerationResponse
 
 logger = logging.getLogger(__name__)
 
+load_dotenv()
 
 client = Groq(api_key="{key here}")
 open_Ai_client = OpenAI(api_key="{key here}")
+
 groq_open_ai_client = OpenAI(
     base_url="https://api.groq.com/openai/v1",
-    api_key="",
+    api_key=os.getenv("GROQ_API_KEY")
 )
 
 

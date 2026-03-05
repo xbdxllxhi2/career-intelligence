@@ -1,9 +1,14 @@
-from typing import Optional
-from fastapi import APIRouter, Body
+from typing import Any, Optional
+from fastapi import APIRouter, Body, Depends
 from fastapi.responses import FileResponse
+from fastapi_keycloak_middleware import get_user
+from sqlalchemy.orm import Session
+
 from .resume_service import generate_resume, generate_resume_for_description
 from jobs.job_service import getJobByReference
-import json
+from user.profile.service import UserProfileService
+from user.profile.mapper import UserProfileMapper
+from database import engine
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/resume", tags=["resume"])
@@ -14,15 +19,73 @@ class GenerateRequest(BaseModel):
     job_description: Optional[str]=None
 
 
-@router.post("", summary="Generate a taiLored CV to the job")
-def create_resume(payload: GenerateRequest):
-    #creating resume
-    job_reference= payload.job_reference
-    job_detail = getJobByReference(reference=job_reference)
-    with open("./input/context/profile.json", "r", encoding="utf-8") as f:
-        user_profile = json.load(f)
+def profile_to_resume_format(profile_model) -> dict:
+    """Convert UserProfile model to the format expected by resume generation services."""
+    # Flatten skills from categories to a single list
+    all_skills = []
+    for skill_category in profile_model.skills:
+        all_skills.extend(skill_category.skills)
+    
+    return {
+        "profile": {
+            "first_name": profile_model.first_name,
+            "last_name": profile_model.last_name,
+            "location": f"{profile_model.city}, {profile_model.country}" if profile_model.city and profile_model.country else profile_model.city or profile_model.country or "",
+            "summary": profile_model.summary,
+        },
+        "education": [
+            {
+                "degree": edu.degree,
+                "school": edu.school or edu.institution,
+                "year": edu.year,
+            }
+            for edu in profile_model.education
+        ],
+        "skills": all_skills,
+        "experience": [
+            {
+                "title": exp.title,
+                "company": exp.company,
+                "period": exp.period,
+                "location": exp.location,
+                "tags": exp.tags,
+                "bullets": exp.bullets,
+            }
+            for exp in profile_model.experience
+        ],
+        "projects": [
+            {
+                "name": proj.name,
+                "description": proj.description,
+                "url": proj.url,
+                "year": proj.year,
+                "tags": proj.tags,
+                "bullets": proj.bullets,
+            }
+            for proj in profile_model.projects
+        ],
+        "languages": profile_model.languages,
+        "extra_curricular": profile_model.extra_curricular,
+    }
 
-    user_resume_path = generate_resume(job_detail,user_profile)
+
+@router.post("", summary="Generate a taiLored CV to the job")
+def create_resume(
+    payload: GenerateRequest,
+    user: Any = Depends(get_user),
+    db: Session = Depends(engine.get_db)
+):
+    user_id = user.user_id
+    job_reference = payload.job_reference
+    job_detail = getJobByReference(reference=job_reference)
+    
+    # Fetch user profile from database
+    profile_service = UserProfileService(db)
+    profile_entity = profile_service.get_profile(user_id)
+    profile_model = UserProfileMapper.entity_to_model(profile_entity)
+    user_profile = profile_to_resume_format(profile_model)
+
+    user_resume_path = generate_resume(job_detail, user_profile)
     print(user_resume_path)
     return FileResponse(
         path=user_resume_path,
@@ -32,12 +95,20 @@ def create_resume(payload: GenerateRequest):
 
 
 @router.post("/from/description", summary="Generate a taiLored CV to the job description")
-def create_resume(payload: GenerateRequest):
-    #creating resume
-    with open("./input/context/profile.json", "r", encoding="utf-8") as f:
-        user_profile = json.load(f)
+def create_resume_from_description(
+    payload: GenerateRequest,
+    user: Any = Depends(get_user),
+    db: Session = Depends(engine.get_db)
+):
+    user_id = user.user_id
+    
+    # Fetch user profile from database
+    profile_service = UserProfileService(db)
+    profile_entity = profile_service.get_profile(user_id)
+    profile_model = UserProfileMapper.entity_to_model(profile_entity)
+    user_profile = profile_to_resume_format(profile_model)
 
-    user_resume_path = generate_resume_for_description(payload.job_description,user_profile)
+    user_resume_path = generate_resume_for_description(payload.job_description, user_profile)
     print(user_resume_path)
     return FileResponse(
         path=user_resume_path,

@@ -23,10 +23,18 @@
 
   <!-- Center Section - Quick Nav -->
   <div class="hidden md:flex items-center gap-1 px-1.5 py-1.5 bg-neutral-900/50 rounded-2xl border border-neutral-800/50">
+    @if (isAuthenticated) {
+    <a routerLink="/assistant" routerLinkActive="bg-neutral-800 text-white"
+       class="px-4 py-2 rounded-xl text-sm text-neutral-400 hover:text-white hover:bg-neutral-800/50 transition-all duration-200 flex items-center gap-1.5">
+      <i class="pi pi-sparkles text-xs"></i>
+      Assistant
+    </a>
+    } @else {
     <a routerLink="/" routerLinkActive="bg-neutral-800 text-white" [routerLinkActiveOptions]="{exact: true}" 
        class="px-4 py-2 rounded-xl text-sm text-neutral-400 hover:text-white hover:bg-neutral-800/50 transition-all duration-200">
       {{ 'nav.home' | transloco }}
     </a>
+    }
     <a routerLink="/jobs" routerLinkActive="bg-neutral-800 text-white"
        class="px-4 py-2 rounded-xl text-sm text-neutral-400 hover:text-white hover:bg-neutral-800/50 transition-all duration-200">
       {{ 'nav.jobs' | transloco }}
@@ -70,7 +78,8 @@
       </ng-template>
     </p-select>
 
-    <!-- Notification Bell -->
+    <!-- Notification Bell (only when authenticated) -->
+    @if (isAuthenticated) {
     <button class="relative p-2.5 rounded-xl bg-neutral-800/50 hover:bg-neutral-800 border border-neutral-700/50 transition-all duration-200 group">
       <i class="pi pi-bell text-neutral-400 group-hover:text-white transition-colors"></i>
       <span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 flex items-center justify-center text-[10px] font-bold text-white shadow-lg shadow-rose-500/30">
@@ -80,18 +89,33 @@
 
     <!-- Divider -->
     <div class="h-8 w-px bg-neutral-800"></div>
+    }
 
-    <!-- User Profile -->
-    <button class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-neutral-800/50 transition-all duration-200 group">
+    <!-- User Profile with Dropdown -->
+    @if (isAuthenticated) {
+    <button 
+      (click)="userMenu.toggle($event)"
+      class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-neutral-800/50 transition-all duration-200 group"
+    >
       <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-500 flex items-center justify-center text-sm font-bold text-white">
-        AA
+        {{ userInitials || 'U' }}
       </div>
       <div class="hidden sm:flex flex-col items-start">
-        <span class="text-sm font-medium text-white">Abdellahi</span>
+        <span class="text-sm font-medium text-white">{{ userName || 'User' }}</span>
         <span class="text-[11px] text-neutral-500">Pro Plan</span>
       </div>
       <i class="pi pi-chevron-down text-xs text-neutral-500 group-hover:text-neutral-400 transition-colors"></i>
     </button>
+    <p-menu #userMenu [model]="userMenuItems" [popup]="true" appendTo="body" styleClass="!bg-neutral-900 !border-neutral-700"></p-menu>
+    } @else {
+    <button 
+      (click)="login()"
+      class="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 transition-all duration-200 text-white text-sm font-medium"
+    >
+      <i class="pi pi-sign-in"></i>
+      <span class="hidden sm:inline">Sign in</span>
+    </button>
+    }
   </div>
 </nav>
 
@@ -144,6 +168,11 @@
            class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-300 hover:bg-neutral-800/50 transition-all">
           <i class="pi pi-file-edit text-emerald-400"></i>
           <span>{{ 'nav.resume' | transloco }}</span>
+        </a>
+        <a routerLink="/assistant" routerLinkActive="!bg-emerald-500/10 !text-emerald-400"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-300 hover:bg-neutral-800/50 transition-all">
+          <i class="pi pi-sparkles text-emerald-400"></i>
+          <span>Career Assistant</span>
         </a>
       </nav>
     </div>
