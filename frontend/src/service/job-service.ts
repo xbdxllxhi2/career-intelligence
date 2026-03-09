@@ -7,16 +7,23 @@ import { Page } from '../models/interface/page';
 import { PageRequest } from '../models/interface/page-request';
 import { JobFilters } from '../models/filters/job-filters';
 import { FilterOptions } from '../models/filters/filter-options';
+import { KeycloakService } from 'keycloak-angular';
 
 @Injectable({
   providedIn: 'root',
 })
 export class JobService {
-  private readonly apiUrl = environment.apiUrl+ "/jobs";
+  private readonly baseUrl = environment.apiUrl;
 
-  constructor(private client: HttpClient) {
+  constructor(
+    private client: HttpClient,
+    private keycloak: KeycloakService
+  ) {}
+
+  private get apiUrl(): string {
+    const isAuthenticated = environment.keycloak.enabled && this.keycloak.isLoggedIn();
+    return isAuthenticated ? `${this.baseUrl}/jobs` : `${this.baseUrl}/public/jobs`;
   }
-
 
   getJobs(query: PageRequest, filters: JobFilters | undefined): Observable<Page<JobOffer>> {
     // Clean filters - remove undefined, null, and empty string values

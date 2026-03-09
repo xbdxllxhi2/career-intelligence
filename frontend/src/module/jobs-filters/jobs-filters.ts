@@ -11,6 +11,9 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ChipModule } from 'primeng/chip';
 import { TooltipModule } from 'primeng/tooltip';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 import { TranslocoModule } from '@jsverse/transloco';
 import { JobFilters } from '../../models/filters/job-filters';
 import { FilterOptions } from '../../models/filters/filter-options';
@@ -36,6 +39,9 @@ interface SelectOption {
     AutoCompleteModule,
     ChipModule,
     TooltipModule,
+    MultiSelectModule,
+    IconFieldModule,
+    InputIconModule,
     TranslocoModule,
   ],
   templateUrl: './jobs-filters.html',
@@ -46,6 +52,7 @@ export class JobsFilters implements OnInit {
 
   @Input() sideFilterActive = false;
   @Input({ required: true }) totalSearchResults = 0;
+  @Input() isAuthenticated = false;
 
   @Output() searchEvent = new EventEmitter<JobFilters>();
   @Output() smartSearchEvent = new EventEmitter<void>();
@@ -69,8 +76,18 @@ export class JobsFilters implements OnInit {
   selectedCity: SelectOption | string | null = null;
   selectedSeniority: SelectOption | null = null;
   selectedSource: SelectOption | null = null;
+  selectedEducationLevels: SelectOption[] = [];
   includeExpired = false;
   hasEasyApply = false;
+
+  // Education level options (static list for French education system)
+  readonly educationLevelOptions: SelectOption[] = [
+    { label: 'Bac+2', value: 'Bac+2|à Bac+3' },
+    { label: 'Bac+3 / Licence', value: 'Bac+3|à Bac+4' },
+    { label: 'Bac+4 / M1', value: 'Bac+4|M1|Master1|Master 1|à Bac+5' },
+    { label: 'Bac+5 / M2', value: 'Bac+5|Master|Master2|Master 2' },
+    { label: 'Doctorat', value: 'Doctorat' },
+  ];
 
   ngOnInit(): void {
     this.loadFilterOptions();
@@ -111,8 +128,12 @@ export class JobsFilters implements OnInit {
   }
 
   emitSearchEvent(): void {
+    // Build description_contains from selected education levels
+    const educationKeywords = this.selectedEducationLevels.map(e => e.value).join('|');
+
     this.filters = {
       ...this.filters,
+      description_contains: educationKeywords || undefined,
       country: this.getFilterValue(this.selectedCountry),
       region: this.getFilterValue(this.selectedRegion),
       city: this.getFilterValue(this.selectedCity),
@@ -143,6 +164,7 @@ export class JobsFilters implements OnInit {
     this.selectedCity = null;
     this.selectedSeniority = null;
     this.selectedSource = null;
+    this.selectedEducationLevels = [];
     this.includeExpired = false;
     this.hasEasyApply = false;
     this.searchEvent.emit(this.filters);
@@ -155,7 +177,7 @@ export class JobsFilters implements OnInit {
   getActiveFilterCount(): number {
     let count = 0;
     if (this.filters.title_contains) count++;
-    if (this.filters.description_contains) count++;
+    if (this.selectedEducationLevels.length > 0) count++;
     if (this.getFilterValue(this.selectedCountry)) count++;
     if (this.getFilterValue(this.selectedRegion)) count++;
     if (this.getFilterValue(this.selectedCity)) count++;

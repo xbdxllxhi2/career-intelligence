@@ -32,7 +32,34 @@
         'grid grid-cols-2 gap-3 auto-rows-max': sideFilterActive && gridView && !visible,
         'space-y-3': !(sideFilterActive && gridView && !visible)
       }">
-      @for (job of resultsData.content; track $index) {
+      <!-- Loading Skeletons -->
+      @if (isLoadingJobs) {
+        @for (i of [1,2,3,4,5]; track i) {
+          <p-card class="bg-neutral-800 border border-gray-800 p-2">
+            <ng-template pTemplate="header">
+              <div class="flex items-start justify-between">
+                <div class="flex items-center">
+                  <p-skeleton shape="square" width="52px" height="52px" styleClass="rounded-md"></p-skeleton>
+                  <div class="flex flex-col ml-4 gap-2">
+                    <p-skeleton width="200px" height="1.25rem"></p-skeleton>
+                    <p-skeleton width="150px" height="0.875rem"></p-skeleton>
+                  </div>
+                </div>
+                <p-skeleton shape="circle" width="2rem" height="2rem"></p-skeleton>
+              </div>
+              <div class="flex gap-2 mt-2">
+                <p-skeleton width="80px" height="1.5rem"></p-skeleton>
+                <p-skeleton width="60px" height="1.5rem"></p-skeleton>
+              </div>
+            </ng-template>
+            <div class="mt-2 flex items-center justify-end gap-2">
+              <p-skeleton width="70px" height="2rem"></p-skeleton>
+              <p-skeleton width="70px" height="2rem"></p-skeleton>
+            </div>
+          </p-card>
+        }
+      } @else {
+        @for (job of resultsData.content; track $index) {
       <p-card class="bg-neutral-800 border p-2"
         [ngClass]="job.reference === selectedJob?.reference ? 'border-emerald-200/50' : 'border-gray-800'">
         <ng-template pTemplate="header">
@@ -74,6 +101,7 @@
         </div>
       </p-card>
       }
+      }
       <div id="paginator" class="py-4" [ngClass]="{'col-span-2': sideFilterActive && gridView && !visible}">
         <div class="card flex justify-center">
           <p-paginator (onPageChange)="onPageChange($event)" [first]="resultsData.page * resultsData.size"
@@ -96,7 +124,43 @@
         </button>
       </div>
 
-      @if (selectedJob) {
+      <!-- Loading State for Job Details -->
+      @if (isLoadingJobDetails) {
+        <div class="py-4 flex flex-col min-w-full gap-4">
+          <div class="flex gap-2 items-center">
+            <p-skeleton shape="square" width="32px" height="32px" styleClass="rounded"></p-skeleton>
+            <p-skeleton width="120px" height="1rem"></p-skeleton>
+          </div>
+          <div class="flex flex-col gap-3">
+            <p-skeleton width="300px" height="1.5rem"></p-skeleton>
+            <div class="flex gap-2">
+              <p-skeleton width="100px" height="1.5rem" styleClass="rounded-full"></p-skeleton>
+              <p-skeleton width="120px" height="1.5rem" styleClass="rounded-full"></p-skeleton>
+              <p-skeleton width="100px" height="1.5rem" styleClass="rounded-full"></p-skeleton>
+            </div>
+            <div class="flex gap-2">
+              <p-skeleton width="80px" height="2.5rem" styleClass="rounded-full"></p-skeleton>
+              <p-skeleton width="100px" height="2.5rem" styleClass="rounded-full"></p-skeleton>
+              <p-skeleton width="120px" height="2.5rem" styleClass="rounded-full"></p-skeleton>
+            </div>
+          </div>
+          
+          <!-- Skills Match Skeleton -->
+          <div class="mt-4">
+            <p-skeleton height="200px" styleClass="w-full rounded-lg"></p-skeleton>
+          </div>
+          
+          <!-- Description Skeleton -->
+          <div class="mt-4">
+            <p-skeleton width="150px" height="1.25rem" styleClass="mb-3"></p-skeleton>
+            <p-skeleton height="1rem" styleClass="w-full mb-2"></p-skeleton>
+            <p-skeleton height="1rem" styleClass="w-full mb-2"></p-skeleton>
+            <p-skeleton height="1rem" styleClass="w-3/4 mb-2"></p-skeleton>
+            <p-skeleton height="1rem" styleClass="w-full mb-2"></p-skeleton>
+            <p-skeleton height="1rem" styleClass="w-5/6"></p-skeleton>
+          </div>
+        </div>
+      } @else if (selectedJob) {
       <app-application-info-modal (modalCloseEvent)="onModalClose()" [selectedJob]="selectedJob"
         [applicationModalVisible]="showApplicationModalFlag"></app-application-info-modal>
 
@@ -184,7 +248,25 @@
             </p-panel>
           </div>
           <div class="w-full">
-            @if (matchingError) {
+            @if (!isAuthenticated) {
+              <!-- Login prompt for unauthenticated users -->
+              <p-panel [collapsed]="false" [toggleable]="true" class="w-full">
+                <ng-template #header>
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-objects-column"></i>
+                    <span class="font-bold">{{ 'jobs.skillsMatch' | transloco }}</span>
+                  </div>
+                </ng-template>
+                <div class="flex flex-col items-center justify-center py-6 text-center">
+                  <i class="pi pi-lock text-3xl text-neutral-500 mb-3"></i>
+                  <p class="text-neutral-400 mb-4">Sign in to see how well your skills match this job</p>
+                  <button pButton severity="primary" size="small" (click)="login()">
+                    <i class="pi pi-sign-in mr-2"></i>
+                    Sign in
+                  </button>
+                </div>
+              </p-panel>
+            } @else if (matchingError) {
               <p-panel [collapsed]="false" [toggleable]="true" class="w-full">
                 <ng-template #header>
                   <div class="flex items-center gap-2">

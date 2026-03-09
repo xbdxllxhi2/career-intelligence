@@ -21,8 +21,65 @@
 
   <!-- Content -->
   <div class="flex-1 overflow-y-auto">
-    <div class="max-w-5xl mx-auto px-6 py-8">
-      <form [formGroup]="profileForm" (ngSubmit)="submitProfileFrom()">
+    <div class="max-w-5xl mx-auto px-6 py-8">      <!-- Loading State -->
+      @if (isLoadingProfile) {
+        <div class="space-y-8">
+          <!-- CV Upload Skeleton -->
+          <div class="p-5 bg-neutral-800/50 border border-neutral-700 border-dashed rounded-lg">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <p-skeleton shape="square" width="48px" height="48px" styleClass="rounded-lg"></p-skeleton>
+                <div class="flex flex-col gap-2">
+                  <p-skeleton width="120px" height="1rem"></p-skeleton>
+                  <p-skeleton width="200px" height="0.75rem"></p-skeleton>
+                </div>
+              </div>
+              <p-skeleton width="100px" height="2.5rem" styleClass="rounded-lg"></p-skeleton>
+            </div>
+          </div>
+
+          <!-- Personal Info Skeleton -->
+          <section>
+            <p-skeleton width="150px" height="0.875rem" styleClass="mb-4"></p-skeleton>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              @for (i of [1,2,3,4]; track i) {
+                <div>
+                  <p-skeleton width="80px" height="0.75rem" styleClass="mb-1.5"></p-skeleton>
+                  <p-skeleton height="2.75rem" styleClass="w-full rounded-lg"></p-skeleton>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Links Skeleton -->
+          <section>
+            <p-skeleton width="80px" height="0.875rem" styleClass="mb-4"></p-skeleton>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              @for (i of [1,2,3]; track i) {
+                <div>
+                  <p-skeleton width="60px" height="0.75rem" styleClass="mb-1.5"></p-skeleton>
+                  <p-skeleton height="2.75rem" styleClass="w-full rounded-lg"></p-skeleton>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Experience Skeleton -->
+          <section>
+            <p-skeleton width="100px" height="0.875rem" styleClass="mb-4"></p-skeleton>
+            @for (i of [1,2]; track i) {
+              <div class="p-4 bg-neutral-800/50 border border-neutral-700 rounded-lg mb-3">
+                <div class="flex justify-between mb-3">
+                  <p-skeleton width="180px" height="1.25rem"></p-skeleton>
+                  <p-skeleton width="100px" height="0.875rem"></p-skeleton>
+                </div>
+                <p-skeleton width="150px" height="0.875rem" styleClass="mb-2"></p-skeleton>
+                <p-skeleton height="3rem" styleClass="w-full"></p-skeleton>
+              </div>
+            }
+          </section>
+        </div>
+      } @else {      <form [formGroup]="profileForm" (ngSubmit)="submitProfileFrom()">
         
         <!-- CV Upload Section -->
         <div class="mb-8 p-5 bg-neutral-800/50 border border-neutral-700 border-dashed rounded-lg">
@@ -688,6 +745,7 @@
           </button>
         </div>
       </form>
+      }
     </div>
   </div>
 </div>

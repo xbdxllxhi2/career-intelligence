@@ -61,6 +61,7 @@ export class Profile {
   private keycloak = inject(KeycloakService);
   isAuthenticated = false;
   isParsingResume = false;
+  isLoadingProfile = true;
 
   profileData!: UserProfile;
 
@@ -96,6 +97,7 @@ export class Profile {
   }
 
   private initProfileData(): void {
+    this.isLoadingProfile = true;
     this.profileService.getUserProfile().subscribe({
       next: (profile) => {
         console.log('Got Profile ', profile);
@@ -112,7 +114,11 @@ export class Profile {
         if (profile.projects?.length) {
           this.patchProjects(profile.projects);
         }
+        this.isLoadingProfile = false;
       },
+      error: () => {
+        this.isLoadingProfile = false;
+      }
     });
   }
 

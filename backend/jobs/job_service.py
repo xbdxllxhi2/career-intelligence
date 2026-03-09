@@ -84,7 +84,7 @@ def getJobByReference(reference: str) -> JobDetail | None:
     return None
 
 
-def getJobs(user_id: str, filters: JobFilters, page: int, size: int) -> Page[JobBasic]:
+def getJobs(user_id: str | None, filters: JobFilters, page: int, size: int) -> Page[JobBasic]:
     limit = size
     offset = page * size
 
@@ -92,8 +92,11 @@ def getJobs(user_id: str, filters: JobFilters, page: int, size: int) -> Page[Job
     params: dict = {
         "limit": limit,
         "offset": offset,
-        "user_id": user_id,
     }
+    
+    # Only add user_id param if authenticated
+    if user_id:
+        params["user_id"] = user_id
 
     # Filters
     if filters.title_contains:
@@ -101,8 +104,18 @@ def getJobs(user_id: str, filters: JobFilters, page: int, size: int) -> Page[Job
         params["title"] = f"%{filters.title_contains}%"
         
     if filters.description_contains:
-        where_clauses.append("LOWER(j.description) LIKE LOWER(:description)")
-        params["description"] = f"%{filters.description_contains}%"
+        # Handle pipe-separated values for OR search (e.g., "Bac+4|Bac+5")
+        desc_terms = [term.strip() for term in filters.description_contains.split("|") if term.strip()]
+        if len(desc_terms) == 1:
+            where_clauses.append("LOWER(j.description) LIKE LOWER(:description)")
+            params["description"] = f"%{desc_terms[0]}%"
+        elif len(desc_terms) > 1:
+            desc_conditions = []
+            for i, term in enumerate(desc_terms):
+                param_name = f"desc_{i}"
+                desc_conditions.append(f"LOWER(j.description) LIKE LOWER(:{param_name})")
+                params[param_name] = f"%{term}%"
+            where_clauses.append(f"({' OR '.join(desc_conditions)})")
 
     if not filters.include_expired:
         where_clauses.append("j.expires_at >= NOW()")
@@ -135,6 +148,18 @@ def getJobs(user_id: str, filters: JobFilters, page: int, size: int) -> Page[Job
     if where_clauses:
         where_sql = "WHERE " + " AND ".join(where_clauses)
 
+    # Conditional join for user applications (only if authenticated)
+    if user_id:
+        user_app_join = """
+        LEFT JOIN app.user_applications ua
+            ON ua.job_offer_id = j.job_checksum
+            AND ua.user_id = :user_id
+        """
+        applied_column = "CASE WHEN ua.job_offer_id IS NOT NULL THEN TRUE ELSE FALSE END AS applied"
+    else:
+        user_app_join = ""
+        applied_column = "FALSE AS applied"
+
     # Main query
     sql = text(
         f"""
@@ -158,14 +183,12 @@ def getJobs(user_id: str, filters: JobFilters, page: int, size: int) -> Page[Job
             o.logo_url,
             j.posted_at AS created_at,
             j.expires_at,
-            CASE WHEN ua.job_offer_id IS NOT NULL THEN TRUE ELSE FALSE END AS applied
+            {applied_column}
         FROM public.jobs j
         LEFT JOIN public.organizations o ON j.organization_id = o.organization_id
         LEFT JOIN public.locations l ON j.location_id = l.location_id
         LEFT JOIN public.sources s ON j.source_id = s.source_id
-        LEFT JOIN app.user_applications ua
-            ON ua.job_offer_id = j.job_checksum
-            AND ua.user_id = :user_id
+        {user_app_join}
         {where_sql}
         ORDER BY j.expires_at ASC
         LIMIT :limit OFFSET :offset

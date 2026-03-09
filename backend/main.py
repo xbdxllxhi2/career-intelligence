@@ -10,6 +10,7 @@ from typing import Dict, Any
 from flask.cli import load_dotenv
 
 from jobs.api import router as jobs_router
+from jobs.public_api import router as public_jobs_router
 from resume.resume_api import router as resume_router
 from user.application.api import router as user_application_router
 from user.profile.api import router as user_profile_router
@@ -78,7 +79,8 @@ setup_keycloak_middleware(
     keycloak_config,
     user_mapper=user_mapper,
     exclude_patterns=[
-        "/health"
+        "/health",
+        "/public/*"
     ]
 )
 #####################################################################
@@ -105,9 +107,10 @@ async def health_check():
 
 @app.get("/")
 async def root():
-    return {"message": "Internships Helper API", "version": "1.0.0"}
+    return {"message": "Career Intelligence API", "version": "1.0.0"}
 
 app.include_router(jobs_router)
+app.include_router(public_jobs_router)
 app.include_router(resume_router)
 app.include_router(user_application_router)
 app.include_router(user_profile_router)

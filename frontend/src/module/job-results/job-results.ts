@@ -11,6 +11,7 @@ import { PanelModule } from 'primeng/panel';
 import { MeterGroupModule } from 'primeng/metergroup';
 import { ChartModule } from 'primeng/chart';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SkeletonModule } from 'primeng/skeleton';
 import { ResumeService } from '../../service/resume-service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -24,12 +25,13 @@ import { JobMatchingStats } from '../../shared/job-matching-stats/job-matching-s
 import { JobMatchingService } from '../../service/job-matching-service';
 import { JobMatchingResponse, MatchCategoryType, MatchRecommendation } from '../../models/interface/job-matching';
 import { Router } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
 
 
 @Component({
   selector: 'app-job-results',
   imports: [CardModule, ButtonModule, DrawerModule, JobAddressPipe, TagModule, PanelModule, MeterGroupModule, DatePipe,
-    ChartModule, CommonModule ,ProgressSpinnerModule, ToastModule, ChipModule,PaginatorModule, ApplicationInfoModal, TranslocoModule, JobMatchingStats],
+    ChartModule, CommonModule, ProgressSpinnerModule, SkeletonModule, ToastModule, ChipModule, PaginatorModule, ApplicationInfoModal, TranslocoModule, JobMatchingStats],
   providers: [MessageService],
   templateUrl: './job-results.html',
   styleUrl: './job-results.scss',
@@ -38,6 +40,8 @@ export class JobResults implements OnChanges {
   @Input({required:true}) resultsData!: Page<JobOffer>;
   @Input() selectedJobRef: string | null = null;
   @Input() sideFilterActive: boolean = false;
+  @Input() isAuthenticated: boolean = false;
+  @Input() isLoadingJobs: boolean = false;
   @Output() closeResults = new EventEmitter<void>();
   @Output() isjobDetailsOpen = new EventEmitter<boolean>();
   @Output() onPageChangeEvent = new EventEmitter<PaginatorState>();
@@ -47,6 +51,7 @@ export class JobResults implements OnChanges {
   selectedJob: JobOffer | null = null;
   gridView: boolean = false;
   private loadingJobRef: string | null = null;  // Track which job is being loaded
+  isLoadingJobDetails: boolean = false;
 
   visible: boolean = false;
 
@@ -62,11 +67,18 @@ export class JobResults implements OnChanges {
     private resumeService: ResumeService, 
     private messageService: MessageService,
     private jobMatchingService: JobMatchingService,
-    private router: Router
+    private router: Router,
+    private keycloak: KeycloakService
   ) {}
 
   ngOnInit() {
     this.showApplicationModalFlag = false;
+  }
+
+  login(): void {
+    this.keycloak.login({
+      redirectUri: window.location.href
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -83,15 +95,20 @@ export class JobResults implements OnChanges {
 
   private loadJobFromRef(jobRef: string) {
     this.loadingJobRef = jobRef;
+    this.isLoadingJobDetails = true;
     this.jobService.getJobDetails(jobRef).subscribe({
       next: (data) => {
         this.selectedJob = data;
         this.visible = true;
         this.isjobDetailsOpen.emit(true);
-        this.loadJobMatching(jobRef);
+        this.isLoadingJobDetails = false;
+        if (this.isAuthenticated) {
+          this.loadJobMatching(jobRef);
+        }
       },
       error: (err) => {
         console.log('Failed to load job from URL:', err);
+        this.isLoadingJobDetails = false;
       }
     });
   }
@@ -158,15 +175,20 @@ export class JobResults implements OnChanges {
 
   showJobDetails(reference: string) {
     this.loadingJobRef = reference;  // Mark as loading to prevent duplicate from ngOnChanges
+    this.isLoadingJobDetails = true;
     this.emitJobDetailEvent(true);
     this.onJobSelected.emit(reference);
     this.jobService.getJobDetails(reference)
       .subscribe({
         next: (data) => {
           this.selectedJob = data;
-          this.loadJobMatching(reference);
+          this.isLoadingJobDetails = false;
+          if (this.isAuthenticated) {
+            this.loadJobMatching(reference);
+          }
         }, error: (err) => {
-          console.log(err)
+          console.log(err);
+          this.isLoadingJobDetails = false;
         }
       })
   }

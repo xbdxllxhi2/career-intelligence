@@ -102,6 +102,7 @@
     "active": "Actifs",
     "jobTitle": "Titre du poste ou mots-clés",
     "descriptionContains": "Description contient",
+    "educationLevel": "Niveau d'études",
     "location": "Localisation",
     "country": "Pays",
     "region": "Région / État",
@@ -327,7 +328,13 @@
     },
     "signInTitle": "Assistant Carrière",
     "signInSubtitle": "Connectez-vous pour accéder à votre coach carrière IA. Obtenez des conseils personnalisés sur les CV, entretiens, compétences et planification de carrière.",
-    "signInButton": "Se connecter pour continuer"
+    "signInButton": "Se connecter pour continuer",
+    "betaBadge": "Bientôt disponible",
+    "comingSoonTitle": "Assistant Carrière",
+    "comingSoonDescription": "Nous développons un assistant carrière propulsé par l'IA pour vous aider avec vos candidatures, entretiens et planification de carrière. Restez à l'écoute !",
+    "featureChat": "Chat IA",
+    "featureAgents": "Agents intelligents",
+    "featureCvGenerator": "Générateur CV"
   },
   "settings": {
     "title": "Paramètres",

@@ -40,6 +40,7 @@ export class JobFinder implements OnInit {
   filterSideLayout: boolean = true;
   selectedJobRef: string | null = null;
   isAuthenticated = false;
+  isLoadingJobs = false;
 
   pageRequest: PageRequest;
   resultsData: Page<JobOffer>;
@@ -63,10 +64,6 @@ export class JobFinder implements OnInit {
   ngOnInit() {
     this.isAuthenticated = environment.keycloak.enabled ? this.keycloak.isLoggedIn() : true;
 
-    if (!this.isAuthenticated) {
-      return;
-    }
-
     // Subscribe to query params to handle job reference from URL
     this.route.queryParams.subscribe(params => {
       const jobRef = params['job'];
@@ -76,6 +73,8 @@ export class JobFinder implements OnInit {
       }
     });
 
+    // Load jobs for both authenticated and unauthenticated users
+    // Public API will be used for unauthenticated users
     this.getJobOffers(this.pageRequest);
   }
 
@@ -113,12 +112,15 @@ export class JobFinder implements OnInit {
   }
 
   getJobOffers(request: PageRequest, filters:JobFilters|undefined = undefined) {
+    this.isLoadingJobs = true;
     this.service.getJobs(request,filters).subscribe({
       next: (data) => {
         this.resultsData = data;
+        this.isLoadingJobs = false;
       },
       error: (err) => {
         console.log(err);
+        this.isLoadingJobs = false;
       },
     });
   }

@@ -102,6 +102,7 @@
     "active": "Active",
     "jobTitle": "Job title or keywords",
     "descriptionContains": "Description contains",
+    "educationLevel": "Education Level",
     "location": "Location",
     "country": "Country",
     "region": "Region / State",
@@ -327,7 +328,13 @@
     },
     "signInTitle": "Career Assistant",
     "signInSubtitle": "Sign in to access your AI-powered career coach. Get personalized guidance on resumes, interviews, skills, and career planning.",
-    "signInButton": "Sign in to continue"
+    "signInButton": "Sign in to continue",
+    "betaBadge": "Coming Soon",
+    "comingSoonTitle": "Career Assistant",
+    "comingSoonDescription": "We're building an AI-powered career assistant to help you with job applications, interviews, and career planning. Stay tuned!",
+    "featureChat": "AI Chat",
+    "featureAgents": "Smart Agents",
+    "featureCvGenerator": "CV Generator"
   },
   "settings": {
     "title": "Settings",
