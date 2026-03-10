@@ -23,15 +23,17 @@ import { ApplicationInfoModal } from '../application-info-modal/application-info
 import { TranslocoModule } from '@jsverse/transloco';
 import { JobMatchingStats } from '../../shared/job-matching-stats/job-matching-stats';
 import { JobMatchingService } from '../../service/job-matching-service';
-import { JobMatchingResponse, MatchCategoryType, MatchRecommendation } from '../../models/interface/job-matching';
+import { JobMatchingResponse, MatchCategoryType, MatchRecommendation, MissingItem } from '../../models/interface/job-matching';
 import { Router } from '@angular/router';
 import { KeycloakService } from 'keycloak-angular';
+import { DialogModule } from 'primeng/dialog';
+import { DividerModule } from 'primeng/divider';
 
 
 @Component({
   selector: 'app-job-results',
   imports: [CardModule, ButtonModule, DrawerModule, JobAddressPipe, TagModule, PanelModule, MeterGroupModule, DatePipe,
-    ChartModule, CommonModule, ProgressSpinnerModule, SkeletonModule, ToastModule, ChipModule, PaginatorModule, ApplicationInfoModal, TranslocoModule, JobMatchingStats],
+    ChartModule, CommonModule, ProgressSpinnerModule, SkeletonModule, ToastModule, ChipModule, PaginatorModule, ApplicationInfoModal, TranslocoModule, JobMatchingStats, DialogModule, DividerModule],
   providers: [MessageService],
   templateUrl: './job-results.html',
   styleUrl: './job-results.scss',
@@ -61,6 +63,10 @@ export class JobResults implements OnChanges {
   matchingResponse: JobMatchingResponse | null = null;
   matchingLoading: boolean = false;
   matchingError: string | null = null;
+
+  // Full report dialog
+  showFullReportDialog: boolean = false;
+  fullReportData: JobMatchingResponse | null = null;
 
   constructor(
     private jobService: JobService, 
@@ -168,9 +174,92 @@ export class JobResults implements OnChanges {
     console.log('Recommendation clicked:', recommendation);
   }
 
+  onViewFullReport(report: JobMatchingResponse): void {
+    this.fullReportData = report;
+    this.showFullReportDialog = true;
+  }
+
+  getScoreClass(score: number): string {
+    if (score >= 75) return 'text-green-400';
+    if (score >= 30) return 'text-yellow-400';
+    return 'text-red-400';
+  }
+
+  getScoreBgClass(score: number): string {
+    if (score >= 75) return 'bg-green-900/30';
+    if (score >= 30) return 'bg-yellow-900/30';
+    return 'bg-red-900/30';
+  }
+
+  getImpactSeverity(impact: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' {
+    switch (impact) {
+      case 'high': return 'danger';
+      case 'medium': return 'warn';
+      case 'low': return 'info';
+      default: return 'secondary';
+    }
+  }
+
+  getImportanceSeverity(importance: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' {
+    switch (importance) {
+      case 'required': return 'danger';
+      case 'preferred': return 'warn';
+      case 'nice-to-have': return 'info';
+      default: return 'secondary';
+    }
+  }
+
+  getAllMissingItems(): MissingItem[] {
+    if (!this.fullReportData) return [];
+    return this.fullReportData.matchCategories
+      .flatMap(cat => cat.missingItems)
+      .sort((a, b) => {
+        const order = { 'required': 0, 'preferred': 1, 'nice-to-have': 2 };
+        return (order[a.importance] ?? 3) - (order[b.importance] ?? 3);
+      });
+  }
+
 
   getSelectedJob(): JobOffer | null {
     return this.selectedJob ? this.selectedJob : null;
+  }
+
+  async shareJob(job: JobOffer): Promise<void> {
+    const shareUrl = `${window.location.origin}/jobs/${job.reference}`;
+    const shareData = {
+      title: job.title,
+      text: `Check out this job: ${job.title}${job.company ? ' at ' + job.company : ''}`,
+      url: shareUrl
+    };
+
+    // Try Web Share API first (mobile and some desktop browsers)
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch (err) {
+        // User cancelled or error - fall back to clipboard
+        if ((err as Error).name === 'AbortError') return;
+      }
+    }
+
+    // Fallback: copy link to clipboard
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Link Copied',
+        detail: 'Job link copied to clipboard',
+        life: 3000
+      });
+    } catch (err) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to copy link',
+        life: 3000
+      });
+    }
   }
 
   showJobDetails(reference: string) {

@@ -32,7 +32,7 @@ class UserProfileRepository:
         # Copy scalar attributes from input entity to existing entity
         for attr in [
             "first_name", "last_name", "phone", "email", "city", "country",
-            "linkedin", "github", "summary", "languages", "extra_curricular"
+            "linkedin", "github", "summary", "languages", "certifications", "extra_curricular"
         ]:
             setattr(existing, attr, getattr(entity, attr, None))
 

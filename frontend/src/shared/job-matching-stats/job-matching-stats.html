@@ -121,8 +121,8 @@
                       <span class="text-surface-500 dark:text-surface-400 text-sm">
                         {{ meterItem.translationKey | transloco }}
                       </span>
-                      <span class="font-bold text-lg" [ngClass]="getScoreClass(meterItem.value)">
-                        {{ meterItem.value }}%
+                      <span class="font-bold text-lg" [ngClass]="getScoreClass(meterItem.displayScore)">
+                        {{ meterItem.displayScore }}%
                       </span>
                       @if (meterItem.matchedCount !== undefined && meterItem.totalCount !== undefined) {
                         <span class="text-xs text-gray-500">
@@ -142,7 +142,7 @@
           
           <ng-template #meter let-value let-class="class" let-width="size">
             <span [class]="class"
-              [style]="{ background: 'linear-gradient(to right, ' + value.color1 + ', ' + value.color2 + ')', width: width }"></span>
+              [style]="{ background: getMeterColor(), width: width }"></span>
           </ng-template>
           
           <ng-template #start let-totalPercent="totalPercent">
@@ -181,7 +181,7 @@
             
             <!-- Action Buttons -->
             <div class="flex justify-between mt-4">
-              <p-button [label]="'matching.viewFullReport' | transloco" [outlined]="true" size="small" icon="pi pi-file" />
+              <p-button [label]="'matching.viewFullReport' | transloco" [outlined]="true" size="small" icon="pi pi-file" (onClick)="onViewFullReportClick()" />
               @if (showUpdateProfileButton) {
                 <p-button [label]="'jobs.updateProfile' | transloco" size="small" (onClick)="onUpdateProfileClick()" icon="pi pi-user-edit" />
               }
@@ -204,7 +204,7 @@
                    (click)="openCategoryDetails(meterItem.category)">
                 <span class="w-3 h-3 rounded-full" [style]="{ 'background-color': meterItem.color1 }"></span>
                 <span class="text-sm text-gray-300">{{ meterItem.translationKey | transloco }}</span>
-                <span class="ml-auto text-sm font-semibold" [ngClass]="getScoreClass(meterItem.value)">{{ meterItem.value }}%</span>
+                <span class="ml-auto text-sm font-semibold" [ngClass]="getScoreClass(meterItem.displayScore)">{{ meterItem.displayScore }}%</span>
               </div>
             }
           </div>
@@ -217,7 +217,7 @@
           
           <!-- Action Buttons -->
           <div class="flex justify-between mt-4">
-            <p-button [label]="'matching.viewFullReport' | transloco" [outlined]="true" size="small" icon="pi pi-file" />
+            <p-button [label]="'matching.viewFullReport' | transloco" [outlined]="true" size="small" icon="pi pi-file" (onClick)="onViewFullReportClick()" />
             @if (showUpdateProfileButton) {
               <p-button [label]="'jobs.updateProfile' | transloco" size="small" (onClick)="onUpdateProfileClick()" icon="pi pi-user-edit" />
             }

@@ -28,6 +28,17 @@ class ProjectEntry(BaseModel):
     tags: List[str] = Field(default_factory=list)
     bullets: List[str] = Field(default_factory=list)
 
+class CertificationEntry(BaseModel):
+    name: str
+    issuer: Optional[str] = None
+    date: Optional[str] = None
+    credentialId: Optional[str] = Field(None, alias="credential_id")
+    url: Optional[str] = None
+
+    model_config = {
+        "populate_by_name": True,
+    }
+
 class UserProfile(BaseModel):
     first_name: Optional[str] = Field(None, alias="firstName")
     last_name: Optional[str] = Field(None, alias="lastName")
@@ -43,6 +54,7 @@ class UserProfile(BaseModel):
     skills: List[SkillCategory] = Field(default_factory=list)
     experience: List[ExperienceEntry] = Field(default_factory=list)
     projects: List[ProjectEntry] = Field(default_factory=list)
+    certifications: List[CertificationEntry] = Field(default_factory=list)
     languages: Dict[str, str] = Field(default_factory=dict)
     extra_curricular: List[str] = Field(default_factory=list)
 

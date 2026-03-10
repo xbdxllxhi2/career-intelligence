@@ -79,55 +79,55 @@
             }
           </section>
         </div>
-      } @else {      <form [formGroup]="profileForm" (ngSubmit)="submitProfileFrom()">
-        
-        <!-- CV Upload Section -->
-        <div class="mb-8 p-5 bg-neutral-800/50 border border-neutral-700 border-dashed rounded-lg">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 rounded-lg bg-neutral-700 flex items-center justify-center">
+      } @else {
+      <!-- CV Upload Section -->
+      <div class="mb-6 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/20">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-lg bg-neutral-700 flex items-center justify-center">
+              @if (isParsingResume) {
+                <i class="pi pi-spin pi-spinner text-xl text-emerald-400"></i>
+              } @else {
+                <i class="pi pi-file-pdf text-xl text-neutral-400"></i>
+              }
+            </div>
+            <div>
+              <p class="text-sm font-medium text-white">Import from CV</p>
+              <p class="text-xs text-neutral-500">
                 @if (isParsingResume) {
-                  <i class="pi pi-spin pi-spinner text-xl text-emerald-400"></i>
+                  Parsing your resume with AI...
                 } @else {
-                  <i class="pi pi-file-pdf text-xl text-neutral-400"></i>
+                  Upload your existing resume to auto-fill your profile
                 }
-              </div>
-              <div>
-                <p class="text-sm font-medium text-white">Import from CV</p>
-                <p class="text-xs text-neutral-500">
-                  @if (isParsingResume) {
-                    Parsing your resume with AI...
-                  } @else {
-                    Upload your existing resume to auto-fill your profile
-                  }
-                </p>
-              </div>
+              </p>
             </div>
-            <p-fileupload 
-              #fu 
-              mode="basic" 
-              [chooseLabel]="isParsingResume ? 'Parsing...' : 'Choose file'" 
-              chooseIcon="pi pi-upload" 
-              name="cv"
-              accept=".pdf,.docx"
-              [auto]="true"
-              [customUpload]="true"
-              (uploadHandler)="handleUpload($event)"
-              [disabled]="isParsingResume"
-              styleClass="p-button-secondary"
-            />
           </div>
-          @if (isParsingResume) {
-            <div class="mt-4">
-              <div class="h-1 bg-neutral-700 rounded-full overflow-hidden">
-                <div class="h-full bg-emerald-500 rounded-full animate-pulse" style="width: 60%"></div>
-              </div>
-            </div>
-          }
+          <p-fileupload 
+            #fu 
+            mode="basic" 
+            [chooseLabel]="isParsingResume ? 'Parsing...' : 'Choose file'" 
+            chooseIcon="pi pi-upload" 
+            name="cv"
+            accept=".pdf,.docx"
+            [auto]="true"
+            [customUpload]="true"
+            (uploadHandler)="handleUpload($event)"
+            [disabled]="isParsingResume"
+            styleClass="p-button-secondary"
+          />
         </div>
+        @if (isParsingResume) {
+          <div class="mt-4">
+            <div class="h-1 bg-neutral-700 rounded-full overflow-hidden">
+              <div class="h-full bg-emerald-500 rounded-full animate-pulse" style="width: 60%"></div>
+            </div>
+          </div>
+        }
+      </div>
 
+      <form [formGroup]="profileForm" (ngSubmit)="submitProfileFrom()" class="p-6 border border-neutral-700/50 rounded-xl bg-neutral-800/20">
         <!-- Personal Info -->
-        <section class="mb-8">
+        <section class="mb-8 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
           <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide mb-4">Personal Information</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -170,7 +170,7 @@
         </section>
 
         <!-- Links -->
-        <section class="mb-8">
+        <section class="mb-8 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
           <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide mb-4">Links</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -213,7 +213,7 @@
         </section>
 
         <!-- Education -->
-        <section class="mb-8">
+        <section class="mb-8 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Education</h2>
             <button 
@@ -329,7 +329,7 @@
         </section>
 
         <!-- Experience -->
-        <section class="mb-8">
+        <section class="mb-8 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Experience</h2>
             <button 
@@ -471,7 +471,7 @@
         </section>
 
         <!-- Projects -->
-        <section class="mb-8">
+        <section class="mb-8 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Projects</h2>
             <button 
@@ -561,7 +561,7 @@
         </section>
 
         <!-- Certifications -->
-        <section class="mb-8">
+        <section class="mb-8 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Certifications</h2>
             <button 
@@ -666,7 +666,7 @@
         </section>
 
         <!-- Languages -->
-        <section class="mb-8">
+        <section class="mb-8 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Languages</h2>
             <button 

@@ -37,6 +37,13 @@ export interface ParsedProfile {
     tags?: string[];
     bullets?: string[];
   }>;
+  certifications?: Array<{
+    name: string;
+    issuer?: string;
+    date?: string;
+    credentialId?: string;
+    url?: string;
+  }>;
   languages?: Array<{
     name: string;
     proficiency: string;

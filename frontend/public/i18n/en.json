@@ -136,6 +136,9 @@
     "noResults": "No jobs found",
     "noResultsDescription": "Try adjusting your filters or search terms",
     "share": "Share",
+    "linkCopied": "Link Copied",
+    "linkCopiedDesc": "Job link copied to clipboard",
+    "shareFailed": "Failed to copy link",
     "save": "Save",
     "close": "Close",
     "view": "View",
@@ -285,6 +288,7 @@
     "required": "Required",
     "preferred": "Preferred",
     "nice-to-have": "Nice to Have",
+    "noMissingItems": "Great! You meet all the requirements",
     "yourProfile": "Your Profile",
     "jobRequires": "Job Requires",
     "jobRequirements": "Job Requirements",
@@ -302,7 +306,8 @@
     "noMatch": "No Match",
     "greatFit": "Great Fit!",
     "greatFitDescription": "You're an excellent match for this position. Your profile strongly aligns with the job requirements.",
-    "matchScore": "Match Score"
+    "matchScore": "Match Score",
+    "yourMatchScore": "Your Match Score"
   },
   "assistant": {
     "title": "Career Assistant",

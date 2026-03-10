@@ -136,6 +136,9 @@
     "noResults": "Aucune offre trouvée",
     "noResultsDescription": "Essayez d'ajuster vos filtres ou termes de recherche",
     "share": "Partager",
+    "linkCopied": "Lien copié",
+    "linkCopiedDesc": "Lien de l'offre copié dans le presse-papiers",
+    "shareFailed": "Échec de la copie du lien",
     "save": "Sauvegarder",
     "close": "Fermer",
     "view": "Affichage",
@@ -285,6 +288,7 @@
     "required": "Requis",
     "preferred": "Préféré",
     "nice-to-have": "Souhaitable",
+    "noMissingItems": "Parfait ! Vous répondez à toutes les exigences",
     "yourProfile": "Votre profil",
     "jobRequires": "L'emploi requiert",
     "jobRequirements": "Exigences du poste",
@@ -302,7 +306,8 @@
     "noMatch": "Pas de correspondance",
     "greatFit": "Excellente correspondance !",
     "greatFitDescription": "Vous êtes un excellent candidat pour ce poste. Votre profil correspond fortement aux exigences du poste.",
-    "matchScore": "Score de correspondance"
+    "matchScore": "Score de correspondance",
+    "yourMatchScore": "Votre score de correspondance"
   },
   "assistant": {
     "title": "Assistant Carrière",
