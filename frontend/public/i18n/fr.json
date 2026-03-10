@@ -309,6 +309,12 @@
     "matchScore": "Score de correspondance",
     "yourMatchScore": "Votre score de correspondance"
   },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "Aucune notification",
+    "markAllRead": "Tout marquer comme lu",
+    "viewAll": "Voir tout"
+  },
   "assistant": {
     "title": "Assistant Carrière",
     "subtitle": "Votre coach carrière propulsé par l'IA. Posez-moi vos questions sur les CV, entretiens, compétences, négociation salariale ou planification de carrière.",

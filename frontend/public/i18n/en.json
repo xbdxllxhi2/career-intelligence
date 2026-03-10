@@ -309,6 +309,12 @@
     "matchScore": "Match Score",
     "yourMatchScore": "Your Match Score"
   },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet",
+    "markAllRead": "Mark all as read",
+    "viewAll": "View all"
+  },
   "assistant": {
     "title": "Career Assistant",
     "subtitle": "Your AI-powered career coach. Ask me anything about resumes, interviews, skills, salary negotiation, or career planning.",
