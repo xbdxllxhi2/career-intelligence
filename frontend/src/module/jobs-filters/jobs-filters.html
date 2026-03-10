@@ -35,19 +35,23 @@
     </p-floatlabel>
 
     <p-floatlabel variant="on">
-      <input
-        class="w-full"
-        pInputText
-        id="description_search"
-        [(ngModel)]="filters.description_contains"
-        autocomplete="off"
+      <p-multiselect
+        id="education_level_select"
+        [options]="educationLevelOptions"
+        [(ngModel)]="selectedEducationLevels"
+        optionLabel="label"
+        [showClear]="true"
+        styleClass="w-full"
+        appendTo="body"
+        [maxSelectedLabels]="2"
+        selectedItemsLabel="{0} levels"
       />
-      <label for="description_search">{{ 'jobs.descriptionContains' | transloco }}</label>
+      <label for="education_level_select">{{ 'jobs.educationLevel' | transloco }}</label>
     </p-floatlabel>
   </div>
 
   <!-- Location Filters Accordion -->
-  <p-accordion [multiple]="true" [value]="['location', 'job-type', 'source']">
+  <p-accordion [multiple]="true" [value]="[]">
     <p-accordion-panel value="location">
       <p-accordion-header>
         <div class="flex items-center gap-2">
@@ -180,15 +184,17 @@
       styleClass="w-full"
       (onClick)="emitSearchEvent()"
     />
-    <p-button
-      [label]="'jobs.smartSearch' | transloco"
-      icon="pi pi-sparkles"
-      severity="secondary"
-      styleClass="w-full"
-      (onClick)="emitSmartSearchEvent()"
-      [pTooltip]="'jobs.smartSearchTooltip' | transloco"
-      tooltipPosition="top"
-    />
+    @if (isAuthenticated) {
+      <p-button
+        [label]="'jobs.smartSearch' | transloco"
+        icon="pi pi-sparkles"
+        severity="secondary"
+        styleClass="w-full"
+        (onClick)="emitSmartSearchEvent()"
+        [pTooltip]="'jobs.smartSearchTooltip' | transloco"
+        tooltipPosition="top"
+      />
+    }
   </div>
 </div>
 
@@ -209,16 +215,16 @@
     <div class="h-6 w-px bg-neutral-700/50"></div>
 
     <!-- Search Input with Icon -->
-    <div class="relative flex-1 min-w-56 max-w-md">
-      <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm"></i>
+    <p-iconfield class="flex-1 min-w-56 max-w-md">
+      <p-inputicon styleClass="pi pi-search" />
       <input
         pInputText
-        class="w-full pl-9 pr-3 py-2 bg-neutral-800/80 border-neutral-700 rounded-lg text-sm placeholder:text-neutral-500 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition-all"
+        class="w-full text-sm"
         [placeholder]="'jobs.searchPlaceholder' | transloco"
         [(ngModel)]="filters.title_contains"
         (keydown.enter)="emitSearchEvent()"
       />
-    </div>
+    </p-iconfield>
 
     <!-- Divider -->
     <div class="h-6 w-px bg-neutral-700/50"></div>

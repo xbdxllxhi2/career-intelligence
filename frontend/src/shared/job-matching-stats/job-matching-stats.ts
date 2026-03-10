@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { MeterGroupModule } from 'primeng/metergroup';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 import { TagModule } from 'primeng/tag';
@@ -27,7 +27,8 @@ export interface MatchingStatItem {
   translationKey: string;
   color1: string;
   color2: string;
-  value: number;
+  value: number;  // Weighted value for meter bar (score * weight)
+  displayScore: number;  // Raw category score (0-100) for display
   icon: string;
   category: MatchCategoryType;
   matchedCount?: number;
@@ -59,6 +60,8 @@ export type ViewMode = 'meter' | 'radar';
   styleUrl: './job-matching-stats.scss'
 })
 export class JobMatchingStats implements OnChanges {
+  private transloco = inject(TranslocoService);
+
   @Input() matchingResponse: JobMatchingResponse | null = null;
   @Input() loading: boolean = false;
   @Input() collapsed: boolean = true;
@@ -70,6 +73,7 @@ export class JobMatchingStats implements OnChanges {
   @Output() updateProfileClick = new EventEmitter<void>();
   @Output() viewDetailsClick = new EventEmitter<MatchCategoryType>();
   @Output() recommendationClick = new EventEmitter<MatchRecommendation>();
+  @Output() viewFullReportClick = new EventEmitter<JobMatchingResponse>();
 
   stats: MatchingStatItem[] = [];
   recommendations: MatchRecommendation[] = [];
@@ -142,7 +146,8 @@ export class JobMatchingStats implements OnChanges {
       translationKey: config.translationKey,
       color1: config.color1,
       color2: config.color2,
-      value: category.score,
+      value: Math.round(category.score * category.weight),  // Weighted contribution to overall
+      displayScore: category.score,  // Raw score for display
       icon: config.icon,
       category: category.category,
       matchedCount: category.matchedItems.length,
@@ -152,7 +157,7 @@ export class JobMatchingStats implements OnChanges {
 
   private buildRadarChart(response: JobMatchingResponse): void {
     const categories = response.matchCategories.filter(c => c.weight > 0);
-    const labels = categories.map(c => this.categoryConfig[c.category].translationKey);
+    const labels = categories.map(c => this.transloco.translate(this.categoryConfig[c.category].translationKey));
     const scores = categories.map(c => c.score);
     const colors = categories.map(c => this.categoryConfig[c.category].color1);
 
@@ -160,7 +165,7 @@ export class JobMatchingStats implements OnChanges {
       labels: labels,
       datasets: [
         {
-          label: 'Your Match Score',
+          label: this.transloco.translate('matching.yourMatchScore'),
           data: scores,
           backgroundColor: 'rgba(16, 185, 129, 0.2)',
           borderColor: '#10b981',
@@ -170,7 +175,7 @@ export class JobMatchingStats implements OnChanges {
           pointHoverBorderColor: '#10b981'
         },
         {
-          label: 'Job Requirements',
+          label: this.transloco.translate('matching.jobRequirements'),
           data: categories.map(() => 100),
           backgroundColor: 'rgba(107, 114, 128, 0.1)',
           borderColor: 'rgba(107, 114, 128, 0.5)',
@@ -247,16 +252,20 @@ export class JobMatchingStats implements OnChanges {
   }
 
   getScoreClass(score: number): string {
-    if (score >= 80) return 'text-green-400';
-    if (score >= 60) return 'text-yellow-400';
-    if (score >= 40) return 'text-orange-400';
+    if (score >= 75) return 'text-green-400';
+    if (score >= 30) return 'text-yellow-400';
     return 'text-red-400';
   }
 
+  getMeterColor(): string {
+    if (this.overallScore >= 75) return '#4ade80';  // green-400
+    if (this.overallScore >= 30) return '#facc15';  // yellow-400
+    return '#f87171';  // red-400
+  }
+
   getScoreBgClass(score: number): string {
-    if (score >= 80) return 'bg-green-500/20';
-    if (score >= 60) return 'bg-yellow-500/20';
-    if (score >= 40) return 'bg-orange-500/20';
+    if (score >= 75) return 'bg-green-500/20';
+    if (score >= 30) return 'bg-yellow-500/20';
     return 'bg-red-500/20';
   }
 
@@ -327,5 +336,11 @@ export class JobMatchingStats implements OnChanges {
 
   onRecommendationClick(recommendation: MatchRecommendation): void {
     this.recommendationClick.emit(recommendation);
+  }
+
+  onViewFullReportClick(): void {
+    if (this.matchingResponse) {
+      this.viewFullReportClick.emit(this.matchingResponse);
+    }
   }
 }

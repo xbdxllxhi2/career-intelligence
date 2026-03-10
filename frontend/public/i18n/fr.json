@@ -102,6 +102,7 @@
     "active": "Actifs",
     "jobTitle": "Titre du poste ou mots-clés",
     "descriptionContains": "Description contient",
+    "educationLevel": "Niveau d'études",
     "location": "Localisation",
     "country": "Pays",
     "region": "Région / État",
@@ -135,6 +136,9 @@
     "noResults": "Aucune offre trouvée",
     "noResultsDescription": "Essayez d'ajuster vos filtres ou termes de recherche",
     "share": "Partager",
+    "linkCopied": "Lien copié",
+    "linkCopiedDesc": "Lien de l'offre copié dans le presse-papiers",
+    "shareFailed": "Échec de la copie du lien",
     "save": "Sauvegarder",
     "close": "Fermer",
     "view": "Affichage",
@@ -284,6 +288,7 @@
     "required": "Requis",
     "preferred": "Préféré",
     "nice-to-have": "Souhaitable",
+    "noMissingItems": "Parfait ! Vous répondez à toutes les exigences",
     "yourProfile": "Votre profil",
     "jobRequires": "L'emploi requiert",
     "jobRequirements": "Exigences du poste",
@@ -301,7 +306,8 @@
     "noMatch": "Pas de correspondance",
     "greatFit": "Excellente correspondance !",
     "greatFitDescription": "Vous êtes un excellent candidat pour ce poste. Votre profil correspond fortement aux exigences du poste.",
-    "matchScore": "Score de correspondance"
+    "matchScore": "Score de correspondance",
+    "yourMatchScore": "Votre score de correspondance"
   },
   "assistant": {
     "title": "Assistant Carrière",
@@ -327,7 +333,13 @@
     },
     "signInTitle": "Assistant Carrière",
     "signInSubtitle": "Connectez-vous pour accéder à votre coach carrière IA. Obtenez des conseils personnalisés sur les CV, entretiens, compétences et planification de carrière.",
-    "signInButton": "Se connecter pour continuer"
+    "signInButton": "Se connecter pour continuer",
+    "betaBadge": "Bientôt disponible",
+    "comingSoonTitle": "Assistant Carrière",
+    "comingSoonDescription": "Nous développons un assistant carrière propulsé par l'IA pour vous aider avec vos candidatures, entretiens et planification de carrière. Restez à l'écoute !",
+    "featureChat": "Chat IA",
+    "featureAgents": "Agents intelligents",
+    "featureCvGenerator": "Générateur CV"
   },
   "settings": {
     "title": "Paramètres",

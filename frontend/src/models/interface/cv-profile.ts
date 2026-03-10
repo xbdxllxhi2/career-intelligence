@@ -13,6 +13,7 @@ export interface UserProfile {
   skills?: SkillCategory[];
   experience?: ExperienceEntry[];
   projects?: ProjectEntry[];
+  certifications?: CertificationEntry[];
   languages?: { [language: string]: string };
   extra_curricular?: string[];
 }
@@ -26,7 +27,7 @@ export interface EducationEntry {
   degree: string;
   school?: string;
   institution?: string;
-  year: string;
+  year?: string;
   coursework?: string;
 }
 
@@ -46,4 +47,12 @@ export interface ProjectEntry {
   year?: string;
   tags?: string[];
   bullets?: string[];
+}
+
+export interface CertificationEntry {
+  name: string;
+  issuer?: string;
+  date?: string;
+  credentialId?: string;
+  url?: string;
 }

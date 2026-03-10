@@ -7,7 +7,7 @@ from .entity import (
     ProjectEntry as ProjectEntryEntity,
 )
 from .model import UserProfile as UserProfileModel
-from .model import SkillCategory, EducationEntry, ExperienceEntry, ProjectEntry
+from .model import SkillCategory, EducationEntry, ExperienceEntry, ProjectEntry, CertificationEntry
 
 
 class UserProfileMapper:
@@ -24,6 +24,16 @@ class UserProfileMapper:
             github=entity.github,
             summary=entity.summary,
             languages=entity.languages or {},
+            certifications=[
+                CertificationEntry(
+                    name=c.get('name', ''),
+                    issuer=c.get('issuer'),
+                    date=c.get('date'),
+                    credentialId=c.get('credentialId') or c.get('credential_id'),
+                    url=c.get('url'),
+                )
+                for c in (entity.certifications or [])
+            ],
             extra_curricular=entity.extra_curricular or [],
             education=[
                 EducationEntry(
@@ -81,6 +91,16 @@ class UserProfileMapper:
         entity.github = model.github
         entity.summary = model.summary
         entity.languages = model.languages or {}
+        entity.certifications = [
+            {
+                'name': c.name,
+                'issuer': c.issuer,
+                'date': c.date,
+                'credentialId': c.credentialId,
+                'url': c.url,
+            }
+            for c in (model.certifications or [])
+        ]
         entity.extra_curricular = model.extra_curricular or []
 
         # Education

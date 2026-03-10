@@ -1,5 +1,36 @@
 @if (isAuthenticated) {
-<div class="h-full w-full bg-neutral-900 flex overflow-hidden">
+<div class="h-full w-full bg-neutral-900 flex overflow-hidden relative">
+
+  <!-- Coming Soon Overlay -->
+  <div class="absolute inset-0 z-50 bg-neutral-900/80 backdrop-blur-sm flex flex-col items-center justify-center">
+    <div class="text-center px-6 py-8 rounded-2xl bg-neutral-800/50 border border-neutral-700/50 max-w-md">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-500/10 mb-6">
+        <i class="pi pi-sparkles text-3xl text-emerald-400"></i>
+      </div>
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-medium mb-4">
+        <i class="pi pi-wrench text-xs"></i>
+        {{ 'assistant.betaBadge' | transloco }}
+      </div>
+      <h2 class="text-2xl font-semibold text-white mb-3">{{ 'assistant.comingSoonTitle' | transloco }}</h2>
+      <p class="text-neutral-400 mb-6">
+        {{ 'assistant.comingSoonDescription' | transloco }}
+      </p>
+      <div class="flex flex-wrap justify-center gap-2">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-700/30 border border-neutral-600/30 text-xs text-neutral-400">
+          <i class="pi pi-comments text-emerald-400/70"></i>
+          {{ 'assistant.featureChat' | transloco }}
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-700/30 border border-neutral-600/30 text-xs text-neutral-400">
+          <i class="pi pi-bolt text-amber-400/70"></i>
+          {{ 'assistant.featureAgents' | transloco }}
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-700/30 border border-neutral-600/30 text-xs text-neutral-400">
+          <i class="pi pi-file-edit text-blue-400/70"></i>
+          {{ 'assistant.featureCvGenerator' | transloco }}
+        </span>
+      </div>
+    </div>
+  </div>
 
   <!-- Sidebar - Chat History -->
   <aside 

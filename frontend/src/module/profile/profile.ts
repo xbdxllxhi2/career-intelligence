@@ -18,7 +18,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { InplaceModule } from 'primeng/inplace';
-import { UserProfile } from '../../models/interface/cv-profile';
+import { UserProfile, EducationEntry, ExperienceEntry, ProjectEntry, CertificationEntry } from '../../models/interface/cv-profile';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CommonModule } from '@angular/common';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -61,6 +61,7 @@ export class Profile {
   private keycloak = inject(KeycloakService);
   isAuthenticated = false;
   isParsingResume = false;
+  isLoadingProfile = true;
 
   profileData!: UserProfile;
 
@@ -96,6 +97,7 @@ export class Profile {
   }
 
   private initProfileData(): void {
+    this.isLoadingProfile = true;
     this.profileService.getUserProfile().subscribe({
       next: (profile) => {
         console.log('Got Profile ', profile);
@@ -112,7 +114,19 @@ export class Profile {
         if (profile.projects?.length) {
           this.patchProjects(profile.projects);
         }
+
+        if (profile.certifications?.length) {
+          this.patchCertifications(profile.certifications);
+        }
+
+        if (profile.languages && Object.keys(profile.languages).length) {
+          this.patchSpokenLanguages(profile.languages);
+        }
+        this.isLoadingProfile = false;
       },
+      error: () => {
+        this.isLoadingProfile = false;
+      }
     });
   }
 
@@ -138,7 +152,7 @@ export class Profile {
     });
   }
 
-  private patchExperience(experiences: any[]): void {
+  private patchExperience(experiences: ExperienceEntry[]): void {
     const experienceArray = this.experience;
     experienceArray.clear();
 
@@ -160,40 +174,73 @@ export class Profile {
     });
   }
 
-  private patchEducation(educations: any[]): void {
+  private patchEducation(educations: EducationEntry[]): void {
     const educationArray = this.education;
     educationArray.clear();
 
     educations.forEach((edu) => {
+      // Map API fields to form fields: year -> period, school/institution -> institution, coursework -> field
       educationArray.push(
         this.fb.nonNullable.group({
           degree: [edu.degree ?? ''],
-          institution: [edu.institution ?? ''],
-          period: [edu.period ?? ''],
-          field: [edu.field ?? ''],
-          grade: [edu.grade ?? ''],
-          studyYear: [edu.studyYear ?? null],
+          institution: [edu.institution ?? edu.school ?? ''],
+          period: [edu.year ?? ''],
+          field: [edu.coursework ?? ''],
+          grade: [''],
+          studyYear: [null],
         }),
       );
     });
   }
 
-  private patchProjects(projects: any[]): void {
+  private patchProjects(projects: ProjectEntry[]): void {
     const projectsArray = this.projects;
     projectsArray.clear();
 
     projects.forEach((project) => {
+      // Map API fields to form fields: year -> period, tags -> technologies
       projectsArray.push(
         this.fb.nonNullable.group({
           name: [project.name ?? ''],
           description: [project.description ?? ''],
-          period: [project.period ?? ''],
+          period: [project.year ?? ''],
           technologies: this.fb.nonNullable.array(
-            (project.technologies ?? []).map((t: string) => this.fb.nonNullable.control(t)),
+            (project.tags ?? []).map((t: string) => this.fb.nonNullable.control(t)),
           ),
           bullets: this.fb.nonNullable.array(
             (project.bullets ?? []).map((b: string) => this.fb.nonNullable.control(b)),
           ),
+        }),
+      );
+    });
+  }
+
+  private patchCertifications(certifications: CertificationEntry[]): void {
+    const certificationsArray = this.certifications;
+    certificationsArray.clear();
+
+    certifications.forEach((cert) => {
+      certificationsArray.push(
+        this.fb.nonNullable.group({
+          name: [cert.name ?? ''],
+          issuer: [cert.issuer ?? ''],
+          date: [cert.date ?? ''],
+          credentialId: [cert.credentialId ?? ''],
+          url: [cert.url ?? ''],
+        }),
+      );
+    });
+  }
+
+  private patchSpokenLanguages(languages: Record<string, string>): void {
+    const languagesArray = this.spokenLanguages;
+    languagesArray.clear();
+
+    Object.entries(languages).forEach(([name, level]) => {
+      languagesArray.push(
+        this.fb.nonNullable.group({
+          name: [name],
+          level: [level],
         }),
       );
     });
@@ -399,37 +446,44 @@ export class Profile {
           linkedin: parsedProfile.linkedin || '',
           github: parsedProfile.github || '',
           summary: parsedProfile.summary || '',
-          languages: this.convertLanguagesToRecord(parsedProfile.languages),
         });
+
+        // Patch languages
+        if (parsedProfile.languages?.length) {
+          const languagesRecord = this.convertLanguagesToRecord(parsedProfile.languages as any);
+          this.patchSpokenLanguages(languagesRecord);
+        }
+
+        // Patch certifications
+        if (parsedProfile.certifications?.length) {
+          this.patchCertifications(parsedProfile.certifications);
+        }
 
         // Patch experience
         if (parsedProfile.experience?.length) {
-          this.patchExperience(parsedProfile.experience);
+          this.patchExperience(parsedProfile.experience as ExperienceEntry[]);
         }
 
-        // Patch education
+        // Patch education - pass API format directly, patchEducation handles the mapping
         if (parsedProfile.education?.length) {
-          const educations = parsedProfile.education.map(edu => ({
+          this.patchEducation(parsedProfile.education.map(edu => ({
             degree: edu.degree,
-            institution: edu.school || edu.institution,
-            period: edu.year,
-            field: edu.coursework,
-            grade: '',
-            studyYear: null,
-          }));
-          this.patchEducation(educations);
+            school: edu.school,
+            institution: edu.institution,
+            year: edu.year,
+            coursework: edu.coursework,
+          })));
         }
 
-        // Patch projects
+        // Patch projects - pass API format directly, patchProjects handles the mapping
         if (parsedProfile.projects?.length) {
-          const projects = parsedProfile.projects.map(proj => ({
+          this.patchProjects(parsedProfile.projects.map(proj => ({
             name: proj.name,
             description: proj.description,
-            period: proj.year,
-            technologies: proj.tags || [],
+            year: proj.year,
+            tags: proj.tags || [],
             bullets: proj.bullets || [],
-          }));
-          this.patchProjects(projects);
+          })));
         }
 
         this.messageService.add({
@@ -460,6 +514,14 @@ export class Profile {
 
     const raw = this.profileForm.getRawValue();
 
+    // Convert spokenLanguages array to languages record
+    const languagesRecord: Record<string, string> = {};
+    (raw.spokenLanguages || []).forEach((lang: { name: string; level: string }) => {
+      if (lang.name) {
+        languagesRecord[lang.name] = lang.level || '';
+      }
+    });
+
     this.profileData = {
       firstName: raw.firstName,
       lastName: raw.lastName,
@@ -473,7 +535,15 @@ export class Profile {
       linkedin: raw.linkedin,
       github: raw.github,
 
-      languages: raw.languages,
+      languages: languagesRecord,
+
+      education: raw.education.map((edu: any) => ({
+        degree: edu.degree,
+        institution: edu.institution,
+        year: edu.period || '',
+        school: edu.institution,
+        coursework: edu.field,
+      })),
 
       experience: raw.experience.map((exp: any) => ({
         title: exp.title,
@@ -483,12 +553,21 @@ export class Profile {
         tags: exp.tags ?? [],
         bullets: exp.bullets ?? [],
       })),
+
       projects: raw.projects.map((proj: any) => ({
         name: proj.name,
         description: proj.description,
-        period: proj.period,
-        technologies: proj.technologies ?? [],
+        year: proj.period,
+        tags: proj.technologies ?? [],
         bullets: proj.bullets ?? [],
+      })),
+
+      certifications: raw.certifications.map((cert: any) => ({
+        name: cert.name,
+        issuer: cert.issuer,
+        date: cert.date,
+        credentialId: cert.credentialId,
+        url: cert.url,
       })),
     };
 

@@ -11,6 +11,7 @@ import { PanelModule } from 'primeng/panel';
 import { MeterGroupModule } from 'primeng/metergroup';
 import { ChartModule } from 'primeng/chart';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SkeletonModule } from 'primeng/skeleton';
 import { ResumeService } from '../../service/resume-service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -22,14 +23,17 @@ import { ApplicationInfoModal } from '../application-info-modal/application-info
 import { TranslocoModule } from '@jsverse/transloco';
 import { JobMatchingStats } from '../../shared/job-matching-stats/job-matching-stats';
 import { JobMatchingService } from '../../service/job-matching-service';
-import { JobMatchingResponse, MatchCategoryType, MatchRecommendation } from '../../models/interface/job-matching';
+import { JobMatchingResponse, MatchCategoryType, MatchRecommendation, MissingItem } from '../../models/interface/job-matching';
 import { Router } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { DialogModule } from 'primeng/dialog';
+import { DividerModule } from 'primeng/divider';
 
 
 @Component({
   selector: 'app-job-results',
   imports: [CardModule, ButtonModule, DrawerModule, JobAddressPipe, TagModule, PanelModule, MeterGroupModule, DatePipe,
-    ChartModule, CommonModule ,ProgressSpinnerModule, ToastModule, ChipModule,PaginatorModule, ApplicationInfoModal, TranslocoModule, JobMatchingStats],
+    ChartModule, CommonModule, ProgressSpinnerModule, SkeletonModule, ToastModule, ChipModule, PaginatorModule, ApplicationInfoModal, TranslocoModule, JobMatchingStats, DialogModule, DividerModule],
   providers: [MessageService],
   templateUrl: './job-results.html',
   styleUrl: './job-results.scss',
@@ -38,6 +42,8 @@ export class JobResults implements OnChanges {
   @Input({required:true}) resultsData!: Page<JobOffer>;
   @Input() selectedJobRef: string | null = null;
   @Input() sideFilterActive: boolean = false;
+  @Input() isAuthenticated: boolean = false;
+  @Input() isLoadingJobs: boolean = false;
   @Output() closeResults = new EventEmitter<void>();
   @Output() isjobDetailsOpen = new EventEmitter<boolean>();
   @Output() onPageChangeEvent = new EventEmitter<PaginatorState>();
@@ -47,6 +53,7 @@ export class JobResults implements OnChanges {
   selectedJob: JobOffer | null = null;
   gridView: boolean = false;
   private loadingJobRef: string | null = null;  // Track which job is being loaded
+  isLoadingJobDetails: boolean = false;
 
   visible: boolean = false;
 
@@ -57,16 +64,27 @@ export class JobResults implements OnChanges {
   matchingLoading: boolean = false;
   matchingError: string | null = null;
 
+  // Full report dialog
+  showFullReportDialog: boolean = false;
+  fullReportData: JobMatchingResponse | null = null;
+
   constructor(
     private jobService: JobService, 
     private resumeService: ResumeService, 
     private messageService: MessageService,
     private jobMatchingService: JobMatchingService,
-    private router: Router
+    private router: Router,
+    private keycloak: KeycloakService
   ) {}
 
   ngOnInit() {
     this.showApplicationModalFlag = false;
+  }
+
+  login(): void {
+    this.keycloak.login({
+      redirectUri: window.location.href
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -83,15 +101,20 @@ export class JobResults implements OnChanges {
 
   private loadJobFromRef(jobRef: string) {
     this.loadingJobRef = jobRef;
+    this.isLoadingJobDetails = true;
     this.jobService.getJobDetails(jobRef).subscribe({
       next: (data) => {
         this.selectedJob = data;
         this.visible = true;
         this.isjobDetailsOpen.emit(true);
-        this.loadJobMatching(jobRef);
+        this.isLoadingJobDetails = false;
+        if (this.isAuthenticated) {
+          this.loadJobMatching(jobRef);
+        }
       },
       error: (err) => {
         console.log('Failed to load job from URL:', err);
+        this.isLoadingJobDetails = false;
       }
     });
   }
@@ -151,22 +174,110 @@ export class JobResults implements OnChanges {
     console.log('Recommendation clicked:', recommendation);
   }
 
+  onViewFullReport(report: JobMatchingResponse): void {
+    this.fullReportData = report;
+    this.showFullReportDialog = true;
+  }
+
+  getScoreClass(score: number): string {
+    if (score >= 75) return 'text-green-400';
+    if (score >= 30) return 'text-yellow-400';
+    return 'text-red-400';
+  }
+
+  getScoreBgClass(score: number): string {
+    if (score >= 75) return 'bg-green-900/30';
+    if (score >= 30) return 'bg-yellow-900/30';
+    return 'bg-red-900/30';
+  }
+
+  getImpactSeverity(impact: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' {
+    switch (impact) {
+      case 'high': return 'danger';
+      case 'medium': return 'warn';
+      case 'low': return 'info';
+      default: return 'secondary';
+    }
+  }
+
+  getImportanceSeverity(importance: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' {
+    switch (importance) {
+      case 'required': return 'danger';
+      case 'preferred': return 'warn';
+      case 'nice-to-have': return 'info';
+      default: return 'secondary';
+    }
+  }
+
+  getAllMissingItems(): MissingItem[] {
+    if (!this.fullReportData) return [];
+    return this.fullReportData.matchCategories
+      .flatMap(cat => cat.missingItems)
+      .sort((a, b) => {
+        const order = { 'required': 0, 'preferred': 1, 'nice-to-have': 2 };
+        return (order[a.importance] ?? 3) - (order[b.importance] ?? 3);
+      });
+  }
+
 
   getSelectedJob(): JobOffer | null {
     return this.selectedJob ? this.selectedJob : null;
   }
 
+  async shareJob(job: JobOffer): Promise<void> {
+    const shareUrl = `${window.location.origin}/jobs/${job.reference}`;
+    const shareData = {
+      title: job.title,
+      text: `Check out this job: ${job.title}${job.company ? ' at ' + job.company : ''}`,
+      url: shareUrl
+    };
+
+    // Try Web Share API first (mobile and some desktop browsers)
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch (err) {
+        // User cancelled or error - fall back to clipboard
+        if ((err as Error).name === 'AbortError') return;
+      }
+    }
+
+    // Fallback: copy link to clipboard
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Link Copied',
+        detail: 'Job link copied to clipboard',
+        life: 3000
+      });
+    } catch (err) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to copy link',
+        life: 3000
+      });
+    }
+  }
+
   showJobDetails(reference: string) {
     this.loadingJobRef = reference;  // Mark as loading to prevent duplicate from ngOnChanges
+    this.isLoadingJobDetails = true;
     this.emitJobDetailEvent(true);
     this.onJobSelected.emit(reference);
     this.jobService.getJobDetails(reference)
       .subscribe({
         next: (data) => {
           this.selectedJob = data;
-          this.loadJobMatching(reference);
+          this.isLoadingJobDetails = false;
+          if (this.isAuthenticated) {
+            this.loadJobMatching(reference);
+          }
         }, error: (err) => {
-          console.log(err)
+          console.log(err);
+          this.isLoadingJobDetails = false;
         }
       })
   }

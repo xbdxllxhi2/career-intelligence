@@ -21,6 +21,7 @@ class UserProfile(BaseEntity):
     summary = Column(Text)
 
     languages = Column(JSON, default=dict)
+    certifications = Column(JSON, default=list)
     extra_curricular = Column(JSON, default=list)
 
     education = relationship(

@@ -45,6 +45,13 @@ def get_job_matching_prompt() -> str:
 - **preferred**: Nice to have, gives advantage but not mandatory
 - **nice-to-have**: Optional, bonus points
 
+## Recommendation Action Types (MUST use exactly one of these values):
+- **add_skill**: For acquiring new technical skills, tools, or frameworks
+- **update_experience**: For gaining more experience, taking on new projects, or expanding role responsibilities
+- **add_certification**: For obtaining relevant certifications
+- **update_education**: For completing or pursuing educational qualifications
+- **improve_profile**: For general profile improvements, portfolio updates, or location-related changes
+
 ## Dynamic Weight Calculation:
 Distribute weights proportionally among the included categories. Example:
 - If only skills and experience are relevant: skills=0.55, experience=0.45
@@ -57,7 +64,8 @@ Distribute weights proportionally among the included categories. Example:
 - Provide practical suggestions for missing items
 - Calculate overall_score as weighted average of included category scores
 - Include the current timestamp in ISO format for calculated_at
-- Ensure all scores are integers between 0 and 100"""
+- Ensure all scores are integers between 0 and 100
+- **CRITICAL: actionType in recommendations MUST be exactly one of: add_skill, update_experience, add_certification, update_education, improve_profile. Do NOT use any other values like "add_experience" or "location".**"""
 
 
 def get_job_matching_user_prompt(job_description: str, user_profile: str, job_reference: str) -> str:

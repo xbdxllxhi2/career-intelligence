@@ -33,7 +33,7 @@ class ParsedEducation(BaseModel):
     degree: str = ""
     school: Optional[str] = None
     institution: Optional[str] = None
-    year: str = ""
+    year: Optional[str] = None
     coursework: Optional[str] = None
 
 
@@ -55,6 +55,14 @@ class ParsedProject(BaseModel):
     bullets: List[str] = Field(default_factory=list)
 
 
+class ParsedCertification(BaseModel):
+    name: str = ""
+    issuer: Optional[str] = None
+    date: Optional[str] = None
+    credentialId: Optional[str] = None
+    url: Optional[str] = None
+
+
 class ParsedProfile(BaseModel):
     """Structured output for parsed resume data"""
     firstName: Optional[str] = None
@@ -69,6 +77,7 @@ class ParsedProfile(BaseModel):
     education: List[ParsedEducation] = Field(default_factory=list)
     experience: List[ParsedExperience] = Field(default_factory=list)
     projects: List[ParsedProject] = Field(default_factory=list)
+    certifications: List[ParsedCertification] = Field(default_factory=list)
     languages: List[ParsedLanguage] = Field(default_factory=list)
 
 
@@ -81,6 +90,7 @@ Be thorough and extract:
 - Work experience: job title, company name, dates/period, location, key achievements (as bullet points), relevant technologies/skills used (as tags)
 - Education: degree, institution/school, graduation year, relevant coursework
 - Projects: project name, description, technologies used (as tags), key points (as bullets)
+- Certifications: certification name, issuing organization, date, credential ID, URL
 - Languages: language name and proficiency level as objects with "name" and "proficiency" fields (e.g., [{"name": "English", "proficiency": "Native"}, {"name": "French", "proficiency": "B2"}])
 
 For experience and projects, extract specific achievements and technologies mentioned.

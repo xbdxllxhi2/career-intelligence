@@ -102,6 +102,7 @@
     "active": "Active",
     "jobTitle": "Job title or keywords",
     "descriptionContains": "Description contains",
+    "educationLevel": "Education Level",
     "location": "Location",
     "country": "Country",
     "region": "Region / State",
@@ -135,6 +136,9 @@
     "noResults": "No jobs found",
     "noResultsDescription": "Try adjusting your filters or search terms",
     "share": "Share",
+    "linkCopied": "Link Copied",
+    "linkCopiedDesc": "Job link copied to clipboard",
+    "shareFailed": "Failed to copy link",
     "save": "Save",
     "close": "Close",
     "view": "View",
@@ -284,6 +288,7 @@
     "required": "Required",
     "preferred": "Preferred",
     "nice-to-have": "Nice to Have",
+    "noMissingItems": "Great! You meet all the requirements",
     "yourProfile": "Your Profile",
     "jobRequires": "Job Requires",
     "jobRequirements": "Job Requirements",
@@ -301,7 +306,8 @@
     "noMatch": "No Match",
     "greatFit": "Great Fit!",
     "greatFitDescription": "You're an excellent match for this position. Your profile strongly aligns with the job requirements.",
-    "matchScore": "Match Score"
+    "matchScore": "Match Score",
+    "yourMatchScore": "Your Match Score"
   },
   "assistant": {
     "title": "Career Assistant",
@@ -327,7 +333,13 @@
     },
     "signInTitle": "Career Assistant",
     "signInSubtitle": "Sign in to access your AI-powered career coach. Get personalized guidance on resumes, interviews, skills, and career planning.",
-    "signInButton": "Sign in to continue"
+    "signInButton": "Sign in to continue",
+    "betaBadge": "Coming Soon",
+    "comingSoonTitle": "Career Assistant",
+    "comingSoonDescription": "We're building an AI-powered career assistant to help you with job applications, interviews, and career planning. Stay tuned!",
+    "featureChat": "AI Chat",
+    "featureAgents": "Smart Agents",
+    "featureCvGenerator": "CV Generator"
   },
   "settings": {
     "title": "Settings",
