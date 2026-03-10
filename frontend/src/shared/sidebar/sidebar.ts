@@ -8,9 +8,19 @@ import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { TranslocoService, TranslocoModule } from '@jsverse/transloco';
 import { MenuModule } from 'primeng/menu';
+import { PopoverModule } from 'primeng/popover';
 import { KeycloakService } from 'keycloak-angular';
 import { environment } from '../../environments/environments';
 import { MenuItem } from 'primeng/api';
+
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  time: Date;
+  read: boolean;
+  type: 'info' | 'success' | 'warning' | 'error';
+}
 
 interface Language {
   code: string;
@@ -20,7 +30,7 @@ interface Language {
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, DrawerModule, ButtonModule, BadgeModule, RouterLink, RouterLinkActive, SelectModule, FormsModule, TranslocoModule, MenuModule],
+  imports: [CommonModule, DrawerModule, ButtonModule, BadgeModule, RouterLink, RouterLinkActive, SelectModule, FormsModule, TranslocoModule, MenuModule, PopoverModule],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })
@@ -34,6 +44,8 @@ export class Sidebar implements OnInit {
   userInitials = '';
 
   userMenuItems: MenuItem[] = [];
+
+  notifications: Notification[] = [];
 
   languages: Language[] = [
     { code: 'en', name: 'English', flag: '🇬🇧' },
