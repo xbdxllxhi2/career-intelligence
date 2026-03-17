@@ -47,7 +47,7 @@ with DAG(
     "job_pipelineV4",
     start_date=datetime(2025,12,26),
     schedule="@daily"
-):
+) as dag:
     scrape = PythonOperator(
         task_id="scrape",
         python_callable=scrape_and_save_jobs,
