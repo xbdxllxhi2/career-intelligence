@@ -1,5 +1,7 @@
 from airflow import DAG
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.python import PythonOperator
+# from airflow.operators.python import PythonOperator
+from airflow.sdk import Variable
 from datetime import datetime
 from repositories.write_data_to_db_repo import export_to_postgres
 from scrapers.linkedin_scraper import fetch_and_save
@@ -19,9 +21,7 @@ def record_scores():
     return "/opt/airflow/output/jobs/jobs.json"
 
 
-
-
-TITLE_FITER = '''"Stage Data" 
+DEFAULT_TITLE_FILTER = '''"Stage Data" 
 OR "Stage Data Engineer"
 OR "Stage Data Engineering"
 OR "Stage DATA"
@@ -42,6 +42,9 @@ OR "Stage Data Analytics"
 OR "Stage Data Visualization"
 OR "Stage Ingénierie logicielle"
 '''
+
+
+TITLE_FITER = Variable.get("JOB_TITLE_FILTER", DEFAULT_TITLE_FILTER) 
 # scrape >> transform >> export
 with DAG(
     "job_pipelineV4",
