@@ -57,12 +57,12 @@ x-airflow-common:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
     AIRFLOW__CORE__AUTH_MANAGER: airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
-    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB}
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB}
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: ${AIRFLOW__CORE__LOAD_EXAMPLES:-'false'}
     AIRFLOW__CORE__EXECUTION_API_SERVER_URL: 'http://airflow-apiserver:8080/execution/'
     # yamllint disable rule:line-length
     # Use simple http server on scheduler for health checks
@@ -79,7 +79,10 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+    - ${AIRFLOW_PROJ_DIR:-.}/output:/opt/airflow/output
   user: "${AIRFLOW_UID:-50000}:0"
+  networks:
+    - airflow-local-net
   depends_on:
     &airflow-common-depends-on
     redis:
@@ -89,15 +92,17 @@ x-airflow-common:
 
 services:
   postgres:
-    image: postgres:15
+    image: postgres:16
     environment:
-      POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
-      POSTGRES_DB: airflow
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres-db-volume:/var/lib/postgresql/data
+    networks:
+      - airflow-local-net
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "airflow"]
+      test: ["CMD", "pg_isready", "-U", "$${POSTGRES_USER}", "-d $${POSTGRES_DB}"]
       interval: 10s
       retries: 5
       start_period: 5s
@@ -109,6 +114,8 @@ services:
     image: redis:7.2-bookworm
     expose:
       - 6379
+    networks:
+      - airflow-local-net
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -129,6 +136,9 @@ services:
       retries: 5
       start_period: 30s
     restart: always
+    networks:
+      - airflow-local-net
+      - nginx-net
     depends_on:
       <<: *airflow-common-depends-on
       airflow-init:
@@ -159,6 +169,8 @@ services:
       retries: 5
       start_period: 30s
     restart: always
+    networks:
+      - airflow-local-net
     depends_on:
       <<: *airflow-common-depends-on
       airflow-init:
@@ -182,6 +194,8 @@ services:
       # See https://airflow.apache.org/docs/docker-stack/entrypoint.html#signal-propagation
       DUMB_INIT_SETSID: "0"
     restart: always
+    networks:
+      - airflow-local-net
     depends_on:
       <<: *airflow-common-depends-on
       airflow-apiserver:
@@ -199,6 +213,8 @@ services:
       retries: 5
       start_period: 30s
     restart: always
+    networks:
+      - airflow-local-net
     depends_on:
       <<: *airflow-common-depends-on
       airflow-init:
@@ -291,10 +307,12 @@ services:
       <<: *airflow-common-env
       _AIRFLOW_DB_MIGRATE: 'true'
       _AIRFLOW_WWW_USER_CREATE: 'true'
-      _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
-      _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
+      _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME}
+      _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD}
       _PIP_ADDITIONAL_REQUIREMENTS: ''
     user: "0:0"
+    networks:
+      - airflow-local-net
 
   airflow-cli:
     <<: *airflow-common
@@ -308,6 +326,8 @@ services:
       - bash
       - -c
       - airflow
+    networks:
+      - airflow-local-net
     depends_on:
       <<: *airflow-common-depends-on
 
@@ -342,95 +362,20 @@ services:
       POSTGRES_DB: jobsdb
     ports:
       - "5433:5432"
+    networks:
+      - careerintel-net
+      - airflow-local-net
     volumes:
       - main_sql_storage-volume:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
+networks:
+  nginx-net:
+    external: true
+  airflow-local-net:
+  careerintel-net:
+    external: true
+
 volumes:
   postgres-db-volume:
   main_sql_storage-volume:
-
-
-# x-airflow-env: &airflow-env
-#   AIRFLOW__CORE__EXECUTOR: LocalExecutor
-#   AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'false'
-#   AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
-
-# services:
-#   postgres:
-#     image: postgres:15
-#     environment:
-#       POSTGRES_USER: airflow
-#       POSTGRES_PASSWORD: airflow
-#       POSTGRES_DB: airflow
-#     volumes:
-#       - postgres-db-volume:/var/lib/postgresql/data
-#     healthcheck:
-#       test: ["CMD", "pg_isready", "-U", "airflow"]
-#       interval: 5s
-#       retries: 5
-
-  # airflow-webserver:
-    # image: apache/airflow:2.10.2
-    # depends_on:
-    #   postgres:
-    #     condition: service_healthy
-    # environment:
-    #   <<: *airflow-env
-    #   AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
-    # ports:
-    #   - "8080:8080"
-    # volumes:
-    #   - ./dags:/opt/airflow/dags
-    #   - ./logs:/opt/airflow/logs
-    #   - ./plugins:/opt/airflow/plugins
-    #   - ./output:/opt/airflow/output
-    #   - ./input:/opt/airflow/input
-    #   - ./requirements.txt:/requirements.txt
-    # command: webserver
-
-  # airflow-scheduler:
-  #   image: apache/airflow:2.10.2
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   environment:
-  #     <<: *airflow-env
-  #     AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
-  #   volumes:
-  #     - ./dags:/opt/airflow/dags
-  #     - ./logs:/opt/airflow/logs
-  #     - ./plugins:/opt/airflow/plugins
-  #     - ./output:/opt/airflow/output
-  #     - ./input:/opt/airflow/input
-  #     - ./requirements.txt:/requirements.txt
-  #   command: scheduler
-
-  # airflow-triggerer:
-  #   image: apache/airflow:2.10.2
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   environment:
-  #     <<: *airflow-env
-  #     AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
-  #   volumes:
-  #     - ./dags:/opt/airflow/dags
-  #     - ./logs:/opt/airflow/logs
-  #     - ./plugins:/opt/airflow/plugins
-  #   command: triggerer
-
- 
-  # flower:
-  #   image: apache/airflow:2.10.2
-  #   ports:
-  #     - "5555:5555"
-  #   environment:
-  #     <<: *airflow-env
-  #   command: flower
-
-
-
-# volumes:
-#   main_sql_storage-volume:
-#   postgres-db-volume:
