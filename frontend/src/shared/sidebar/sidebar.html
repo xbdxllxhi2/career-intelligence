@@ -72,59 +72,6 @@
       </ng-template>
     </p-select>
 
-    <!-- Notification Bell (only when authenticated) -->
-    @if (isAuthenticated) {
-    <button 
-      (click)="notificationPanel.toggle($event)"
-      class="relative p-2 rounded-lg bg-neutral-800/50 hover:bg-neutral-700/50 transition-colors">
-      <i class="pi pi-bell text-sm text-neutral-400 hover:text-white"></i>
-      @if (notifications.length > 0) {
-        <span class="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-rose-500 flex items-center justify-center text-[9px] font-medium text-white">
-          {{ notifications.length }}
-        </span>
-      }
-    </button>
-    
-    <p-popover #notificationPanel styleClass="!bg-neutral-900/95 !backdrop-blur-xl !border-neutral-800 !rounded-xl !shadow-none">
-      <div class="w-64">
-        <div class="flex items-center justify-between px-3 py-2 border-b border-neutral-800">
-          <span class="text-sm font-medium text-white">{{ 'notifications.title' | transloco }}</span>
-          @if (notifications.length > 0) {
-            <button class="text-[10px] text-neutral-400 hover:text-white">{{ 'notifications.markAllRead' | transloco }}</button>
-          }
-        </div>
-        <div class="max-h-64 overflow-y-auto">
-          @if (notifications.length === 0) {
-            <div class="py-6 px-3 text-center">
-              <i class="pi pi-inbox text-2xl text-neutral-700 mb-2"></i>
-              <p class="text-xs text-neutral-500">{{ 'notifications.empty' | transloco }}</p>
-            </div>
-          } @else {
-            @for (notification of notifications; track notification.id) {
-              <div class="px-3 py-2 hover:bg-neutral-800/50 cursor-pointer transition-colors border-b border-neutral-800/50 last:border-0"
-                   [class.bg-neutral-800/30]="!notification.read">
-                <div class="flex items-start gap-2">
-                  <i class="pi text-xs mt-0.5" [ngClass]="{
-                    'pi-info-circle text-blue-400': notification.type === 'info',
-                    'pi-check-circle text-green-400': notification.type === 'success',
-                    'pi-exclamation-triangle text-yellow-400': notification.type === 'warning',
-                    'pi-times-circle text-red-400': notification.type === 'error'
-                  }"></i>
-                  <div class="flex-1 min-w-0">
-                    <p class="text-xs font-medium text-white truncate">{{ notification.title }}</p>
-                    <p class="text-[10px] text-neutral-500 mt-0.5 line-clamp-1">{{ notification.message }}</p>
-                  </div>
-                </div>
-              </div>
-            }
-          }
-        </div>
-      </div>
-    </p-popover>
-
-    <!-- Divider -->
-    <div class="h-8 w-px bg-neutral-800"></div>
-    }
 
     <!-- User Profile with Dropdown -->
     @if (isAuthenticated) {
