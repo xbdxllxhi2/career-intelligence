@@ -80,10 +80,10 @@ export class JobMatchingStats implements OnChanges {
   overallScore: number = 0;
 
   // View mode toggle
-  viewMode: ViewMode = 'meter';
+  viewMode: ViewMode = 'radar';
   viewModeOptions = [
-    { label: 'Meter', value: 'meter', icon: 'pi pi-chart-bar' },
-    { label: 'Radar', value: 'radar', icon: 'pi pi-chart-pie' }
+    { label: 'Radar', value: 'radar', icon: 'pi pi-chart-pie' },
+    { label: 'Meter', value: 'meter', icon: 'pi pi-chart-bar' }
 ];
 
   // Radar chart data

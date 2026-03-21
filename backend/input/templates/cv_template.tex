@@ -32,9 +32,9 @@
 
 \address{ {{phone}} | {{ city }}}
 \address{
-        \href{mailto:{{email}}}{ {{ email}} } |
-        \href{ {{ linkedin }} }{Linkedin} |
-        \href{ {{ github }} }{Github}}
+  \href{mailto:{{ email_href }} }{ {{ email }} } |
+  \href{ {{ linkedin_href }} }{Linkedin} |
+  \href{ {{ github_href }} }{Github}}
 
 
 
@@ -89,8 +89,19 @@ Tools & {{ skills.tools | join(', ') }} \\
 \begin{rSection}{Langues \& Certifications}
 \begin{tabular}{ @{} p{0.45\textwidth}  p{6\textwidth} }
 \textbf{Langues} & \textbf{Certifications} \\
-Français: Niveau C1 & Banking and Financial Institutions - University of Illinois \\
-English: TOEFL Advanced B2 & AWS Cloud Practitioner \\
+{% set language_rows = languages if languages else [] %}
+{% set certification_rows = certifications if certifications else [] %}
+{% set total_rows = [language_rows|length, certification_rows|length] | max %}
+{% if total_rows == 0 %}
+ & \\
+{% else %}
+{% for row_index in range(total_rows) %}
+{% set language = language_rows[row_index] if row_index < language_rows|length else None %}
+{% set certification = certification_rows[row_index] if row_index < certification_rows|length else None %}
+{% if language %}{{ language.name }}{% if language.level %}: {{ language.level }}{% endif %}{% endif %} &
+{% if certification %}{{ certification.name }}{% if certification.issuer %} - {{ certification.issuer }}{% endif %}{% endif %} \\
+{% endfor %}
+{% endif %}
 \end{tabular}
 \end{rSection}
 

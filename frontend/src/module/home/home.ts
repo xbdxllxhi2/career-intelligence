@@ -1,6 +1,7 @@
 import { Component, afterNextRender, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 // PrimeNG Components
 import { ButtonModule } from 'primeng/button';
@@ -37,6 +38,7 @@ interface Feature {
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule,
     ButtonModule,
     CardModule,
     TagModule,

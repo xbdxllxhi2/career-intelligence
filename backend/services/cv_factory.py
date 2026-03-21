@@ -21,7 +21,7 @@ def load_data():
 
 def _render_template(tex_file_name,context):
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
-    template = env.get_template("cv_template.tex")
+    template = env.get_template("resume-template-2.tex")
     rendered = template.render(context)
 
     Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)

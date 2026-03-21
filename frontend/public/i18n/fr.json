@@ -20,9 +20,9 @@
       "title": "Sachez où vous en êtes.",
       "titleHighlight": "Sachez où vous allez.",
       "subtitle": "La plateforme d'intelligence carrière qui vous montre où va le marché, quelles compétences montent, et comment garder une longueur d'avance. Arrêtez de réagir. Pilotez votre carrière.",
-      "startMatching": "Explorer les insights",
+      "startMatching": "Commencer",
       "watchDemo": "Voir en action",
-      "matchedThisWeek": "insights livrés cette semaine"
+      "matchedThisWeek": "professionnels ont rejoint cette semaine"
     },
     "stats": {
       "activePositions": "Signaux marché suivis",
@@ -67,7 +67,7 @@
       "headlineHighlight": "votre carrière",
       "description": "Rejoignez des milliers de professionnels qui ont arrêté de deviner et commencé à strategiser. Votre intelligence carrière vous attend.",
       "emailPlaceholder": "Entrez votre email",
-      "getStarted": "Obtenir mes insights",
+      "getStarted": "Commencer gratuitement",
       "freeForever": "Gratuit pour toujours pour l'intelligence de base",
       "trustedBy": "Fait confiance par des professionnels de"
     },
@@ -141,9 +141,11 @@
     "shareFailed": "Échec de la copie du lien",
     "save": "Sauvegarder",
     "close": "Fermer",
+    "backToList": "Retour",
     "view": "Affichage",
     "generateCV": "Générer CV",
     "aboutJob": "À propos du poste",
+    "aboutCompany": "À propos de l'entreprise",
     "skillsMatch": "Correspondance des compétences",
     "alreadyApplied": "Déjà postulé",
     "overall": "Global",
@@ -155,6 +157,7 @@
     "subtitle": "Suivez et gérez vos candidatures",
     "total": "Total",
     "sortBy": "Trier par",
+    "searchPlaceholder": "Rechercher par titre, entreprise ou lieu...",
     "dateApplied": "Date de candidature",
     "status": "Statut",
     "company": "Entreprise",
@@ -243,6 +246,7 @@
     "view": "Voir",
     "close": "Fermer",
     "confirm": "Confirmer",
+    "tapToExpand": "Appuyez pour développer",
     "back": "Retour",
     "next": "Suivant",
     "previous": "Précédent",

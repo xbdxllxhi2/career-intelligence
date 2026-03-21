@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { TextareaModule } from 'primeng/textarea';
 import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
@@ -41,6 +41,7 @@ export class JobFinder implements OnInit {
   selectedJobRef: string | null = null;
   isAuthenticated = false;
   isLoadingJobs = false;
+  isMobile = false;
 
   pageRequest: PageRequest;
   resultsData: Page<JobOffer>;
@@ -63,6 +64,7 @@ export class JobFinder implements OnInit {
 
   ngOnInit() {
     this.isAuthenticated = environment.keycloak.enabled ? this.keycloak.isLoggedIn() : true;
+    this.checkScreenSize();
 
     // Subscribe to query params to handle job reference from URL
     this.route.queryParams.subscribe(params => {
@@ -78,6 +80,19 @@ export class JobFinder implements OnInit {
     this.getJobOffers(this.pageRequest);
   }
 
+  @HostListener('window:resize')
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  private checkScreenSize() {
+    this.isMobile = window.innerWidth < 768;
+    // On mobile, always use compact filter bar (not side layout)
+    if (this.isMobile) {
+      this.filterSideLayout = false;
+    }
+  }
+
   login(): void {
     this.keycloak.login({
       redirectUri: window.location.origin + '/jobs'
@@ -89,7 +104,8 @@ export class JobFinder implements OnInit {
   }
 
   onJobDetailsOpen(isOpen: boolean) {
-    this.filterSideLayout = !isOpen;
+    // On mobile, never show side filter
+    this.filterSideLayout = this.isMobile ? false : !isOpen;
     if (!isOpen) {
       // Remove job param from URL when closing details
       this.router.navigate([], {
