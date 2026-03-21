@@ -4,7 +4,7 @@
 <div class="h-full w-full bg-neutral-900 flex flex-col overflow-hidden">
   <!-- Header -->
   <div class="flex-shrink-0 px-6 py-5 border-b border-neutral-800">
-    <div class="max-w-5xl mx-auto flex items-center justify-between">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
       <h1 class="text-xl font-medium text-white">Profile</h1>
       <div class="flex gap-2">
         <button pButton severity="secondary" class="px-4 py-2 text-sm">
@@ -21,7 +21,7 @@
 
   <!-- Content -->
   <div class="flex-1 overflow-y-auto">
-    <div class="max-w-5xl mx-auto px-6 py-8">      <!-- Loading State -->
+    <div class="max-w-6xl mx-auto px-6 py-10">      <!-- Loading State -->
       @if (isLoadingProfile) {
         <div class="space-y-8">
           <!-- CV Upload Skeleton -->
@@ -125,9 +125,9 @@
         }
       </div>
 
-      <form [formGroup]="profileForm" (ngSubmit)="submitProfileFrom()" class="p-6 border border-neutral-700/50 rounded-xl bg-neutral-800/20">
+      <form [formGroup]="profileForm" (ngSubmit)="submitProfileFrom()" class="p-8 border border-neutral-700/50 rounded-xl bg-neutral-800/20">
         <!-- Personal Info -->
-        <section class="mb-8 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
+        <section class="mb-10 p-6 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
           <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide mb-4">Personal Information</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -170,7 +170,7 @@
         </section>
 
         <!-- Links -->
-        <section class="mb-8 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
+        <section class="mb-10 p-6 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
           <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide mb-4">Links</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -213,7 +213,7 @@
         </section>
 
         <!-- Education -->
-        <section class="mb-8 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
+        <section class="mb-10 p-6 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Education</h2>
             <button 
@@ -329,7 +329,7 @@
         </section>
 
         <!-- Experience -->
-        <section class="mb-8 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
+        <section class="mb-10 p-6 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Experience</h2>
             <button 
@@ -471,7 +471,7 @@
         </section>
 
         <!-- Projects -->
-        <section class="mb-8 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
+        <section class="mb-10 p-6 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Projects</h2>
             <button 
@@ -561,7 +561,7 @@
         </section>
 
         <!-- Certifications -->
-        <section class="mb-8 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
+        <section class="mb-10 p-6 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Certifications</h2>
             <button 
@@ -666,7 +666,7 @@
         </section>
 
         <!-- Languages -->
-        <section class="mb-8 p-5 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
+        <section class="mb-10 p-6 border border-neutral-700/50 rounded-xl bg-neutral-800/30">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-sm font-medium text-neutral-400 uppercase tracking-wide">Languages</h2>
             <button 
