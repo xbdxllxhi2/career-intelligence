@@ -203,8 +203,143 @@
   class="w-full bg-gradient-to-r from-neutral-900 via-neutral-900/95 to-neutral-900 backdrop-blur-md border-b border-neutral-700/50 sticky top-0 z-30"
   [class.hidden]="sideFilterActive"
 >
-  <!-- Main Filter Row -->
-  <div class="flex items-center gap-2 px-4 py-2.5">
+  <!-- Mobile Filter Bar -->
+  <div class="md:hidden">
+    <div class="flex items-center gap-2 px-3 py-2">
+      <!-- Results Count -->
+      <span class="text-sm font-medium whitespace-nowrap">
+        <span class="text-emerald-400">{{ totalSearchResults | number }}</span>
+        <span class="text-neutral-400 ml-1">{{ 'jobs.jobs' | transloco }}</span>
+      </span>
+
+      <!-- Search Input -->
+      <div class="flex-1 min-w-0">
+        <p-iconfield class="w-full">
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            pInputText
+            class="w-full text-sm"
+            [placeholder]="'jobs.searchPlaceholder' | transloco"
+            [(ngModel)]="filters.title_contains"
+            (keydown.enter)="emitSearchEvent()"
+          />
+        </p-iconfield>
+      </div>
+
+      <!-- Filter Button -->
+      <p-button
+        icon="pi pi-sliders-h"
+        [badge]="getActiveFilterCount() > 0 ? getActiveFilterCount().toString() : ''"
+        badgeSeverity="danger"
+        severity="secondary"
+        [outlined]="true"
+        size="small"
+        (onClick)="mobileFiltersVisible = !mobileFiltersVisible"
+      />
+
+      <!-- Search Button -->
+      <p-button
+        icon="pi pi-search"
+        size="small"
+        styleClass="bg-emerald-600 hover:bg-emerald-500 border-emerald-600"
+        (onClick)="emitSearchEvent()"
+      />
+    </div>
+
+    <!-- Mobile Expandable Filters -->
+    @if (mobileFiltersVisible) {
+      <div class="px-3 pb-3 space-y-3 border-t border-neutral-800 pt-3">
+        <!-- Location Row -->
+        <div class="flex gap-2">
+          <p-select
+            [options]="countryOptions()"
+            [(ngModel)]="selectedCountry"
+            optionLabel="label"
+            [filter]="true"
+            [showClear]="true"
+            [placeholder]="'jobs.country' | transloco"
+            styleClass="flex-1 text-sm"
+            appendTo="body"
+          />
+          <p-autoComplete
+            [(ngModel)]="selectedCity"
+            [suggestions]="filteredCities()"
+            (completeMethod)="filterCities($event)"
+            field="label"
+            [dropdown]="true"
+            [showClear]="true"
+            [placeholder]="'jobs.city' | transloco"
+            styleClass="flex-1 text-sm"
+            appendTo="body"
+          />
+        </div>
+
+        <!-- Experience & Source Row -->
+        <div class="flex gap-2">
+          <p-select
+            [options]="seniorityOptions()"
+            [(ngModel)]="selectedSeniority"
+            optionLabel="label"
+            [showClear]="true"
+            [placeholder]="'jobs.experience' | transloco"
+            styleClass="flex-1 text-sm"
+            appendTo="body"
+          />
+          <p-select
+            [options]="sourceOptions()"
+            [(ngModel)]="selectedSource"
+            optionLabel="label"
+            [showClear]="true"
+            [placeholder]="'jobs.source' | transloco"
+            styleClass="flex-1 text-sm"
+            appendTo="body"
+          />
+        </div>
+
+        <!-- Toggle Chips Row -->
+        <div class="flex gap-2">
+          <div
+            class="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all border text-sm"
+            [ngClass]="hasEasyApply ? 'bg-yellow-500/20 border-yellow-500/50 text-yellow-300' : 'bg-neutral-800/50 border-neutral-700 text-neutral-400'"
+            (click)="hasEasyApply = !hasEasyApply"
+          >
+            <i class="pi pi-bolt" [ngClass]="hasEasyApply ? 'text-yellow-400' : 'text-neutral-500'"></i>
+            <span class="text-xs">{{ 'jobs.easyApply' | transloco }}</span>
+          </div>
+          <div
+            class="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all border text-sm"
+            [ngClass]="includeExpired ? 'bg-neutral-600/30 border-neutral-500/50 text-neutral-300' : 'bg-neutral-800/50 border-neutral-700 text-neutral-400'"
+            (click)="includeExpired = !includeExpired"
+          >
+            <i class="pi pi-history" [ngClass]="includeExpired ? 'text-neutral-300' : 'text-neutral-500'"></i>
+            <span class="text-xs">{{ 'jobs.expired' | transloco }}</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-2">
+          <p-button
+            [label]="'jobs.searchJobs' | transloco"
+            icon="pi pi-search"
+            styleClass="flex-1 bg-emerald-600 hover:bg-emerald-500 border-emerald-600"
+            (onClick)="emitSearchEvent(); mobileFiltersVisible = false"
+          />
+          @if (getActiveFilterCount() > 0) {
+            <p-button
+              icon="pi pi-filter-slash"
+              severity="secondary"
+              [outlined]="true"
+              (onClick)="clearFilters()"
+            />
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Desktop Filter Row -->
+  <div class="hidden md:block">
+    <div class="flex items-center gap-2 px-4 py-2.5">
     <!-- Results Count -->
     <span class="text-sm font-medium whitespace-nowrap">
       <span class="text-emerald-400">{{ totalSearchResults | number }}</span>
@@ -357,9 +492,9 @@
     </div>
   </div>
 
-  <!-- Active Filters Pills (show only when filters are active) -->
+  <!-- Active Filters Pills (show only when filters are active) - Desktop only -->
   @if (getActiveFilterCount() > 0) {
-    <div class="flex items-center gap-2 px-4 pb-2.5 pt-0 overflow-x-auto">
+    <div class="hidden md:flex items-center gap-2 px-4 pb-2.5 pt-0 overflow-x-auto">
       <span class="text-xs text-neutral-500">{{ 'jobs.active' | transloco }}:</span>
       @if (filters.title_contains) {
         <p-chip

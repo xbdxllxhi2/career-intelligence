@@ -20,9 +20,9 @@
       "title": "Know where you stand.",
       "titleHighlight": "Know where you're going.",
       "subtitle": "The career intelligence platform that shows you where the market is heading, what skills are rising, and how to stay ahead. Stop reacting. Start leading your career.",
-      "startMatching": "Explore Insights",
+      "startMatching": "Get Started",
       "watchDemo": "See It in Action",
-      "matchedThisWeek": "insights delivered this week"
+      "matchedThisWeek": "professionals joined this week"
     },
     "stats": {
       "activePositions": "Market Signals Tracked",
@@ -67,7 +67,7 @@
       "headlineHighlight": "your career",
       "description": "Join thousands of professionals who stopped guessing and started strategizing. Your career intelligence awaits.",
       "emailPlaceholder": "Enter your email",
-      "getStarted": "Get My Insights",
+      "getStarted": "Start Free",
       "freeForever": "Free forever for core intelligence",
       "trustedBy": "Trusted by professionals from"
     },
@@ -141,9 +141,11 @@
     "shareFailed": "Failed to copy link",
     "save": "Save",
     "close": "Close",
+    "backToList": "Back",
     "view": "View",
     "generateCV": "Generate CV",
     "aboutJob": "About the Job",
+    "aboutCompany": "About the Company",
     "skillsMatch": "Skills Match",
     "alreadyApplied": "Already applied",
     "overall": "Overall",
@@ -155,6 +157,7 @@
     "subtitle": "Track and manage your job applications",
     "total": "Total",
     "sortBy": "Sort by",
+    "searchPlaceholder": "Search by job title, company, or location...",
     "dateApplied": "Date Applied",
     "status": "Status",
     "company": "Company",
@@ -243,6 +246,7 @@
     "view": "View",
     "close": "Close",
     "confirm": "Confirm",
+    "tapToExpand": "Tap to expand",
     "back": "Back",
     "next": "Next",
     "previous": "Previous",

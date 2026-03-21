@@ -57,6 +57,7 @@ export class JobsFilters implements OnInit {
   @Output() searchEvent = new EventEmitter<JobFilters>();
   @Output() smartSearchEvent = new EventEmitter<void>();
 
+  mobileFiltersVisible = false;
   filters: JobFilters = {};
 
   // Filter options

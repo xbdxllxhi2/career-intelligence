@@ -30,6 +30,12 @@ def profile_to_resume_format(profile_model) -> dict:
         "profile": {
             "first_name": profile_model.first_name,
             "last_name": profile_model.last_name,
+            "phone": profile_model.phone,
+            "email": profile_model.email,
+            "city": profile_model.city,
+            "country": profile_model.country,
+            "linkedin": profile_model.linkedin,
+            "github": profile_model.github,
             "location": f"{profile_model.city}, {profile_model.country}" if profile_model.city and profile_model.country else profile_model.city or profile_model.country or "",
             "summary": profile_model.summary,
         },
@@ -37,7 +43,9 @@ def profile_to_resume_format(profile_model) -> dict:
             {
                 "degree": edu.degree,
                 "school": edu.school or edu.institution,
+                "institution": edu.institution or edu.school,
                 "year": edu.year,
+                "coursework": edu.coursework,
             }
             for edu in profile_model.education
         ],
@@ -65,6 +73,16 @@ def profile_to_resume_format(profile_model) -> dict:
             for proj in profile_model.projects
         ],
         "languages": profile_model.languages,
+        "certifications": [
+            {
+                "name": cert.name,
+                "issuer": cert.issuer,
+                "date": cert.date,
+                "credentialId": cert.credentialId,
+                "url": cert.url,
+            }
+            for cert in profile_model.certifications
+        ],
         "extra_curricular": profile_model.extra_curricular,
     }
 

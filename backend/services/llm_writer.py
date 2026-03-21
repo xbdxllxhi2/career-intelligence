@@ -22,7 +22,7 @@ groq_open_ai_client = OpenAI(
 
 
 def _build_messages(context):
-    return [{"role": "system", "content": get_PROMPT_V3_fr(context)}]
+    return [{"role": "system", "content": get_prompt_V7_fr()}]
 
 
 def _log_response(response):
@@ -33,10 +33,11 @@ def _log_response(response):
 
 
 def _groq_open_api_oss_120b_generate_resume_section(context):
+    print(f"Profile: {context['profile']}, Job Description: {context['job_description']}")
     response = groq_open_ai_client.responses.parse(
         model="openai/gpt-oss-120b",
         temperature=0.2,
-        instructions=get_prompt_V6_fR(),
+        instructions=get_prompt_v8_fr(),
         input=f"description: {context['job_description']}\n profile: {context['profile']}",
         # max_tokens=5000,
         text_format=ResumeGenerationResponse,
