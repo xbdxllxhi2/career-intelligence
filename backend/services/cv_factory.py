@@ -41,7 +41,7 @@ def generate_cv(output_file_name, context):
     logger.debug("complete cv context %s: ", json.dumps(context, indent=4))
     _render_template(output_file_name, context)
     _compile_pdf(output_file_name)
-    print("CV generated to output/cv/%s.pdf",output_file_name)
+    print(f"CV generated to output/cv/{output_file_name}.pdf")
     return f"output/cv/{output_file_name}.pdf"
 
 
