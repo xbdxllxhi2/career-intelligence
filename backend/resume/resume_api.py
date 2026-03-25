@@ -103,7 +103,7 @@ def create_resume(
     profile_model = UserProfileMapper.entity_to_model(profile_entity)
     user_profile = profile_to_resume_format(profile_model)
 
-    user_resume_path = generate_resume(job_detail, user_profile)
+    user_resume_path = generate_resume(user_id, job_detail, user_profile)
     print(user_resume_path)
     return FileResponse(
         path=user_resume_path,
@@ -126,7 +126,7 @@ def create_resume_from_description(
     profile_model = UserProfileMapper.entity_to_model(profile_entity)
     user_profile = profile_to_resume_format(profile_model)
 
-    user_resume_path = generate_resume_for_description(payload.job_description, user_profile)
+    user_resume_path = generate_resume_for_description(user_id, payload.job_description, user_profile)
     print(user_resume_path)
     return FileResponse(
         path=user_resume_path,

@@ -24,14 +24,14 @@ def _generate_resume_context(job_description: str, profile: dict[str, Any]) -> d
     return ResumeMapper.build_complete_cv_context(profile, generated_resume_response)
 
 
-def generate_resume(job: JobDetail, profile):
+def generate_resume(user_id: str, job: JobDetail, profile):
     logger.info("Generating Resume...")
     complete_cv:dict[str, Any] = _generate_resume_context(job.description, profile)
-    return generate_cv(job.reference, complete_cv)
+    return generate_cv(job.reference, complete_cv, user_id=user_id)
 
-def generate_resume_for_description(offer_description:str, profile):
+def generate_resume_for_description(user_id: str, offer_description:str, profile):
     logger.info("Generating Resume for the given description...")
     complete_cv:dict[str, Any] = _generate_resume_context(offer_description, profile)
     random_uuid = uuid.uuid4()
-    return generate_cv(f'from_job_description_{random_uuid}', complete_cv)
+    return generate_cv(f'from_job_description_{random_uuid}', complete_cv, user_id=user_id)
     
