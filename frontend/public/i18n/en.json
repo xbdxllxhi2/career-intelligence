@@ -181,6 +181,7 @@
     "chars": "chars",
     "clear": "Clear",
     "generate": "Generate PDF",
+    "generateCoverLetter": "Cover letter",
     "generating": "Generating...",
     "reviewLabel": "Review with AI before generating",
     "reviewHint": "A reviewer agent checks alignment, impact and ATS keywords, then refines the resume. Slower but higher quality.",

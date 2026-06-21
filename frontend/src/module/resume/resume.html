@@ -50,19 +50,36 @@
           {{ 'resume.clear' | transloco }}
         </button>
 
-        <button
-          pButton
-          [loading]="isGeneratingResume"
-          [disabled]="offerDescription.length < 50"
-          (click)="generateResume()"
-          class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 border-0 rounded-lg text-sm font-medium transition-colors disabled:opacity-40 disabled:hover:bg-emerald-600"
-        >
-          @if (isGeneratingResume) {
-            {{ 'resume.generating' | transloco }}
-          } @else {
-            {{ 'resume.generate' | transloco }}
-          }
-        </button>
+        <div class="flex items-center gap-3">
+          <button
+            pButton
+            [outlined]="true"
+            [loading]="isGeneratingCoverLetter"
+            [disabled]="offerDescription.length < 50 || isGeneratingResume"
+            (click)="generateCoverLetter()"
+            class="px-6 py-2.5 border border-emerald-600 text-emerald-400 hover:bg-emerald-600/10 rounded-lg text-sm font-medium transition-colors disabled:opacity-40"
+          >
+            @if (isGeneratingCoverLetter) {
+              {{ 'resume.generating' | transloco }}
+            } @else {
+              {{ 'resume.generateCoverLetter' | transloco }}
+            }
+          </button>
+
+          <button
+            pButton
+            [loading]="isGeneratingResume"
+            [disabled]="offerDescription.length < 50 || isGeneratingCoverLetter"
+            (click)="generateResume()"
+            class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 border-0 rounded-lg text-sm font-medium transition-colors disabled:opacity-40 disabled:hover:bg-emerald-600"
+          >
+            @if (isGeneratingResume) {
+              {{ 'resume.generating' | transloco }}
+            } @else {
+              {{ 'resume.generate' | transloco }}
+            }
+          </button>
+        </div>
       </div>
 
       <!-- Minimal hint -->

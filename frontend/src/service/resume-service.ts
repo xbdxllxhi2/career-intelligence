@@ -21,4 +21,10 @@ export class ResumeService {
       responseType: 'blob'
     });
   }
+
+  generateCoverLetterFromDescription(offerDescription: string, review: boolean = false): Observable<Blob>{
+     return this.client.post(`${this.apiUrl}/cover-letter`, { job_description: offerDescription, review },{
+      responseType: 'blob'
+    });
+  }
 }

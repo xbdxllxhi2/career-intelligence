@@ -24,6 +24,7 @@ export class Resume implements OnInit {
   isAuthenticated = false;
   offerDescription!: string;
   isGeneratingResume!: boolean;
+  isGeneratingCoverLetter = false;
   enableReview = false;
 
   constructor(private resumeService: ResumeService, private messageService: MessageService) {}
@@ -40,29 +41,49 @@ export class Resume implements OnInit {
     });
   }
 
+  private downloadBlob(blob: Blob, filename: string) {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  }
+
+  private showError() {
+    this.messageService.add({
+      summary: 'Error',
+      detail: 'Try again later...',
+      severity: 'error',
+    });
+  }
+
   generateResume() {
     this.isGeneratingResume = true;
     this.resumeService.generateResumeFromDescription(this.offerDescription, this.enableReview).subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'resume.pdf';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-      },
-      error: (err) => {
-        this.messageService.add({
-          summary: 'Error',
-          detail: 'Try again later...',
-          severity: 'error',
-        });
+      next: (blob) => this.downloadBlob(blob, 'resume.pdf'),
+      error: () => {
+        this.showError();
         this.isGeneratingResume = false;
       },
       complete: () => {
         this.isGeneratingResume = false;
+      },
+    });
+  }
+
+  generateCoverLetter() {
+    this.isGeneratingCoverLetter = true;
+    this.resumeService.generateCoverLetterFromDescription(this.offerDescription, this.enableReview).subscribe({
+      next: (blob) => this.downloadBlob(blob, 'cover_letter.pdf'),
+      error: () => {
+        this.showError();
+        this.isGeneratingCoverLetter = false;
+      },
+      complete: () => {
+        this.isGeneratingCoverLetter = false;
       },
     });
   }

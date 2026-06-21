@@ -7,6 +7,7 @@ from services.llm_writer import generate_cv_section
 from services.cv_factory import generate_cv
 from services.resume_review_workflow import run_resume_review_workflow
 from agents.resume_generation_agent import generate_resume_with_agent
+from agents.cover_letter_agent import generate_cover_letter_with_agent
 import logging
 from jobs.Job import JobDetail
 from resume.mapper import ResumeMapper
@@ -100,3 +101,27 @@ def generate_resume_for_description(user_id: str, offer_description: str, profil
     logger.info("Generating Resume for the given description...")
     output_file_name = f"from_job_description_{uuid.uuid4()}"
     return _generate(user_id, offer_description, profile, output_file_name, enable_review=enable_review)
+
+
+def generate_cover_letter(user_id: str, offer_description: str, profile, company: str | None = None, output_file_name: str | None = None, enable_review: bool = False):
+    """Generate a single-page cover letter using the cover letter agent."""
+    logger.info("Generating cover letter (review=%s)...", enable_review)
+    if not output_file_name:
+        output_file_name = f"cover_letter_{uuid.uuid4()}"
+
+    result = generate_cover_letter_with_agent(
+        job_description=offer_description,
+        profile=profile,
+        user_id=user_id,
+        output_file_name=output_file_name,
+        company=company,
+        enable_review=enable_review,
+    )
+    logger.info(
+        "Cover letter generated: %s (lang=%s, pages=%s, review=%s)",
+        result["final_pdf_path"],
+        result["language"],
+        result["page_count"],
+        result["review_iterations"],
+    )
+    return result["final_pdf_path"]

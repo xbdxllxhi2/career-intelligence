@@ -180,6 +180,7 @@
     "minCharacters": "Minimum 50 caractères",
     "chars": "caractères",
     "clear": "Effacer",
+    "generateCoverLetter": "Lettre de motivation",
     "reviewLabel": "Réviser avec l'IA avant de générer",
     "reviewHint": "Un agent réviseur vérifie l'alignement, l'impact et les mots-clés ATS, puis affine le CV. Plus lent mais de meilleure qualité.",
     "generate": "Générer PDF",

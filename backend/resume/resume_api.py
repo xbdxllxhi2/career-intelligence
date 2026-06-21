@@ -8,6 +8,7 @@ from .resume_service import (
     generate_resume,
     generate_resume_for_description,
     generate_resume_with_generation_agent,
+    generate_cover_letter,
 )
 from jobs.job_service import getJobByReference
 from user.profile.service import UserProfileService
@@ -171,6 +172,41 @@ def create_resume_with_agent(
     print(user_resume_path)
     return FileResponse(
         path=user_resume_path,
+        media_type="application/pdf",
+        filename=filename,
+    )
+
+
+@router.post("/cover-letter", summary="Generate a single-page cover letter via the agent")
+def create_cover_letter(
+    payload: GenerateRequest,
+    user: Any = Depends(get_user),
+    db: Session = Depends(engine.get_db),
+):
+    """Generate a tailored cover letter. Accepts a ``job_reference`` (looked up
+    for its description + company) or a raw ``job_description``."""
+    user_id = user.user_id
+
+    profile_service = UserProfileService(db)
+    profile_entity = profile_service.get_profile(user_id)
+    profile_model = UserProfileMapper.entity_to_model(profile_entity)
+    user_profile = profile_to_resume_format(profile_model)
+
+    job_description = payload.job_description
+    company = None
+    filename = "cover_letter.pdf"
+    if payload.job_reference:
+        job_detail = getJobByReference(reference=payload.job_reference)
+        job_description = job_detail.description
+        company = job_detail.company
+        filename = f"{job_detail.company}_cover_letter.pdf"
+
+    letter_path = generate_cover_letter(
+        user_id, job_description, user_profile, company=company, enable_review=payload.review
+    )
+    print(letter_path)
+    return FileResponse(
+        path=letter_path,
         media_type="application/pdf",
         filename=filename,
     )

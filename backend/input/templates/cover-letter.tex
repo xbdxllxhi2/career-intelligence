@@ -1,0 +1,65 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[
+  top=1.6cm,
+  bottom=1.4cm,
+  left=2cm,
+  right=2cm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{parskip}
+
+\definecolor{emerald}{RGB}{46,139,87}
+
+\usepackage{tgheros}
+\renewcommand{\familydefault}{\sfdefault}
+\pagenumbering{gobble}
+\setlength{\parindent}{0pt}
+
+\hypersetup{colorlinks=true, urlcolor=black, linkcolor=black}
+
+\begin{document}
+
+% Sender header
+{\Large \textbf{\color{emerald} {{ name }} }}\\
+\vspace{1pt}
+{\small {{ sender_contact }} }
+
+\vspace{6pt}
+{\color{emerald}\hrule}
+\vspace{10pt}
+
+% Recipient + date
+\begin{flushright}
+{% if recipient %}{{ recipient }}\\{% endif %}
+{{ date }}
+\end{flushright}
+
+\vspace{4pt}
+
+% Subject
+\textbf{ {{ subject }} }
+
+\vspace{8pt}
+
+{{ salutation }}
+
+\vspace{4pt}
+
+{% for paragraph in paragraphs %}
+{{ paragraph }}
+
+{% endfor %}
+
+\vspace{2pt}
+
+{{ closing }}
+
+\vspace{6pt}
+\textbf{ {{ name }} }
+
+\end{document}
