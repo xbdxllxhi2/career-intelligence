@@ -10,15 +10,15 @@ export class ResumeService {
   private readonly apiUrl = environment.apiUrl +"/resume";
   constructor(private client: HttpClient) { }
 
-  generateResume(jobReference: string): Observable<Blob> {
-    return this.client.post(`${this.apiUrl}`, { job_reference: jobReference },{
-      responseType: 'blob'  
+  generateResume(jobReference: string, review: boolean = false): Observable<Blob> {
+    return this.client.post(`${this.apiUrl}`, { job_reference: jobReference, review },{
+      responseType: 'blob'
     });
   }
 
-  generateResumeFromDescription(offerDescription: string): Observable<Blob>{
-     return this.client.post(`${this.apiUrl}/from/description`, { job_description: offerDescription },{
-      responseType: 'blob'  
+  generateResumeFromDescription(offerDescription: string, review: boolean = false): Observable<Blob>{
+     return this.client.post(`${this.apiUrl}/from/description`, { job_description: offerDescription, review },{
+      responseType: 'blob'
     });
   }
 }

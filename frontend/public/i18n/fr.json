@@ -180,6 +180,8 @@
     "minCharacters": "Minimum 50 caractères",
     "chars": "caractères",
     "clear": "Effacer",
+    "reviewLabel": "Réviser avec l'IA avant de générer",
+    "reviewHint": "Un agent réviseur vérifie l'alignement, l'impact et les mots-clés ATS, puis affine le CV. Plus lent mais de meilleure qualité.",
     "generate": "Générer PDF",
     "generating": "Génération...",
     "hint": "Les données de votre profil seront comparées aux exigences du poste pour créer un CV sur mesure.",

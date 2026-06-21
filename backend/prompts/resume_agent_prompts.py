@@ -110,6 +110,59 @@ def get_generation_prompt(language: str) -> str:
     return f"{intro}\n{_SCHEMA_CONTRACT}\n{_RULES}\n{examples_section}"
 
 
+def get_reviewer_prompt(language: str) -> str:
+    """System prompt for the judge-only reviewer agent.
+
+    The reviewer evaluates and suggests; it MUST NOT rewrite the resume.
+    """
+    lang_label = "French" if language == "fr" else "English"
+    return f"""You are a demanding senior recruiter and ATS expert reviewing a
+{lang_label} resume for a specific job offer. You are a JUDGE ONLY: you evaluate
+and give actionable feedback, you NEVER rewrite the resume yourself.
+
+Score the resume on these dimensions (1-5 each):
+- job_alignment: keywords, role and seniority match the offer.
+- impact: bullets show measurable results, not task lists.
+- clarity: dense, concrete, strong action verbs, no fluff or pronouns.
+- ats_keywords: the offer's key technologies/skills are present.
+- conciseness: tight enough to fit one page, no redundancy.
+
+Critical checks:
+- grounded: set to false if ANY claim, metric, technology or employer is not
+  supported by the candidate profile. Fabrication is the most serious problem.
+- For each problem, return an issue with severity (critical/major/minor), the
+  precise location, what is wrong, and a concrete suggestion that uses ONLY the
+  candidate's real facts.
+
+Set "passed" to true only when the resume is well aligned to the offer, free of
+fabrication, and has no critical or major issues. Be strict but fair. Return the
+structured verdict only."""
+
+
+def get_revise_prompt(language: str, verdict_summary: str) -> str:
+    """System prompt for the generator to apply reviewer feedback (judge-only loop)."""
+    base = get_generation_prompt(language)
+    if language == "fr":
+        instruction = (
+            "\n\nUn relecteur expert a évalué la version précédente du CV. "
+            "Applique STRICTEMENT ses retours ci-dessous pour produire une version "
+            "améliorée, en respectant le même schéma de sortie. N'invente RIEN : "
+            "utilise uniquement les faits du profil. Si une suggestion demande une "
+            "information absente du profil, ignore-la plutôt que d'inventer.\n\n"
+            f"Retours du relecteur :\n{verdict_summary}"
+        )
+    else:
+        instruction = (
+            "\n\nAn expert reviewer evaluated the previous version of this resume. "
+            "Apply their feedback below STRICTLY to produce an improved version, "
+            "keeping the same output schema. Invent NOTHING: use only facts from the "
+            "profile. If a suggestion needs information absent from the profile, skip "
+            "it rather than fabricate.\n\n"
+            f"Reviewer feedback:\n{verdict_summary}"
+        )
+    return base + instruction
+
+
 def get_condense_prompt(language: str, overflow_pages: int) -> str:
     """System prompt for the condensing step when the PDF overflows one page."""
     if language == "fr":

@@ -182,6 +182,8 @@
     "clear": "Clear",
     "generate": "Generate PDF",
     "generating": "Generating...",
+    "reviewLabel": "Review with AI before generating",
+    "reviewHint": "A reviewer agent checks alignment, impact and ATS keywords, then refines the resume. Slower but higher quality.",
     "hint": "Your profile data will be matched against the job requirements to create a tailored resume.",
     "signInSubtitle": "Sign in to generate AI-tailored resumes based on your profile and job descriptions.",
     "signInButton": "Sign in to continue"

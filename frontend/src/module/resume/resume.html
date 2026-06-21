@@ -28,6 +28,15 @@
         </div>
       </div>
 
+      <!-- Review toggle -->
+      <div class="flex items-start gap-3 p-4 bg-neutral-800/50 border border-neutral-700 rounded-lg">
+        <p-toggleswitch [(ngModel)]="enableReview" inputId="enableReview"></p-toggleswitch>
+        <label for="enableReview" class="flex-1 cursor-pointer">
+          <span class="block text-sm text-neutral-200">{{ 'resume.reviewLabel' | transloco }}</span>
+          <span class="block text-xs text-neutral-500 mt-0.5">{{ 'resume.reviewHint' | transloco }}</span>
+        </label>
+      </div>
+
       <!-- Actions -->
       <div class="flex items-center justify-between pt-2">
         <button

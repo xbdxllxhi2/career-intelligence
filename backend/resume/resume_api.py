@@ -21,6 +21,7 @@ router = APIRouter(prefix="/resume", tags=["resume"])
 class GenerateRequest(BaseModel):
     job_reference: Optional[str]=None
     job_description: Optional[str]=None
+    review: bool = False
 
 
 def profile_to_resume_format(profile_model) -> dict:
@@ -107,7 +108,7 @@ def create_resume(
     profile_model = UserProfileMapper.entity_to_model(profile_entity)
     user_profile = profile_to_resume_format(profile_model)
 
-    user_resume_path = generate_resume(user_id, job_detail, user_profile)
+    user_resume_path = generate_resume(user_id, job_detail, user_profile, enable_review=payload.review)
     print(user_resume_path)
     return FileResponse(
         path=user_resume_path,
@@ -130,7 +131,7 @@ def create_resume_from_description(
     profile_model = UserProfileMapper.entity_to_model(profile_entity)
     user_profile = profile_to_resume_format(profile_model)
 
-    user_resume_path = generate_resume_for_description(user_id, payload.job_description, user_profile)
+    user_resume_path = generate_resume_for_description(user_id, payload.job_description, user_profile, enable_review=payload.review)
     print(user_resume_path)
     return FileResponse(
         path=user_resume_path,
@@ -165,7 +166,7 @@ def create_resume_with_agent(
         filename = f"{job_detail.company}_CV.pdf"
 
     user_resume_path = generate_resume_with_generation_agent(
-        user_id, job_description, user_profile
+        user_id, job_description, user_profile, enable_review=payload.review
     )
     print(user_resume_path)
     return FileResponse(

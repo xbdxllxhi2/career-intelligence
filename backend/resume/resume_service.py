@@ -50,13 +50,15 @@ def _generate_with_legacy_pipeline(user_id: str, job_description: str, profile, 
         return pdf_path
 
 
-def generate_resume_with_generation_agent(user_id: str, offer_description: str, profile, output_file_name: str | None = None):
+def generate_resume_with_generation_agent(user_id: str, offer_description: str, profile, output_file_name: str | None = None, enable_review: bool = False):
     """Generate a single-page resume using the LangGraph generation agent.
 
     The agent detects the offer language, drafts content from the profile using
-    few-shot reference resumes, and condenses until the PDF fits one page.
+    few-shot reference resumes, and condenses until the PDF fits one page. When
+    ``enable_review`` is True, a judge-only reviewer agent critiques the draft
+    and the generator revises it before rendering.
     """
-    logger.info("Generating Resume with the generation agent...")
+    logger.info("Generating Resume with the generation agent (review=%s)...", enable_review)
     if not output_file_name:
         output_file_name = f"agent_resume_{uuid.uuid4()}"
 
@@ -65,34 +67,36 @@ def generate_resume_with_generation_agent(user_id: str, offer_description: str, 
         profile=profile,
         user_id=user_id,
         output_file_name=output_file_name,
+        enable_review=enable_review,
     )
     logger.info(
-        "Agent resume generated: %s (lang=%s, pages=%s, condense=%s)",
+        "Agent resume generated: %s (lang=%s, pages=%s, condense=%s, review=%s)",
         result["final_pdf_path"],
         result["language"],
         result["page_count"],
         result["condense_iterations"],
+        result["review_iterations"],
     )
     return result["final_pdf_path"]
 
 
-def _generate(user_id: str, job_description: str, profile, output_file_name: str) -> str:
+def _generate(user_id: str, job_description: str, profile, output_file_name: str, enable_review: bool = False) -> str:
     """Primary resume generation: run the agent, fall back to the legacy pipeline."""
     try:
         return generate_resume_with_generation_agent(
-            user_id, job_description, profile, output_file_name
+            user_id, job_description, profile, output_file_name, enable_review=enable_review
         )
     except Exception as e:
         logger.error(f"Generation agent failed, falling back to legacy pipeline: {e}")
         return _generate_with_legacy_pipeline(user_id, job_description, profile, output_file_name)
 
 
-def generate_resume(user_id: str, job: JobDetail, profile):
+def generate_resume(user_id: str, job: JobDetail, profile, enable_review: bool = False):
     logger.info("Generating Resume...")
-    return _generate(user_id, job.description, profile, job.reference)
+    return _generate(user_id, job.description, profile, job.reference, enable_review=enable_review)
 
 
-def generate_resume_for_description(user_id: str, offer_description: str, profile):
+def generate_resume_for_description(user_id: str, offer_description: str, profile, enable_review: bool = False):
     logger.info("Generating Resume for the given description...")
     output_file_name = f"from_job_description_{uuid.uuid4()}"
-    return _generate(user_id, offer_description, profile, output_file_name)
+    return _generate(user_id, offer_description, profile, output_file_name, enable_review=enable_review)

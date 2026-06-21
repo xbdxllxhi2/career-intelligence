@@ -20,7 +20,13 @@ from typing import Any, Dict, Optional, TypedDict
 from langgraph.graph import StateGraph, START, END
 
 from models.agent_resume_response import AgentResumeResponse
-from prompts.resume_agent_prompts import get_generation_prompt, get_condense_prompt
+from models.resume_review_verdict import ResumeReviewVerdict
+from prompts.resume_agent_prompts import (
+    get_generation_prompt,
+    get_condense_prompt,
+    get_reviewer_prompt,
+    get_revise_prompt,
+)
 from resume.mapper import ResumeMapper
 from services.cv_factory import generate_cv, BASE_DIR
 from services.llm_writer import groq_open_ai_client
@@ -31,6 +37,10 @@ logger = logging.getLogger(__name__)
 TEMPLATE_NAME = "resume-agent.tex"
 MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
 MAX_CONDENSE_ITERATIONS = 3
+MAX_REVIEW_ITERATIONS = 2
+# Resume is accepted when the reviewer marks it passed, or its overall score
+# reaches this threshold (avoids endless nitpicking loops).
+REVIEW_SCORE_THRESHOLD = 8
 
 # Localised section titles for the shared template.
 LABELS = {
@@ -91,6 +101,7 @@ class GenerationState(TypedDict):
     profile: Dict[str, Any]
     user_id: str
     output_file_name: str
+    enable_review: bool
 
     # Working state
     language: str
@@ -98,6 +109,10 @@ class GenerationState(TypedDict):
     pdf_path: str
     page_count: int
     iteration: int
+
+    # Review loop
+    review_iteration: int
+    review_verdict: Optional[Dict[str, Any]]
 
     # Output
     final_pdf_path: str
@@ -133,6 +148,49 @@ def _condense_content(state: GenerationState) -> AgentResumeResponse:
     user_input = (
         f"Job offer:\n{state['job_description']}\n\n"
         f"Current resume content (condense this to fit one page):\n{current}"
+    )
+    return _call_llm(system_prompt, user_input)
+
+
+def _review_content(state: GenerationState) -> ResumeReviewVerdict:
+    system_prompt = get_reviewer_prompt(state["language"])
+    current = state["content"].model_dump() if state["content"] else {}
+    user_input = (
+        f"Job offer:\n{state['job_description']}\n\n"
+        f"Candidate profile (ground truth for fabrication checks):\n{state['profile']}\n\n"
+        f"Resume to evaluate:\n{current}"
+    )
+    response = groq_open_ai_client.responses.parse(
+        model=MODEL,
+        temperature=0.1,  # deterministic judging
+        instructions=system_prompt,
+        input=user_input,
+        text_format=ResumeReviewVerdict,
+    )
+    return response.output_parsed
+
+
+def _format_verdict_feedback(verdict: Dict[str, Any]) -> str:
+    """Turn a verdict dict into a concise feedback block for the revise prompt."""
+    lines = [verdict.get("summary", "").strip()]
+    if not verdict.get("grounded", True):
+        lines.append("- WARNING: remove any claim not supported by the profile.")
+    for issue in verdict.get("issues", []):
+        lines.append(
+            f"- [{issue.get('severity')}] {issue.get('location')}: "
+            f"{issue.get('issue')} -> {issue.get('suggestion')}"
+        )
+    return "\n".join(line for line in lines if line)
+
+
+def _revise_content(state: GenerationState) -> AgentResumeResponse:
+    feedback = _format_verdict_feedback(state["review_verdict"] or {})
+    system_prompt = get_revise_prompt(state["language"], feedback)
+    current = state["content"].model_dump() if state["content"] else {}
+    user_input = (
+        f"Job offer:\n{state['job_description']}\n\n"
+        f"Candidate profile (strict source of truth):\n{state['profile']}\n\n"
+        f"Previous resume version to improve:\n{current}"
     )
     return _call_llm(system_prompt, user_input)
 
@@ -232,6 +290,52 @@ def generate_node(state: GenerationState) -> GenerationState:
     return state
 
 
+def review_node(state: GenerationState) -> GenerationState:
+    logger.info("[AGENT] Reviewing content (review iteration %s)", state["review_iteration"])
+    try:
+        verdict = _review_content(state)
+        state["review_verdict"] = verdict.model_dump()
+        logger.info(
+            "[AGENT] Review verdict: passed=%s score=%s grounded=%s issues=%s",
+            verdict.passed,
+            verdict.overall_score,
+            verdict.grounded,
+            len(verdict.issues),
+        )
+    except Exception as exc:  # pragma: no cover - defensive
+        logger.error("[AGENT] Review step failed, accepting current content: %s", exc)
+        state["review_verdict"] = {"passed": True, "overall_score": 0, "issues": []}
+    return state
+
+
+def revise_node(state: GenerationState) -> GenerationState:
+    state["review_iteration"] += 1
+    logger.info("[AGENT] Revising content (review iteration %s)", state["review_iteration"])
+    try:
+        state["content"] = _revise_content(state)
+    except Exception as exc:  # pragma: no cover - defensive
+        logger.error("[AGENT] Revise step failed, keeping current content: %s", exc)
+    return state
+
+
+def after_generate(state: GenerationState) -> str:
+    return "review" if state.get("enable_review") else "render"
+
+
+def needs_revision(state: GenerationState) -> str:
+    verdict = state.get("review_verdict") or {}
+    passed = verdict.get("passed", True)
+    score = verdict.get("overall_score", 0)
+    grounded = verdict.get("grounded", True)
+
+    if (passed or score >= REVIEW_SCORE_THRESHOLD) and grounded:
+        return "render"
+    if state["review_iteration"] >= MAX_REVIEW_ITERATIONS:
+        logger.info("[AGENT] Max review iterations reached, accepting current content")
+        return "render"
+    return "revise"
+
+
 def render_node(state: GenerationState) -> GenerationState:
     pdf_path = _render(state)
     state["pdf_path"] = pdf_path
@@ -284,6 +388,8 @@ def build_generation_agent():
     graph = StateGraph(GenerationState)
     graph.add_node("detect_language", detect_language_node)
     graph.add_node("generate", generate_node)
+    graph.add_node("review", review_node)
+    graph.add_node("revise", revise_node)
     graph.add_node("render", render_node)
     graph.add_node("measure", measure_node)
     graph.add_node("condense", condense_node)
@@ -291,7 +397,17 @@ def build_generation_agent():
 
     graph.add_edge(START, "detect_language")
     graph.add_edge("detect_language", "generate")
-    graph.add_edge("generate", "render")
+    graph.add_conditional_edges(
+        "generate",
+        after_generate,
+        {"review": "review", "render": "render"},
+    )
+    graph.add_conditional_edges(
+        "review",
+        needs_revision,
+        {"revise": "revise", "render": "render"},
+    )
+    graph.add_edge("revise", "review")
     graph.add_edge("render", "measure")
     graph.add_conditional_edges(
         "measure",
@@ -308,9 +424,19 @@ def generate_resume_with_agent(
     profile: Dict[str, Any],
     user_id: str,
     output_file_name: str,
+    enable_review: bool = False,
 ) -> Dict[str, Any]:
-    """Run the resume generation agent and return the final PDF path + metadata."""
-    logger.info("[AGENT] Starting resume generation agent for user %s", user_id)
+    """Run the resume generation agent and return the final PDF path + metadata.
+
+    When ``enable_review`` is True, a judge-only reviewer agent evaluates the
+    drafted content (job alignment, impact, ATS keywords, fabrication) and the
+    generator revises it (bounded by MAX_REVIEW_ITERATIONS) before rendering.
+    """
+    logger.info(
+        "[AGENT] Starting resume generation agent for user %s (review=%s)",
+        user_id,
+        enable_review,
+    )
     graph = build_generation_agent()
 
     initial_state: GenerationState = {
@@ -318,11 +444,14 @@ def generate_resume_with_agent(
         "profile": profile,
         "user_id": user_id,
         "output_file_name": output_file_name,
+        "enable_review": enable_review,
         "language": "en",
         "content": None,
         "pdf_path": "",
         "page_count": 0,
         "iteration": 0,
+        "review_iteration": 0,
+        "review_verdict": None,
         "final_pdf_path": "",
     }
 
@@ -332,4 +461,6 @@ def generate_resume_with_agent(
         "language": result["language"],
         "page_count": result["page_count"],
         "condense_iterations": result["iteration"],
+        "review_iterations": result["review_iteration"],
+        "review_verdict": result.get("review_verdict"),
     }

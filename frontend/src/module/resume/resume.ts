@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ResumeService } from '../../service/resume-service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -11,7 +12,7 @@ import { environment } from '../../environments/environments';
 
 @Component({
   selector: 'app-resume',
-  imports: [TextareaModule, ButtonModule, FormsModule, ToastModule, TranslocoModule],
+  imports: [TextareaModule, ButtonModule, ToggleSwitchModule, FormsModule, ToastModule, TranslocoModule],
   templateUrl: './resume.html',
   providers: [MessageService],
   styleUrl: './resume.scss',
@@ -23,6 +24,7 @@ export class Resume implements OnInit {
   isAuthenticated = false;
   offerDescription!: string;
   isGeneratingResume!: boolean;
+  enableReview = false;
 
   constructor(private resumeService: ResumeService, private messageService: MessageService) {}
 
@@ -40,7 +42,7 @@ export class Resume implements OnInit {
 
   generateResume() {
     this.isGeneratingResume = true;
-    this.resumeService.generateResumeFromDescription(this.offerDescription).subscribe({
+    this.resumeService.generateResumeFromDescription(this.offerDescription, this.enableReview).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
