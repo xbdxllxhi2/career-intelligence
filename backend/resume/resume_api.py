@@ -4,7 +4,11 @@ from fastapi.responses import FileResponse
 from fastapi_keycloak_middleware import get_user
 from sqlalchemy.orm import Session
 
-from .resume_service import generate_resume, generate_resume_for_description
+from .resume_service import (
+    generate_resume,
+    generate_resume_for_description,
+    generate_resume_with_generation_agent,
+)
 from jobs.job_service import getJobByReference
 from user.profile.service import UserProfileService
 from user.profile.mapper import UserProfileMapper
@@ -132,4 +136,40 @@ def create_resume_from_description(
         path=user_resume_path,
         media_type="application/pdf",
         filename=f"resume.pdf",
+    )
+
+
+@router.post("/agent", summary="Generate a single-page CV via the generation agent")
+def create_resume_with_agent(
+    payload: GenerateRequest,
+    user: Any = Depends(get_user),
+    db: Session = Depends(engine.get_db),
+):
+    """Generate a resume using the LangGraph agent.
+
+    Accepts either a ``job_reference`` (looked up for its description) or a raw
+    ``job_description``. The agent auto-detects the offer language.
+    """
+    user_id = user.user_id
+
+    profile_service = UserProfileService(db)
+    profile_entity = profile_service.get_profile(user_id)
+    profile_model = UserProfileMapper.entity_to_model(profile_entity)
+    user_profile = profile_to_resume_format(profile_model)
+
+    job_description = payload.job_description
+    filename = "resume.pdf"
+    if payload.job_reference:
+        job_detail = getJobByReference(reference=payload.job_reference)
+        job_description = job_detail.description
+        filename = f"{job_detail.company}_CV.pdf"
+
+    user_resume_path = generate_resume_with_generation_agent(
+        user_id, job_description, user_profile
+    )
+    print(user_resume_path)
+    return FileResponse(
+        path=user_resume_path,
+        media_type="application/pdf",
+        filename=filename,
     )

@@ -1,0 +1,122 @@
+           Mohamed Hamed MOHAMED AHMED
+
+                                           Software Engineer
+
+                       mdhamed.off@gmail.com · +33 7 59 59 60 37 · Lyon, France
+                mdhamed.dev · github.com/mdhamed238 · linkedin.com/in/mdhamed238
+
+Profile
+
+    Software Engineer at LCL building internal banking platforms serving thousands of agency advisors. Java/Spring Boot
+backend focus with hands-on experience migrating legacy systems to cloud infrastructure. Open-source contributor to PMD
+and WeasyPrint. Master's student at Universit´e Claude Bernard Lyon 1.
+
+Education
+
+Master's Degree in Computer Science (M1)                                                  Sep 2024 ­ Present
+
+Universit´e Claude Bernard Lyon 1, France -- Software Engineering, Distributed Algorithms, Big Data
+
+Licence Informatique (Bachelor's Degree)                                                  Jan 2021 ­ Jul 2023
+
+ISCAE / Universit´e de Nouakchott, Mauritania -- Algorithms, Data Structures, Web Development, Databases
+
+Professional Experience
+
+    Software Engineer (Apprenticeship)                                                    Sep 2025 ­ Present
+LCL, Villejuif, France -- Major French retail bank, subsidiary of Cr´edit Agricole Group
+
+· Maintaining and extending client onboarding and sales portal features used daily by several thousand agency advisors
+   across LCL's retail banking network.
+
+· Developing new features and fixing bugs in microservices for customer account creation and subscription workflows.
+· Refactored the document management layer from local filesystem I/O to Amazon S3, a critical step in making the
+
+   application stateless for the migration to Kubernetes architecture.
+· Designing and automating end-to-end test suites integrated into CI/CD pipelines.
+
+Tech Stack: Java, Spring Boot, Angular, Amazon S3, Selenium, Cypress
+
+Full-Stack Developer                                                                      Mar 2024 ­ Jun 2024
+
+Software Savants, Nouakchott, Mauritania -- Software agency specializing in healthcare and startup solutions
+
+· Integrated Saudi Arabia's NPHIES (National Health Information Exchange) API into healthcare backend, ensuring com-
+   pliance with national interoperability standards.
+
+· Developed API connections for real-time patient eligibility verification and automated insurance claim workflows.
+· Worked with healthcare data standards including HL7 FHIR for cross-system interoperability.
+· Configured CI/CD pipelines for automated testing and deployment.
+
+Tech Stack: Python, Frappe Framework, MariaDB, HL7 FHIR, GitLab CI/CD
+
+    Frontend Developer                                                                    Dec 2023 ­ Feb 2024
+GSM, Nouakchott, Mauritania -- IT consulting and technology solutions provider
+
+· Modernized the National PBF (Performance-Based Financing) Portal for the Ministry of Health.
+· Built automated reporting systems aggregating data from healthcare facilities across the national territory.
+· Developed interactive public dashboard for health metrics visualization with code splitting and lazy loading optimizations.
+
+Tech Stack: Next.js, React, TailwindCSS, Data Visualization
+
+Full-Stack Developer                                                                      Feb 2023 ­ Dec 2023
+
+Ibtikar Technologies, Nouakchott, Mauritania -- IT company building GovTech and digital identity solutions
+
+· Started as intern; promoted to full-time after 5 months based on performance.
+· Developed mobile app for traffic officers to digitally record road violations.
+· Integrated secure payment gateway for real-time fine settlements.
+· Built administrative dashboard centralizing infraction data for operational reporting and resource allocation.
+
+Tech Stack: React Native, Node.js, Next.js, MongoDB Atlas, Firebase
+
+Open Source Contributions
+
+· PMD (Static Code Analysis): 2 merged PRs fixing Java parser bugs including switch expressions in super() calls and
+   pattern variables in for-each loops.
+   github.com/pmd/pmd
+
+· Talawa API (Palisadoes Foundation): 3 merged PRs achieving 100% code coverage on mutation resolvers (unit and
+   integration tests).
+   github.com/PalisadoesFoundation/talawa-api
+
+· WeasyPrint (PDF Rendering): Contributing to the Python HTML/CSS to PDF engine; connected with maintainers.
+   github.com/Kozea/WeasyPrint
+Projects
+
+    Cloud Image Processing API                                                                              [GitHub]
+FastAPI, Python, PostgreSQL, Redis, Docker, Cloudflare R2, JWT
+
+· Built REST API for image transformations (resize, crop, rotate, format conversion, filters) with async processing.
+· Implemented Redis caching layer to avoid redundant processing of identical transformation requests.
+· Integrated Cloudflare R2 for cloud storage with JWT authentication and role-based access control.
+· Containerized with Docker and deployed to DigitalOcean App Platform with GitHub Actions CI/CD.
+
+    Weather API                                                                                             [GitHub]
+Java, Spring Boot, Redis, Docker, Spring WebFlux, Bucket4j, OpenAPI
+
+· Developed reactive Spring Boot application consuming Visual Crossing weather API with Redis caching.
+· Implemented rate limiting with Bucket4j and API key authentication for secure access control.
+· Built web interface for testing with comprehensive OpenAPI/Swagger documentation.
+
+Leadership & Community
+
+    Core Team Member                                                             Oct 2021 ­ Jul 2023
+Google Developer Student Clubs, Nouakchott
+
+· Organized technical workshops and developer conferences at the University of Nouakchott.
+· Grew local developer community through consistent engagement, event planning, and social media outreach.
+
+Technical Skills     Java, Python, TypeScript, JavaScript, SQL
+                     Spring Boot, Spring WebFlux, FastAPI, Node.js, Express.js, Frappe, REST APIs, Microservices
+    Languages:       Angular, React, Next.js, React Native, TailwindCSS, Redux
+    Backend:         PostgreSQL, MySQL, MongoDB, MariaDB, Redis
+    Frontend:        Amazon S3, Cloudflare R2, Docker, Git, GitLab CI/CD, GitHub Actions, Linux
+    Databases:       Selenium, Cypress, JUnit, Jest
+    Cloud & DevOps:
+    Testing:
+
+Languages
+
+    English: Fluent · French: Professional Working Proficiency · Arabic: Native
+

@@ -26,9 +26,9 @@ def load_data():
     with open(f"{CONTEXT_DIR}/cv_data.json", "r", encoding="utf8") as f:
         return json.load(f)
 
-def _render_template(tex_file_name, context, output_dir: Path):
+def _render_template(tex_file_name, context, output_dir: Path, template_name: str = "resume-template-2.tex"):
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
-    template = env.get_template("resume-template-2.tex")
+    template = env.get_template(template_name)
     rendered = template.render(context)
 
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -44,7 +44,7 @@ def _compile_pdf(tex_file_name:string, output_dir: Path):
         stderr=subprocess.DEVNULL
     )
 
-def generate_cv(output_file_name, context, user_id: Optional[str] = None):
+def generate_cv(output_file_name, context, user_id: Optional[str] = None, template_name: str = "resume-template-2.tex"):
     logger.debug("complete cv context %s: ", json.dumps(context, indent=4))
     safe_output_file_name = _safe_path_component(output_file_name)
 
@@ -55,7 +55,7 @@ def generate_cv(output_file_name, context, user_id: Optional[str] = None):
     else:
         raise ValueError("User ID is required to generate resume.")
 
-    _render_template(safe_output_file_name, context, output_dir)
+    _render_template(safe_output_file_name, context, output_dir, template_name=template_name)
     _compile_pdf(safe_output_file_name, output_dir)
     print(f"CV generated to {relative_output_path}")
     return relative_output_path

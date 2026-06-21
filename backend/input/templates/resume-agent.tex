@@ -1,0 +1,140 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[
+  top=0.5cm,
+  bottom=0.3cm,
+  left=1cm,
+  right=1cm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{xcolor}
+
+\definecolor{emerald}{RGB}{46,139,87}
+
+\renewcommand{\familydefault}{\sfdefault}
+\pagenumbering{gobble}
+\setlength{\parindent}{0pt}
+
+\usepackage{tgheros}
+\renewcommand{\familydefault}{\sfdefault}
+
+\hypersetup{
+  colorlinks=true,
+  urlcolor=black,
+  linkcolor=black,
+  citecolor=black
+}
+
+\titleformat{\section}
+  {\large\bfseries\color{emerald}}
+  {}
+  {0pt}
+  {}
+  [\vspace{.5mm}{\color{emerald}\hrule}\vspace{2.5mm}]
+
+\titlespacing*{\section}{0pt}{6pt}{4pt}
+
+\setlist[itemize]{
+  leftmargin=1.2em,
+  nosep,
+  topsep=2pt,
+  label=\textbullet
+}
+
+{% raw %}
+\newcommand{\daterange}[1]{\hfill \textbf{#1}}
+{% endraw %}
+
+\begin{document}
+
+\begin{center}
+{\Large \textbf{ {{ name }} }}\\
+{% if headline %}\vspace{1pt}{\small {{ headline }} }\\{% endif %}
+\vspace{2pt}
+
+\small
+{{ city }}{% if phone %} \;|\; {{ phone }}{% endif %}{% if email %} \;|\; \href{mailto:{{ email_href }}}{ {{ email }} }{% endif %}{% if linkedin_href %} \;|\; \href{ {{ linkedin_href }} }{LinkedIn}{% endif %}{% if github_href %} \;|\; \href{ {{ github_href }} }{GitHub}{% endif %}
+\end{center}
+
+\vspace{-2mm}
+
+{% if objective %}
+\section*{ {{ labels.profile }} }
+{{ objective }}
+{% endif %}
+
+{% if skills %}
+\section*{ {{ labels.skills }} }
+{% for category in skills %}
+{% if category.skill_items %}\textbf{ {{ category.category }} } : {{ category.skill_items | join(', ') }}.\\{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if experience %}
+\section*{ {{ labels.experience }} }
+{% for exp in experience %}
+\textbf{ {{ exp.title }} — {{ exp.company }} }{% if exp.start_date %}\daterange{ {{ exp.start_date }}{% if exp.end_date %} -- {{ exp.end_date }}{% endif %} }{% endif %}\\
+{% if exp.location or exp.context %}\textit{ {% if exp.location %}{{ exp.location }}{% endif %}{% if exp.location and exp.context %} — {% endif %}{% if exp.context %}{{ exp.context }}{% endif %} }{% endif %}
+{% if exp.bullets %}
+\begin{itemize}
+{% for bullet in exp.bullets %}
+  \item {{ bullet }}
+{% endfor %}
+\end{itemize}
+{% endif %}
+{% if not loop.last %}
+\vspace{2mm}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if projects %}
+\section*{ {{ labels.projects }} }
+{% for project in projects %}
+\textbf{ {{ project.title }} }{% if project.subtitle %} \textmd{\small({{ project.subtitle }})}{% endif %}{% if project.year %}\daterange{ {{ project.year }} }{% endif %}\\
+{% if project.url %}{\footnotesize \href{ {{ project.url }} }{ {{ labels.project_link }} }}\\{% endif %}
+{% if project.bullets %}
+\begin{itemize}
+{% for bullet in project.bullets %}
+  \item {{ bullet }}
+{% endfor %}
+\end{itemize}
+{% endif %}
+{% if not loop.last %}
+\vspace{2mm}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if education %}
+\section*{ {{ labels.education }} }
+{% for edu in education %}
+\textbf{ {{ edu.institution }} }{% if edu.location %} — {{ edu.location }}{% endif %}{% if edu.year %}\daterange{ {{ edu.year }} }{% endif %}\\
+{{ edu.degree }}{% if edu.coursework %}\\{{ edu.coursework }}{% endif %}
+
+{% if not loop.last %}
+\vspace{1mm}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if languages or certifications %}
+\section*{ {{ labels.additional }} }
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+{% if languages %}
+\textbf{ {{ labels.languages }} } & {% for lang in languages %}{{ lang.name }}{% if lang.level %} ({{ lang.level }}){% endif %}{% if not loop.last %}, {% endif %}{% endfor %} \\
+{% endif %}
+{% if certifications %}
+\textbf{ {{ labels.certifications }} } & {% for cert in certifications %}{{ cert.name }}{% if cert.issuer %} - {{ cert.issuer }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %} \\
+{% endif %}
+\end{tabularx}
+{% endif %}
+
+\end{document}

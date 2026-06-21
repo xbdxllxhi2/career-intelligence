@@ -1,0 +1,100 @@
+                                            JAYA SAI KISHORE NEERUKONDA
+                                       Ingénieur Machine Learning | Data Scientist
+           jayasaikishoren@gmail.com | +33 745324032 | LinkedIn | GitHub | Paris, France
+
+PROFIL
+
+Ingénieur en machine learning avec 2.5 ans d'expérience professionnelle et un Master en Data Science & Intelligence
+Artificielle. Expérimenté dans la conception et la mise en production de systèmes de machine learning, avec une solide
+expertise en Python, Deep Learning et MLOps, incluant CI/CD les LLMs et les pipelines RAG. Capacité démontrée à
+développer des workflows ML évolutifs et fiables, générant un impact métier mesurable.
+
+COMPÉTENCES TECHNIQUES
+
+Programmation: Python, SQL, Pandas, NumPy.
+Machine Learning & IA générative: Machine Learning, Deep Learning, Scikit-learn, TensorFlow, PyTorch, Computer
+Vision, NLP, Fine-tuning, HuggingFace Transformers, LLMs, RAG Pipelines, LangChain.
+MLOps & outils de développement: Git, GitHub, CI/CD, Docker, AWS (EC2, S3), DVC, MLflow.
+Bases de données & APIs: MySQL, RESTful APIs, FastAPI.
+
+EXPÉRI ENCE PROFESSIONNELLE
+
+Ingénieur Machine Learning ­ Starlite Infotech Ltd., Bengaluru                   Jan 2023 ­ Sept 2024
+
+ Conception et mise en oeuvre de pipelines de machine learning et de deep learning de bout en bout, incluant des
+     workflows NLP, permettant d'améliorer la précision des modèles de 20 à 28% grâce au prétraitement des données, à
+     l'ingénierie des caractéristiques, aux embeddings et à l'optimisation des hyperparamètres.
+
+ Développement et entraînement de modèles de machine learning et de deep learning (réseaux de neurones avec
+     TensorFlow/PyTorch) pour des tâches de classification de texte, similarité et analytique prédictive, réduisant les taux
+     d'erreur de 18 à 22% par rapport aux approches de référence.
+
+ Déploiement de modèles ML/DL et NLP prêts pour la production via des API REST et des environnements cloud, réduisant
+     la latence d'inférence et les efforts manuels de traitement du texte de 20 à 30% grâce à l'automatisation
+
+Ingénieur logiciel senior ­ Capgemini Technologies Pvt. Ltd., Hyderabad          Déc 2021 ­ Déc 2022
+
+ Optimisation des pipelines de machine learning et de données en automatisant le prétraitement, l'ingénierie des features
+     et la validation, améliorant significativement les performances et la fiabilité des workflows.
+
+ Déploiement de services ML conteneurisés à l'aide de Docker, Jenkins et Ansible, réduisant le temps de déploiement de
+     40% et permettant le serving de modèles via des API REST scalables.
+
+ Mise en place de pipelines de monitoring et de CI/CD de bout en bout, incluant la journalisation, les métriques et le
+     versioning des artefacts, augmentant la fiabilité des modèles de 30%.
+
+Stagiaire en data science ­ Digital Lync, Hyderabad                              Juin 2019 ­ Avr 2020
+
+ Optimisé les workflows ML en structurant le prétraitement des données, l'extraction de features et la validation, puis en
+
+menant 20+ expérimentations avec validation croisée et optimisation d'hyperparamètres, réduisant le temps de
+
+préparation de 25% et améliorant la précision des modèles de 18%.
+
+ Renforcé la robustesse des modèles grâce à l'analyse des résidus, à l'attribution des features et aux diagnostics de
+
+variance, réduisant le surapprentissage de 20% et améliorant la généralisation.
+
+PROJETS
+
+Système de prévision de la qualité de l'air -- Côte d'Azur, France
+Python, Scikit-learn, modèles de séries temporelles, LSTM/GRU, MLflow, FastAPI, Streamlit, AWS
+
+ Conçu un système de prévision de la qualité de l'air de bout en bout et reproductible à partir de données horaires multi-
+     stations issues du portail Export Avancé de Geod'Air, permettant des prévisions de concentrations de polluants à 24
+     heures grâce à un prétraitement temporel robuste et une ingénierie de features avancée.
+
+ Entraîné et évalué des modèles ML et deep learning (Random Forest, XGBoost, LSTM, GRU) via des splits temporels et
+     la métrique RMSE, avec sélection automatique du meilleur modèle XGBoost et suivi des expériences et du versioning
+     via MLflow et DVC.
+
+ Déployé une architecture d'inférence conteneurisée et prête pour la production avec FastAPI (APIs JSON) et un tableau
+     de bord Streamlit interactif, permettant la prévision en temps réel, la visualisation et l'export CSV, et conçue pour un
+     déploiement scalable sur AWS.
+
+Système de recherche et de résumé d'avis basé sur les émotions
+ResNet-50, FAISS,Computer Visison, LangChain, Flan-T5, Streamlit
+
+ Développé un système RAG de bout en bout conditionné par la reconnaissance d'émotions faciales, combinant computer
+     vision, recherche d'avis clients et synthèse automatique, via une application Streamlit interactive.
+
+ Fine-tuning d'un CNN ResNet-50 sur le dataset FER-2013 (28 709 images, 7 classes), atteignant 64,8 % d'accuracy et
+     un F1-score pondéré de 0,64, intégré à un pipeline de recherche sémantique FAISS utilisant sentence-transformers.
+
+ Implémenté un pipeline RAG avec LangChain, incluant la génération de résumés par LLM (Flan-T5) et l'analyse de
+     sentiment via RoBERTa, et conçu une architecture de production FastAPI évolutive.
+
+FORMATION
+
+Data Science Tech Institute, Sophia Antipolis, France                            Oct 2024 ­ Nov 2026
+Master en Data Science & Intelligence Artificielle
+
+Gudlavalleru Engineering College, Andhra Pradesh, India                          Juin 2015 - Avr 2019
+Licence en électronique et télécommunications
+
+INFORMATIONS COMPLÉMENTAIRES
+
+Langues: Anglais (C2 ­ bilingue) | Français (A2, en cours de B1)
+Certifications: Neo4j Certified Professional (2025)
+Open-Source Contributions: Contributeur Hacktoberfest 2025 (plusieurs pull requests acceptées)
+
